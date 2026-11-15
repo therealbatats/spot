@@ -590,6 +590,10 @@ function goCoords(raS, decS, fromURL, fromURLForceLive) {
 
 function bindUI() {
   $("#coordForm").addEventListener("submit", e => { e.preventDefault(); goCoords($("#raIn").value, $("#decIn").value); });
+  $$("#examples button").forEach(b => b.addEventListener("click", () => {
+    if (b.dataset.f) { openField(b.dataset.f); return; }
+    $("#raIn").value = b.dataset.ra; $("#decIn").value = b.dataset.dec; goCoords(b.dataset.ra, b.dataset.dec);
+  }));
   $$("#modeSeg button").forEach(b => b.addEventListener("click", () => { if (b.disabled) return; S.mode = b.dataset.mode; if (S.mode !== "blink" && S.mode !== "timeline") stop(); syncButtons(); draw(); }));
   $$("#dataSeg button").forEach(b => b.addEventListener("click", () => { if (b.disabled) return; S.data = b.dataset.data; if (S.data === "chan" && S.mode === "sum") S.mode = "blink"; resetDates(); }));
   $("#selA").addEventListener("change", e => { S.a = +e.target.value; syncButtons(); draw(); });
