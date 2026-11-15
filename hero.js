@@ -17,7 +17,7 @@
     `Real data: Barnard's Star. WISE ${f.wise.utc_range[0]} to ${f.wise.utc_range[1]} (4.6 µm) and SPHEREx ${last.utc_first.slice(0, 10)} (${last.wl_min_um}–${last.wl_max_um} µm). Tap to open.`;
   const pW = f.wise.meas_xy || f.wise.pred_xy, pS = last.meas_xy || last.pred_xy;
   let phase = 0, playing = !reduce, timer = null;
-  const intro = { p: (window.gsap && !reduce) ? 0 : 1 }; // wordmark draw-in progress (GSAP), 1 = fully drawn
+  const intro = { p: (window.gsap && !reduce && !/[?&]capture=/.test(location.search)) ? 0 : 1 }; // wordmark draw-in progress (GSAP), 1 = fully drawn
   function draw() {
     const ctx = cv.getContext("2d"), W = cv.clientWidth * devicePixelRatio, H = cv.clientHeight * devicePixelRatio;
     cv.width = W; cv.height = H;
