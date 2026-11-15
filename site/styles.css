@@ -7,6 +7,7 @@
   --line: #263553; --r: 6px;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { color-scheme: dark; }
 body { margin: 0; background: var(--ink); color: var(--mist); font: 400 16px/1.5 "Plex", system-ui, sans-serif; font-variant-numeric: tabular-nums; }
 a { color: var(--haze); text-underline-offset: 3px; } a:hover { color: var(--mist); }
@@ -49,7 +50,7 @@ input:hover, select:hover { border-color: var(--haze); }
 
 /* film strip of targets */
 .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
-.card { background: transparent; border: 0; padding: 0; text-align: left; color: var(--mist); cursor: pointer; font: inherit; }
+.card { background: transparent; border: 0; padding: 0; text-align: left; color: var(--mist); cursor: pointer; font: inherit; display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; }
 .card img { width: 100%; aspect-ratio: 1; display: block; image-rendering: pixelated; background: var(--sky); border: 1px solid var(--line); }
 .card:hover img, .card:focus-visible img { border-color: var(--haze); }
 .card h3 { font-size: 16px; margin: 8px 0 2px; } .card p { margin: 0; font-size: 14px; color: var(--haze); }
