@@ -1,0 +1,10 @@
+[rdra] selected 230 of 2423 frames (max 6 per detector per visit, spread in wavelength)
+[rdra] 192/2423 cutouts extracted (4s)
+[rdra] 190 usable frames in 17 epochs
+[rdra] cleaned + reprojected (9s)
+[rdra] D1: dropped visit(s) [17, 2] from the band view (too little shared wavelength range)
+[rdra] D2: dropped visit(s) [6] from the band view (too little shared wavelength range)
+[rdra] D3: dropped visit(s) [9, 1, 13] from the band view (too little shared wavelength range)
+[rdra] D4: dropped visit(s) [2] from the band view (too little shared wavelength range)
+[rdra] D5: dropped visit(s) [7, 6] from the band view (too little shared wavelength range)
+[rdra] D6: dropped visit(s) [9] from the band view (too little shared wavelength range)

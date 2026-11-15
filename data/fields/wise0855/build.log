@@ -1,0 +1,8 @@
+[wise0855] selected 157 of 250 frames (max 12 per detector per visit, spread in wavelength)
+[wise0855] 149/250 cutouts extracted (1s)
+[wise0855] 149 usable frames in 3 epochs
+[wise0855] cleaned + reprojected (4s)
+[wise0855] D1: dropped visit(s) [1] from the band view (too little shared wavelength range)
+[wise0855] D3: dropped visit(s) [1] from the band view (too little shared wavelength range)
+[wise0855] D4: dropped visit(s) [1] from the band view (too little shared wavelength range)
+[wise0855] D6: dropped visit(s) [1] from the band view (too little shared wavelength range)
