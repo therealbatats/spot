@@ -1,5 +1,5 @@
 [epsindb] selected 216 of 437 frames (max 12 per detector per visit, spread in wavelength)
 [epsindb] 181/437 cutouts extracted (1s)
 [epsindb] 179 usable frames in 4 epochs
-[epsindb] cleaned + reprojected (10s)
+[epsindb] cleaned + reprojected (11s)
 [epsindb] D4: dropped visit(s) [1] from the band view (too little shared wavelength range)

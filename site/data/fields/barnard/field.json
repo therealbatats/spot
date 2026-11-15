@@ -17,12 +17,13 @@
   "plx": 546.975939730948
  },
  "story": {
-  "hook": "The fastest-moving star in our sky. Watch it creep north between visits.",
-  "best_band": 3,
-  "what_to_look_for": "Blink the first and last visit. The bright star in the blue circle shifts upward (north) by about two pixels. The faint stars around it stay put.",
+  "hook": "The fastest-moving star in our sky. Between 2010 and 2026 it walked almost three arcminutes north.",
+  "best_band": 6,
+  "what_to_look_for": "The blink opens on WISE (2010, an older NASA infrared telescope) against SPHEREx (2026) at about the same wavelength. The bright star in the circle jumps 27 pixels north; every other star stays put. Untick 'Include WISE' to compare SPHEREx visits only: then the shift is about 1.7 pixels per year, easiest to see in Difference.",
   "what_it_is": "Barnard's Star is a small red dwarf about 6 light-years away, one of the Sun's nearest neighbours. It crosses 10.4 arcseconds of sky per year (Gaia DR3), faster than any other star. In SPHEREx's 6.2-arcsecond pixels that is close to two pixels per year.",
   "answer": "The wanderer is Barnard's Star, in the centre. It moves about 10 arcseconds north each year because it is so close to us.",
-  "honest": "The star is very bright for SPHEREx and some frames flag its central pixels; the motion is about two pixels over the whole time span, so look carefully, or use the Difference mode where it shows as a black-white pair."
+  "honest": "The star is very bright for SPHEREx and some frames flag its central pixels; the motion is about two pixels over the whole time span, so look carefully, or use the Difference mode where it shows as a black-white pair.",
+  "wise_default": true
  },
  "bands": [
   {
@@ -7785,6 +7786,27 @@
    ]
   },
   "model": "circular orbit, inclination = field ecliptic latitude, prograde, Kepler rate; observer = Earth centre"
+ },
+ "wise": {
+  "png": "wise_w2.png",
+  "mjd": 55366.02,
+  "utc": "2010-06-19",
+  "utc_range": [
+   "2010-03-18",
+   "2010-09-19"
+  ],
+  "label": "WISE, 2010-03-18 to 2010-09-19 (an older NASA infrared telescope, 297 exposures added), 4.6 \u00b5m. Compare positions only, not brightness.",
+  "coadd_id": "2688p045_ac51",
+  "source_uri": "https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/26/2688/2688p045_ac51/2688p045_ac51-w2-int-3.fits",
+  "band": "W2 (4.6 um)",
+  "pred_xy": [
+   55.99,
+   84.1
+  ],
+  "meas_xy": [
+   56.03,
+   83.97
+  ]
  },
  "gaia": [
   [

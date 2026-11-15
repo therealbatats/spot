@@ -661,6 +661,28 @@ def build(t, half=None):
         field["planetx"] = {"distances_au": dists, "epochs": [tr["epoch"] for tr in track],
                             "offsets_px": {k: [[x, -y] for x, y in v] for k, v in off.items()},
                             "model": "circular orbit, inclination = field ecliptic latitude, prograde, Kepler rate; observer = Earth centre"}
+    # ---- older epoch from NASA's WISE mission (AllWISE Atlas W2, 4.6 um), same grid
+    try:
+        import wise_epoch as WE
+        wimg, wmeta = WE.wise_on_grid(ra_mid, dec_mid, gw, shape, fid)
+    except Exception as e:
+        wimg, wmeta = None, None
+        log(f"[{fid}] WISE epoch failed: {e!r}")
+    if wimg is not None and np.isfinite(wimg).mean() > 0.9:
+        wimg = wimg - np.nanmedian(wimg)
+        wlo, whi = stretch_params([wimg])
+        to_png(wimg, wlo, whi, outdir / "wise_w2.png")
+        wmjd = float(wmeta.get("mjd_mean") or 0.5 * (wmeta["mjd_min"] + wmeta["mjd_max"]))
+        ra_w, dec_w = star_position(t, wmjd)
+        xw, yw = gw.world_to_pixel_values(ra_w, dec_w)
+        cw = centroid(wimg, float(xw), float(yw))
+        field["wise"] = {"png": "wise_w2.png", "mjd": round(wmjd, 2), "utc": Time(wmjd, format="mjd").isot[:10],
+                         "utc_range": [Time(wmeta["mjd_min"], format="mjd").isot[:10], Time(wmeta["mjd_max"], format="mjd").isot[:10]],
+                         "label": f"WISE, {Time(wmeta['mjd_min'], format='mjd').isot[:10]} to {Time(wmeta['mjd_max'], format='mjd').isot[:10]} (an older NASA infrared telescope, {wmeta.get('n_frames')} exposures added), 4.6 µm. Compare positions only, not brightness.",
+                         "coadd_id": wmeta["coadd_id"], "source_uri": wmeta["source_uri"], "band": wmeta["band"],
+                         "pred_xy": [round(float(xw), 2), round(float(shape[0] - 1 - yw), 2)],
+                         "meas_xy": [round(cw[0], 2), round(float(shape[0] - 1 - cw[1]), 2)] if cw else None}
+        log(f"[{fid}] WISE epoch {field['wise']['utc']} pred {field['wise']['pred_xy']} meas {field['wise']['meas_xy']}")
     g = gaia_sources(fid, ra_mid, dec_mid, size * 0.72)
     if g:
         field["gaia"] = g

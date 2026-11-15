@@ -8072,6 +8072,24 @@
   },
   "model": "circular orbit, inclination = field ecliptic latitude, prograde, Kepler rate; observer = Earth centre"
  },
+ "wise": {
+  "png": "wise_w2.png",
+  "mjd": 55451.17,
+  "utc": "2010-09-12",
+  "utc_range": [
+   "2010-05-28",
+   "2010-12-27"
+  ],
+  "label": "WISE, 2010-05-28 to 2010-12-27 (an older NASA infrared telescope, 634 exposures added), 4.6 \u00b5m. Compare positions only, not brightness.",
+  "coadd_id": "2486p666_ac51",
+  "source_uri": "https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/24/2486/2486p666_ac51/2486p666_ac51-w2-int-3.fits",
+  "band": "W2 (4.6 um)",
+  "pred_xy": [
+   57.95,
+   58.02
+  ],
+  "meas_xy": null
+ },
  "gaia": [
   [
    248.1673784,

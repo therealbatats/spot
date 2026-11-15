@@ -15,12 +15,13 @@
    "astrometry_source": "Gaia DR3 4472832130942575872 (MAST)",
    "size_deg": 0.2,
    "story": {
-    "hook": "The fastest-moving star in our sky. Watch it creep north between visits.",
-    "best_band": 3,
-    "what_to_look_for": "Blink the first and last visit. The bright star in the blue circle shifts upward (north) by about two pixels. The faint stars around it stay put.",
+    "hook": "The fastest-moving star in our sky. Between 2010 and 2026 it walked almost three arcminutes north.",
+    "best_band": 6,
+    "what_to_look_for": "The blink opens on WISE (2010, an older NASA infrared telescope) against SPHEREx (2026) at about the same wavelength. The bright star in the circle jumps 27 pixels north; every other star stays put. Untick 'Include WISE' to compare SPHEREx visits only: then the shift is about 1.7 pixels per year, easiest to see in Difference.",
     "what_it_is": "Barnard's Star is a small red dwarf about 6 light-years away, one of the Sun's nearest neighbours. It crosses 10.4 arcseconds of sky per year (Gaia DR3), faster than any other star. In SPHEREx's 6.2-arcsecond pixels that is close to two pixels per year.",
     "answer": "The wanderer is Barnard's Star, in the centre. It moves about 10 arcseconds north each year because it is so close to us.",
-    "honest": "The star is very bright for SPHEREx and some frames flag its central pixels; the motion is about two pixels over the whole time span, so look carefully, or use the Difference mode where it shows as a black-white pair."
+    "honest": "The star is very bright for SPHEREx and some frames flag its central pixels; the motion is about two pixels over the whole time span, so look carefully, or use the Difference mode where it shows as a black-white pair.",
+    "wise_default": true
    }
   },
   {
@@ -59,12 +60,13 @@
    "astrometry_source": "Position: AllWISE designation 08h55m10.831s -07d14m42.53s as given in the challenge (epoch assumed 2010.5). Motion: Luhman & Esplin 2016 (AJ 152, 78) as transcribed by the Y Dwarf Compendium; not checked against the paper.",
    "size_deg": 0.2,
    "story": {
-    "hook": "The coldest brown dwarf known, 7 light-years away. A faint dot creeps west — but watch out for its neighbour.",
-    "best_band": 5,
-    "what_to_look_for": "Pick D5 (3.8–4.4 µm) or D6 (4.4–5.0 µm), where cold brown dwarfs glow, and blink the first and last visit. A faint dot inside the blue circle shifts to the right (west) by about one pixel per year. Then switch to D1 or D2: the light you see near the circle there comes from a different, ordinary star 7.8 arcseconds away that does not move. Tip: the challenge's coordinates are from 2010; since then WISE 0855 has moved about 2 arcminutes west, which is why the circle is not at the old position.",
+    "hook": "The coldest brown dwarf known, 7 light-years away. Watch it cross two arcminutes of sky since 2010.",
+    "best_band": 6,
+    "what_to_look_for": "The blink opens on WISE (2010) against SPHEREx (2026) at 4.4–5.0 µm, where cold brown dwarfs glow. The faint dot in the circle jumps 21 pixels west (to the right). Between SPHEREx visits alone it moves about 1.3 pixels per year. In the short-wavelength bands (D1–D3) it is invisible; the light near the circle there is an ordinary star 7.8 arcseconds away that does not move.",
     "what_it_is": "WISE 0855−0714 is a brown dwarf about 7 light-years away, roughly as cold as Earth's North Pole in winter. It was found in 2014 because it moves fast across the sky in WISE images (about 8 arcseconds per year). It is almost invisible at short infrared wavelengths and gives off most of its light near 4.5 µm.",
     "answer": "WISE 0855 is the faint dot in the circle in the 3.8–5 µm bands; it shifts west by about 1.3 pixels per year. The steady star just beside it is an unrelated Gaia star (G = 16.3).",
-    "honest": "This is near the limit of SPHEREx. In the 3.8–5 µm bands, a faint source sits within about half a pixel of the predicted position and shifts west between visits by about the predicted amount. That is consistent with SPHEREx seeing WISE 0855, but we have not proven it: a background star 7.8 arcseconds away blends with it, and the signal in single frames is weak. At 0.75–3.8 µm the light at the circle is mostly that background star. For the same reason, its brightness chart is not reliable: the measuring circle includes part of the neighbouring star."
+    "honest": "This is near the limit of SPHEREx. In the 3.8–5 µm bands a faint source sits within about half a pixel of the predicted position and shifts west between SPHEREx visits by about the predicted amount, and from WISE (2010) to SPHEREx (2026) it moved a measured 20.6 pixels against 21.1 predicted. That is good evidence the dot is WISE 0855 itself. The signal in single SPHEREx frames is weak, and an unrelated star 7.8 arcseconds away blends with it at 0.75–3.8 µm, where the light at the circle is mostly that star. For the same reason, its brightness chart is not reliable: the measuring circle includes part of the neighbouring star.",
+    "wise_default": true
    }
   },
   {

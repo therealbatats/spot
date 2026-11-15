@@ -17,12 +17,13 @@
   "plx": 449.0
  },
  "story": {
-  "hook": "The coldest brown dwarf known, 7 light-years away. A faint dot creeps west \u2014 but watch out for its neighbour.",
-  "best_band": 5,
-  "what_to_look_for": "Pick D5 (3.8\u20134.4 \u00b5m) or D6 (4.4\u20135.0 \u00b5m), where cold brown dwarfs glow, and blink the first and last visit. A faint dot inside the blue circle shifts to the right (west) by about one pixel per year. Then switch to D1 or D2: the light you see near the circle there comes from a different, ordinary star 7.8 arcseconds away that does not move. Tip: the challenge's coordinates are from 2010; since then WISE 0855 has moved about 2 arcminutes west, which is why the circle is not at the old position.",
+  "hook": "The coldest brown dwarf known, 7 light-years away. Watch it cross two arcminutes of sky since 2010.",
+  "best_band": 6,
+  "what_to_look_for": "The blink opens on WISE (2010) against SPHEREx (2026) at 4.4\u20135.0 \u00b5m, where cold brown dwarfs glow. The faint dot in the circle jumps 21 pixels west (to the right). Between SPHEREx visits alone it moves about 1.3 pixels per year. In the short-wavelength bands (D1\u2013D3) it is invisible; the light near the circle there is an ordinary star 7.8 arcseconds away that does not move.",
   "what_it_is": "WISE 0855\u22120714 is a brown dwarf about 7 light-years away, roughly as cold as Earth's North Pole in winter. It was found in 2014 because it moves fast across the sky in WISE images (about 8 arcseconds per year). It is almost invisible at short infrared wavelengths and gives off most of its light near 4.5 \u00b5m.",
   "answer": "WISE 0855 is the faint dot in the circle in the 3.8\u20135 \u00b5m bands; it shifts west by about 1.3 pixels per year. The steady star just beside it is an unrelated Gaia star (G = 16.3).",
-  "honest": "This is near the limit of SPHEREx. In the 3.8\u20135 \u00b5m bands, a faint source sits within about half a pixel of the predicted position and shifts west between visits by about the predicted amount. That is consistent with SPHEREx seeing WISE 0855, but we have not proven it: a background star 7.8 arcseconds away blends with it, and the signal in single frames is weak. At 0.75\u20133.8 \u00b5m the light at the circle is mostly that background star. For the same reason, its brightness chart is not reliable: the measuring circle includes part of the neighbouring star."
+  "honest": "This is near the limit of SPHEREx. In the 3.8\u20135 \u00b5m bands a faint source sits within about half a pixel of the predicted position and shifts west between SPHEREx visits by about the predicted amount, and from WISE (2010) to SPHEREx (2026) it moved a measured 20.6 pixels against 21.1 predicted. That is good evidence the dot is WISE 0855 itself. The signal in single SPHEREx frames is weak, and an unrelated star 7.8 arcseconds away blends with it at 0.75\u20133.8 \u00b5m, where the light at the circle is mostly that star. For the same reason, its brightness chart is not reliable: the measuring circle includes part of the neighbouring star.",
+  "wise_default": true
  },
  "bands": [
   {
@@ -5740,6 +5741,27 @@
    ]
   },
   "model": "circular orbit, inclination = field ecliptic latitude, prograde, Kepler rate; observer = Earth centre"
+ },
+ "wise": {
+  "png": "wise_w2.png",
+  "mjd": 55416.42,
+  "utc": "2010-08-08",
+  "utc_range": [
+   "2010-05-03",
+   "2010-11-13"
+  ],
+  "label": "WISE, 2010-05-03 to 2010-11-13 (an older NASA infrared telescope, 267 exposures added), 4.6 \u00b5m. Compare positions only, not brightness.",
+  "coadd_id": "1342m076_ac51",
+  "source_uri": "https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/13/1342/1342m076_ac51/1342m076_ac51-w2-int-3.fits",
+  "band": "W2 (4.6 um)",
+  "pred_xy": [
+   37.53,
+   59.64
+  ],
+  "meas_xy": [
+   38.4,
+   60.51
+  ]
  },
  "gaia": [
   [

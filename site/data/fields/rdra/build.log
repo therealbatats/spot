@@ -8,3 +8,4 @@
 [rdra] D4: dropped visit(s) [2] from the band view (too little shared wavelength range)
 [rdra] D5: dropped visit(s) [7, 6] from the band view (too little shared wavelength range)
 [rdra] D6: dropped visit(s) [9] from the band view (too little shared wavelength range)
+[rdra] WISE epoch 2010-09-12 pred [57.95, 58.02] meas None
