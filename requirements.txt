@@ -1,0 +1,11 @@
+# SPOT pipeline (Python 3.10+). Exact versions used on November 15, 2026.
+astropy==8.0.2
+astroquery==0.4.11
+reproject==0.21.0
+numpy==2.5.4
+scipy==1.18.1
+pillow==13.0.0
+requests==2.34.2
+fsspec==2026.9.0
+aiohttp==3.14.5
+pyvo==1.10.0

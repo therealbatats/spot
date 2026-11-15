@@ -1,0 +1,139 @@
+{
+ "_note": "Written with AI assistance under the direction of Ali (team AITHMAC). Astrometry: Gaia DR3 via MAST TAP (queried Nov 15 2026) unless stated. Positions are propagated to each frame's date with astropy (proper motion + parallax).",
+ "fields": [
+  {
+   "id": "barnard",
+   "title": "Barnard's Star",
+   "kind": "mover",
+   "ra": 269.44850252543836,
+   "dec": 4.739420051112412,
+   "epoch": 2016.0,
+   "pmra": -801.5509783684709,
+   "pmdec": 10362.394206546573,
+   "plx": 546.975939730948,
+   "rv": -110.46822357177734,
+   "astrometry_source": "Gaia DR3 4472832130942575872 (MAST)",
+   "size_deg": 0.2,
+   "story": {
+    "hook": "The fastest-moving star in our sky. Watch it creep north between visits.",
+    "best_band": 3,
+    "what_to_look_for": "Blink the first and last visit. The bright star in the blue circle shifts upward (north) by about two pixels. The faint stars around it stay put.",
+    "what_it_is": "Barnard's Star is a small red dwarf about 6 light-years away, one of the Sun's nearest neighbours. It crosses 10.4 arcseconds of sky per year (Gaia DR3), faster than any other star. In SPHEREx's 6.2-arcsecond pixels that is close to two pixels per year.",
+    "answer": "The wanderer is Barnard's Star, in the centre. It moves about 10 arcseconds north each year because it is so close to us.",
+    "honest": "The star is very bright for SPHEREx and some frames flag its central pixels; the motion is about two pixels over the whole time span, so look carefully, or use the Difference mode where it shows as a black-white pair."
+   }
+  },
+  {
+   "id": "epsindb",
+   "title": "Epsilon Indi B (brown-dwarf pair)",
+   "kind": "mover",
+   "ra": 331.07645259656397,
+   "dec": -56.79381206688221,
+   "epoch": 2016.0,
+   "pmra": 3981.97666296105,
+   "pmdec": -2466.8318147663504,
+   "plx": 270.6580324694526,
+   "rv": 0.0,
+   "astrometry_source": "Gaia DR3 6412596012146801152 (MAST); unresolved Ba+Bb",
+   "size_deg": 0.3,
+   "story": {
+    "hook": "Two brown dwarfs, too cold to be stars, travelling with a bright star. They shine at 4 µm.",
+    "best_band": 5,
+    "what_to_look_for": "Pick D5 (3.8–4.4 µm): the brown-dwarf pair is the bright dot in the blue circle. Compare it with D1, where it is much fainter: brown dwarfs give off most of their light in the infrared. Then use Difference between the first and last visit: the pair leaves a faint black-and-white pair because it moved about one pixel to the south-east (down and to the left). The very bright star Epsilon Indi A is about 7 arcminutes to the west (right), near the edge.",
+    "what_it_is": "Epsilon Indi Ba and Bb are two brown dwarfs orbiting each other, about 12 light-years away, and together they orbit the star Epsilon Indi A from far away. Brown dwarfs are 'failed stars': too small to shine by fusion, so they glow mostly in infrared. They move 4.7 arcseconds per year across the sky (Gaia DR3).",
+    "answer": "The brown-dwarf pair is in the centre. Between May 2025 and September 2026 it moved about one SPHEREx pixel (6.5 arcseconds) to the south-east, exactly where Gaia predicts.",
+    "honest": "SPHEREx cannot separate the two brown dwarfs (they are about 0.1 arcsecond apart; one pixel is 6.2). The motion over our 1.4-year span is about one pixel, so it is subtle by eye; our measured positions agree with the Gaia prediction to about a tenth of a pixel (see VALIDATION.md). The brightness chart shows jumps of up to about 30% in the 1.1–2.4 µm bands at single visits that the 3.8–5 µm bands do not show; we treat these as measurement artifacts (for example light from the very bright star Epsilon Indi A), not as real variability."
+   }
+  },
+  {
+   "id": "wise0855",
+   "title": "WISE 0855−0714 (coldest known brown dwarf)",
+   "kind": "mover",
+   "ra": 133.79512916666667,
+   "dec": -7.245147222222222,
+   "epoch": 2010.5,
+   "pmra": -8188.0,
+   "pmdec": 680.0,
+   "plx": 449.0,
+   "rv": 0.0,
+   "astrometry_source": "Position: AllWISE designation 08h55m10.831s -07d14m42.53s as given in the challenge (epoch assumed 2010.5). Motion: Luhman & Esplin 2016 (AJ 152, 78) as transcribed by the Y Dwarf Compendium; not checked against the paper.",
+   "size_deg": 0.2,
+   "story": {
+    "hook": "The coldest brown dwarf known, 7 light-years away. A faint dot creeps west — but watch out for its neighbour.",
+    "best_band": 5,
+    "what_to_look_for": "Pick D5 (3.8–4.4 µm) or D6 (4.4–5.0 µm), where cold brown dwarfs glow, and blink the first and last visit. A faint dot inside the blue circle shifts to the right (west) by about one pixel per year. Then switch to D1 or D2: the light you see near the circle there comes from a different, ordinary star 7.8 arcseconds away that does not move. Tip: the challenge's coordinates are from 2010; since then WISE 0855 has moved about 2 arcminutes west, which is why the circle is not at the old position.",
+    "what_it_is": "WISE 0855−0714 is a brown dwarf about 7 light-years away, roughly as cold as Earth's North Pole in winter. It was found in 2014 because it moves fast across the sky in WISE images (about 8 arcseconds per year). It is almost invisible at short infrared wavelengths and gives off most of its light near 4.5 µm.",
+    "answer": "WISE 0855 is the faint dot in the circle in the 3.8–5 µm bands; it shifts west by about 1.3 pixels per year. The steady star just beside it is an unrelated Gaia star (G = 16.3).",
+    "honest": "This is near the limit of SPHEREx. In the 3.8–5 µm bands, a faint source sits within about half a pixel of the predicted position and shifts west between visits by about the predicted amount. That is consistent with SPHEREx seeing WISE 0855, but we have not proven it: a background star 7.8 arcseconds away blends with it, and the signal in single frames is weak. At 0.75–3.8 µm the light at the circle is mostly that background star. For the same reason, its brightness chart is not reliable: the measuring circle includes part of the neighbouring star."
+   }
+  },
+  {
+   "id": "rwaur",
+   "title": "RW Aurigae (young variable star)",
+   "kind": "variable",
+   "ra": 76.95608119552952,
+   "dec": 30.401204589097233,
+   "epoch": 2016.0,
+   "pmra": 2.6406431770317083,
+   "pmdec": -27.397582540455325,
+   "plx": 6.406249329219477,
+   "rv": -20.937068939208984,
+   "astrometry_source": "Gaia DR3 156430822114424576 (MAST)",
+   "size_deg": 0.2,
+   "story": {
+    "hook": "A young star wrapped in a disturbed dusty disk. Its infrared glow faded over the year.",
+    "best_band": 6,
+    "what_to_look_for": "Pick D6 (4.4–5.0 µm) and blink the first and last visit: the star in the circle looks fainter in September 2026 than in September 2025. Open 'Brightness over time' to compare all bands.",
+    "what_it_is": "RW Aurigae is a young double star about 500 light-years away, still surrounded by the dusty disk it formed from. Since 2010 it has had repeated deep dimming events, explained as dust in its disturbed disk (Rodriguez et al. 2013, 2016; Schneider et al. 2015). At 2.4–5 µm much of the light comes from warm dust in that disk, not from the star itself.",
+    "answer": "The star in the centre is RW Aurigae. It does not move; its infrared glow changed.",
+    "honest": "RW Aurigae is bright enough to saturate SPHEREx's centre pixels, so we measure brightness from its unsaturated glow (a ring 3–6 pixels out). With that method, the 2.4–3.8, 3.8–4.4 and 4.4–5.0 µm bands all fall by a factor of about 1.7–1.9 between September 2025 and September 2026, more than the method's scatter on Barnard's Star (2–15% in those bands). The shorter wavelengths change by less than about 22%, which is within our measurement noise. The two stars of RW Aur (1.4 arcseconds apart) fall in one pixel, so we see their combined light. This is a measurement of a known variable star, not a discovery."
+   }
+  },
+  {
+   "id": "rdra",
+   "title": "R Draconis (Mira variable)",
+   "kind": "variable",
+   "ra": 248.1673783672889,
+   "dec": 66.75500674547219,
+   "epoch": 2016.0,
+   "pmra": -20.642811719160797,
+   "pmdec": 6.148818852711324,
+   "plx": 1.2509180143740992,
+   "rv": 0.0,
+   "astrometry_source": "Gaia DR3 1648328016354496384 (MAST)",
+   "size_deg": 0.2,
+   "story": {
+    "hook": "A pulsating red giant. SPHEREx watched it almost every month: play the time-lapse.",
+    "best_band": 3,
+    "what_to_look_for": "Choose Timeline and press Play: R Draconis lies near SPHEREx's deep-survey area, so we show one image per month (where that detector covered it). Then open 'Brightness over time': the curves rise and fall over months, at different times in different bands.",
+    "what_it_is": "R Draconis is a Mira variable: an old red giant that swells and shrinks, changing its visible brightness from about magnitude 6.7 to 13.2 over a cycle of roughly 246 days (published variable-star tables; not independently checked). In the infrared the changes are smaller but still large.",
+    "answer": "The star in the centre is R Draconis. It does not move; it changes brightness.",
+    "honest": "R Draconis is far too bright for SPHEREx: its centre and inner glow are saturated in every image, so the picture shows a flat white blob and we measure brightness from its outer glow (a ring 6–10 pixels out). Using that method, its brightness at 0.75–1.1 µm fell by about half from July to October 2025 and rose about 2.7 times by August 2026; at 1.6–2.4 µm it peaked around February 2026 and fell by about 2.2 times by April 2026. Those changes are much larger than the method's scatter on a non-pulsating star (Barnard's Star: 2–37%), and they rise and fall smoothly from month to month, as a pulsating star should. Treat the exact numbers as rough."
+   },
+   "cap": 6,
+   "epoch_bin_days": 30
+  },
+  {
+   "id": "m101",
+   "title": "Pinwheel Galaxy M101 (control)",
+   "kind": "control",
+   "ra": 210.80227,
+   "dec": 54.34895,
+   "epoch": 2016.0,
+   "pmra": 0,
+   "pmdec": 0,
+   "plx": 0,
+   "rv": 0,
+   "astrometry_source": "IRSA SPHEREx cutouts tutorial example position",
+   "size_deg": 0.2,
+   "story": {
+    "hook": "Our control: a galaxy 20 million light-years away. Nothing here should change.",
+    "best_band": 2,
+    "what_to_look_for": "Blink the visits. The galaxy and the stars around it should look the same. Any dot that appears in only one frame is most likely a cosmic ray or a flagged pixel, not a discovery.",
+    "what_it_is": "The Pinwheel Galaxy (M101) is a spiral galaxy far beyond our own. At that distance nothing can move enough to see in a year. We include it to show what 'no change' looks like and to catch our own processing errors.",
+    "answer": "Nothing real changes here. That is the point of a control field.",
+    "honest": "Small differences in background and noise between visits are expected."
+   }
+  }
+ ]
+}
