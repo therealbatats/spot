@@ -108,12 +108,14 @@
     "hook": "A pulsating red giant. SPHEREx watched it almost every month: play the time-lapse.",
     "best_band": 3,
     "what_to_look_for": "Choose Timeline and press Play: R Draconis lies near SPHEREx's deep-survey area, so we show one image per month (where that detector covered it). Then open 'Brightness over time': the curves rise and fall over months, at different times in different bands.",
-    "what_it_is": "R Draconis is a Mira variable: an old red giant that swells and shrinks, changing its visible brightness from about magnitude 6.7 to 13.2 over a cycle of roughly 246 days (published variable-star tables; not independently checked). In the infrared the changes are smaller but still large.",
+    "what_it_is": "R Draconis is a Mira variable: an old red giant that swells and shrinks. Its visible brightness swings between magnitude 6.7 and 13.2 over a cycle of 246.12 days (AAVSO Variable Star Index, VSX). In the infrared the changes are smaller but still large.",
     "answer": "The star in the centre is R Draconis. It does not move; it changes brightness.",
     "honest": "R Draconis is far too bright for SPHEREx: its centre and inner glow are saturated in every image, so the picture shows a flat white blob and we measure brightness from its outer glow (a ring 6–10 pixels out). Using that method, its brightness at 0.75–1.1 µm fell by about half from July to October 2025 and rose about 2.7 times by August 2026; at 1.6–2.4 µm it peaked around February 2026 and fell by about 2.2 times by April 2026. Those changes are much larger than the method's scatter on a non-pulsating star (Barnard's Star: 2–37%), and they rise and fall smoothly from month to month, as a pulsating star should. Treat the exact numbers as rough."
    },
    "cap": 6,
-   "epoch_bin_days": 30
+   "epoch_bin_days": 30,
+   "period_days": 246.12,
+   "max_epoch_jd": 2457370
   },
   {
    "id": "m101",

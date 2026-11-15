@@ -87,13 +87,34 @@ def fill_nan(img):
     return a
 
 
-def clean_frame(meta, name, gw, shape):
+BACKGROUND_METHOD = ("sigma-clipped median of the cutout's outer border (outer 20% on each side); "
+                     "noise = sigma-clipped standard deviation of the same border pixels; same method for every frame")
+
+
+def load_uniform(meta, name):
+    """Cached cutout with ONE background method for every frame (the ZODI model and VARIANCE plane, present
+    only for frames read with the early full extractor, are ignored): background = sigma-clipped median of
+    the outer border, noise = sigma-clipped std of the border, used as a constant variance."""
     a = F.load_arrays(meta, name)
-    img = a["img"].astype(np.float64) - a["zod"]  # zodi model (full extractor) or zeros (lean extractor)
+    img = a["img"].astype(np.float64)
+    n = img.shape[0]
+    b = max(4, int(0.2 * n))
+    ring = np.ones_like(img, bool)
+    ring[b:n - b, b:n - b] = False
+    ok = ring & np.isfinite(img) & ((a["flg"] & F.BAD_MASK) == 0)
+    _, med, std = sigma_clipped_stats(img[ok], sigma=3, maxiters=5)
+    a["img"] = img - med
+    a["zod"] = np.zeros_like(img)
+    a["var"] = np.full(img.shape, std ** 2)
+    return a
+
+
+def clean_frame(meta, name, gw, shape):
+    a = load_uniform(meta, name)
+    img = a["img"].copy()  # already background-subtracted (outer-border median)
     bad = F.display_bad(a["flg"]) | ~np.isfinite(img)
     img[bad] = np.nan
-    _, med, std = sigma_clipped_stats(img[np.isfinite(img)], sigma=3, maxiters=5)
-    img -= med  # robust residual background
+    std = float(np.sqrt(a["var"].flat[0]))
     var = a["var"].astype(np.float64)
     var[bad] = np.nan
     src = WCS(fits.Header.fromstring(meta["wcs_header"], sep="\n"))
@@ -467,7 +488,8 @@ def build(t, half=None):
              "size_deg": size, "grid_px": shape[0], "pixel_scale_arcsec": 6.15,
              "astrometry_source": t.get("astrometry_source", ""),
              "catalog": {k: t.get(k) for k in ("ra", "dec", "epoch", "pmra", "pmdec", "plx")},
-             "story": t.get("story", {}), "bands": [], "channels": [], "frames": []}
+             "story": t.get("story", {}), "bands": [], "channels": [], "frames": [],
+             "background_method": BACKGROUND_METHOD}
 
     # ---- frame table (provenance for every frame used)
     for m in metas:
@@ -647,6 +669,59 @@ def build(t, half=None):
                     it["synth_grid_um"] = [round(float(grid[0]), 3), round(float(grid[-1]), 3)]
             it["pred_xy"] = [round(float(x), 2), round(float(shape[0] - 1 - y), 2)]
             it["meas_xy"] = [round(c[0], 2), round(float(shape[0] - 1 - c[1]), 2)] if c else None
+    # ---- one light curve: every frame's brightness divided by the star's own time-median at that wavelength
+    lc = []
+    for b in field["bands"]:
+        det = b["detector"]
+        fk = f"{b['_wing']}_ujy" if b.get("_wing") else "flux_ujy"
+        ek = f"{b['_wing']}_err_ujy" if b.get("_wing") else "err_ujy"
+        pts = [(m["mjd"], m["wavelength_um"], m["phot"][fk], m["phot"].get(ek) or 0.0) for m in metas
+               if m["detector"] == det and m.get("phot") and m["phot"].get(fk) is not None]
+        if len(pts) < 4:
+            continue
+        pts.sort(key=lambda r: r[1])
+        wl = np.array([r[1] for r in pts]); fl = np.array([r[2] for r in pts])
+        edges = np.linspace(wl.min() - 1e-6, wl.max() + 1e-6, max(3, min(8, len(pts) // 4)) + 1)
+        cen, med = [], []
+        for lo_, hi_ in zip(edges[:-1], edges[1:]):
+            sel = (wl >= lo_) & (wl < hi_)
+            if sel.sum() >= 2:
+                cen.append(wl[sel].mean()); med.append(np.median(fl[sel]))
+        if len(cen) < 2 or min(med) <= 0:
+            continue
+        for mjd, w, fx, er in pts:
+            ref = float(np.interp(w, cen, med))
+            lc.append({"mjd": round(mjd, 4), "det": det, "wl": round(w, 3), "ratio": round(fx / ref, 4),
+                       "err": round(er / ref, 4), "method": b.get("_wing") or "core"})
+    field["lightcurve"] = sorted(lc, key=lambda r: r["mjd"])
+    if t.get("period_days") and len(lc) >= 6:
+        # log10(ratio) = c_d + A_d * cos(2 pi (t - t0) / P): period fixed at the catalogue value, one shared
+        # phase t0 (grid search), a separate offset and amplitude per detector (Mira amplitudes depend on wavelength)
+        P = t["period_days"]
+        good = [r for r in lc if r["ratio"] > 0]
+        tt = np.array([r["mjd"] for r in good]); yv = np.log10([r["ratio"] for r in good]); dd = np.array([r["det"] for r in good])
+        best = None
+        for t0 in np.linspace(0, P, 200, endpoint=False):
+            ph = np.cos(2 * np.pi * (tt - t0) / P)
+            res, pars = 0.0, {}
+            for d in np.unique(dd):
+                sel = dd == d
+                X = np.c_[np.ones(sel.sum()), ph[sel]]
+                cf, *_ = np.linalg.lstsq(X, yv[sel], rcond=None)
+                if cf[1] < 0:  # amplitude must be positive with a shared maximum time
+                    cf = np.array([yv[sel].mean(), 0.0])
+                res += float(np.sum((yv[sel] - X @ cf) ** 2)); pars[int(d)] = [float(cf[0]), float(cf[1])]
+            if best is None or res < best[0]:
+                best = (res, t0, pars)
+        res, t0, pars = best
+        rms = float(np.sqrt(res / len(yv)))
+        tot = float(np.sqrt(np.mean((yv - np.mean(yv)) ** 2)))
+        jd_max_pred = t0 + 2400000.5
+        field["lc_fit"] = {"period_days": P, "period_source": "AAVSO VSX", "t0_mjd": float(t0), "per_detector": pars,
+                           "rms_log10": rms, "scatter_before_log10": tot,
+                           "max_phase_vs_vsx_days": float(((jd_max_pred - t.get("max_epoch_jd", jd_max_pred)) % P + P / 2) % P - P / 2),
+                           "note": "Fit to our points with the period fixed at the catalogue value: one shared time of maximum, "
+                                   "a separate brightness offset and amplitude for each detector."}
     for b in field["bands"]:
         b.pop("_wing", None)
     field["track"] = track
