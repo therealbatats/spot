@@ -101,10 +101,12 @@ async function init() {
   if (location.hash === "#about") openAbout();
   document.addEventListener("click", e => { if (e.target.closest('a[href="#about"]')) openAbout(); });
   const q = new URLSearchParams(location.search);
+  if (q.get("capture")) document.documentElement.classList.add("cap-" + q.get("capture")); // for still captures (video, deck)
   if (q.get("ra") && q.get("dec")) { $("#raIn").value = q.get("ra"); $("#decIn").value = q.get("dec"); goCoords(q.get("ra"), q.get("dec"), true, q.get("live") === "1"); }
   else if (q.get("field")) {
     await openField(q.get("field"), q);
     if (q.get("px") === "1") { $("#pxOn").checked = true; S.px = true; if (q.get("au")) { S.pxD = +q.get("au"); $("#pxDistVal").textContent = S.pxD; $("#pxDist").value = Math.log10(S.pxD / 100); } openTab("pxPanel"); syncButtons(); pxInfo(); draw(); }
+    if (q.get("tab") && $("#" + q.get("tab"))) { openTab(q.get("tab")); $("#tabs").scrollIntoView(); }
     if (location.hash === "#viewer") $("#viewer").scrollIntoView();
   }
 }
@@ -158,7 +160,7 @@ async function showField(f, meta, q) {
   S.game = null; $("#gameMsg").textContent = ""; $("#gameBtn").textContent = "Start";
   renderBandBtns(); renderDates(); renderExplain(); renderProv(); renderSpectrum(); renderLightCurve(); syncButtons();
   await draw();
-  if (!reduceMotion && seq().length > 1 && (S.mode === "blink" || S.mode === "timeline")) play(); // start moving at once
+  if (!reduceMotion && !(q && q.get("play") === "0") && seq().length > 1 && (S.mode === "blink" || S.mode === "timeline")) play(); // start moving at once
   if (!q) $("#viewer").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
 }
 

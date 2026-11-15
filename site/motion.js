@@ -4,7 +4,8 @@
 "use strict";
 (function () {
   const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const gs = !reduce && window.gsap ? window.gsap : null;
+  const capture = /[?&]capture=/.test(location.search); // still captures: no animations
+  const gs = !reduce && !capture && window.gsap ? window.gsap : null;
   const M = { ok: !!gs };
 
   // A copy of the clicked thumbnail flies to the stage, then disappears at once (no cross-fade over sky data).

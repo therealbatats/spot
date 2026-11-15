@@ -142,3 +142,6 @@ details.more > summary::-webkit-details-marker, #aboutDetails > summary::-webkit
 .btn, .seg button, .chanbtns button, input, select { border-radius: 999px; }
 .rulerbar button { border-radius: 0; }
 @media (prefers-reduced-motion: reduce) { .btn:active, .seg button:active, .chanbtns button:active, .rulerbar button:active, .tabs button:active { transform: none; } }
+.cap-viewer .top, .cap-viewer .hero, .cap-viewer .coords, .cap-viewer #sky, .cap-viewer #fields, .cap-tab .top, .cap-tab .hero, .cap-tab .coords, .cap-tab #sky, .cap-tab #fields, .cap-tab .vgrid { display: none !important; }
+.cap-viewer .viewer, .cap-tab .viewer { margin-top: 12px; }
+.cap-globe .top, .cap-globe .hero, .cap-globe .coords { display: none !important; }

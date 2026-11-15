@@ -142,7 +142,7 @@
   if (cardsBox) { tiltCards(); new MutationObserver(tiltCards).observe(cardsBox, { childList: true }); }
 
   /* ---------- Section reveals (GSAP) ---------- */
-  if (window.gsap && "IntersectionObserver" in window) {
+  if (window.gsap && "IntersectionObserver" in window && !/[?&]capture=/.test(location.search)) {
     const els = [...document.querySelectorAll("main > section:not(.hero):not(#viewer), .foot")];
     els.forEach(el => { if (el.getBoundingClientRect().top > innerHeight) gsap.set(el, { opacity: 0, y: 24 }); });
     const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { io.unobserve(en.target);
