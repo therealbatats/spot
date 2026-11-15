@@ -17,6 +17,7 @@
     `Real data: Barnard's Star. WISE ${f.wise.utc_range[0]} to ${f.wise.utc_range[1]} (4.6 µm) and SPHEREx ${last.utc_first.slice(0, 10)} (${last.wl_min_um}–${last.wl_max_um} µm). Tap to open.`;
   const pW = f.wise.meas_xy || f.wise.pred_xy, pS = last.meas_xy || last.pred_xy;
   let phase = 0, playing = !reduce, timer = null;
+  const intro = { p: (window.gsap && !reduce) ? 0 : 1 }; // wordmark draw-in progress (GSAP), 1 = fully drawn
   function draw() {
     const ctx = cv.getContext("2d"), W = cv.clientWidth * devicePixelRatio, H = cv.clientHeight * devicePixelRatio;
     cv.width = W; cv.height = H;
@@ -30,14 +31,16 @@
     // wordmark: S P (ring) T, the ring centred on the 2010 position
     const rx = (pW[0] + 0.5 - sx) * s, ry = (pW[1] + 0.5 - sy) * s, R = 0.075 * hgrid * s, lw = Math.max(3, R * 0.2);
     ctx.strokeStyle = "#FFFFFF"; ctx.lineWidth = lw; ctx.lineCap = "square"; ctx.shadowColor = "#000000"; ctx.shadowBlur = 6;
-    ctx.beginPath(); ctx.arc(rx, ry, R, 0, 2 * Math.PI); ctx.stroke();
+    const p = intro.p;
+    ctx.beginPath(); ctx.arc(rx, ry, R, -Math.PI / 2, -Math.PI / 2 + 2 * Math.PI * Math.min(1, p * 1.3)); ctx.stroke();
+    if (p < 1) ctx.setLineDash([p * 8 * R, 8 * R + 1]);
     const cap = 2 * R, gap = R * 0.55, Lw = cap * 0.62;
     const xP = rx - R - gap - Lw, xS = xP - gap - Lw, xT = rx + R + gap, top = ry - R, bot = ry + R, mid = ry;
     ctx.beginPath(); // S
     ctx.moveTo(xS + Lw, top); ctx.lineTo(xS, top); ctx.lineTo(xS, mid); ctx.lineTo(xS + Lw, mid); ctx.lineTo(xS + Lw, bot); ctx.lineTo(xS, bot);
     ctx.moveTo(xP, bot); ctx.lineTo(xP, top); ctx.lineTo(xP + Lw, top); ctx.lineTo(xP + Lw, mid); ctx.lineTo(xP, mid); // P
     ctx.moveTo(xT, top); ctx.lineTo(xT + Lw * 1.1, top); ctx.moveTo(xT + Lw * 0.55, top); ctx.lineTo(xT + Lw * 0.55, bot); // T
-    ctx.stroke(); ctx.shadowBlur = 0;
+    ctx.stroke(); ctx.setLineDash([]); ctx.shadowBlur = 0;
     ctx.fillStyle = "#FFFFFF"; ctx.font = `600 ${Math.max(13, 0.022 * W)}px Plex, system-ui`;
     ctx.fillText(phase ? "SPHEREx " + last.utc_first.slice(0, 4) : "WISE " + f.wise.utc.slice(0, 4), 16, 16 + Math.max(13, 0.022 * W));
   }
@@ -46,5 +49,7 @@
   btn.addEventListener("click", e => { e.stopPropagation(); setPlay(!playing); });
   cv.addEventListener("click", () => { if (window.openField) { openField("barnard"); } });
   window.addEventListener("resize", draw);
-  draw(); setPlay(playing);
+  draw();
+  if (intro.p < 1) { btn.textContent = "Pause"; window.gsap.to(intro, { p: 1, duration: 1.2, ease: "power2.out", onUpdate: draw, onComplete: () => setPlay(true) }); }
+  else setPlay(playing);
 })();
