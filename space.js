@@ -71,6 +71,7 @@
   const io = new IntersectionObserver(es => es.forEach(e => {
     if (!e.isIntersecting) return; io.unobserve(e.target);
     gs.from(e.target.querySelectorAll(".w > span"), { yPercent: 110, opacity: 0, duration: 0.8, ease: "power4.out", stagger: 0.06 });
+    const sp = e.target.querySelectorAll(".w > span"); setTimeout(() => gs.set(sp, { clearProps: "all" }), 2500); // never leave a heading hidden
   }), { rootMargin: "0px 0px -8% 0px" });
   heads.forEach(h => io.observe(h));
 
