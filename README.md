@@ -16,7 +16,7 @@ SPOT (Sky Patches Over Time) is a free public website that shows real images fro
 - **Compare modes:** Blink, Swipe, Difference (B − A), Timeline (a little video), Add all.
 - **Two kinds of comparison:** *whole detector band* (all frames one of SPHEREx's six detectors took during a visit, added for signal-to-noise) and *one exact wavelength* (single frames whose wavelength at the target agrees to within half a filter width).
 - **Spectrum on the fly:** brightness of the target in every frame, plotted against wavelength and coloured by date.
-- **WISE 2010 ↔ SPHEREx 2026:** for the fast movers, blink an AllWISE image from 2010 against SPHEREx on the same grid. Barnard's Star moves a measured 27.1 px (predicted 27.3), WISE 0855 20.6 px (predicted 21.1).
+- **WISE 2010 ↔ SPHEREx 2026:** for the fast movers, blink an AllWISE image from 2010 against SPHEREx on the same grid. Barnard's Star moves a measured 27.1 px (predicted 27.3), WISE 0855 20.7 px (predicted 20.9).
 - **Overlays:** predicted target position for each date (proper motion + parallax), Gaia DR3 stars moved to the image date, flagged/missing pixels.
 - **Provenance:** every frame with date, detector, wavelength, flagged-pixel fraction and a link to the original file.
 - **Spot the wanderer:** a small game: markers hidden, tap what moved.
