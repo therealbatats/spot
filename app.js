@@ -68,8 +68,10 @@ function seq() {
   }
   const b = band();
   if (!b) return [];
-  return b.epochs.map((e, i) => ({ i, png: e.png, epoch: e.epoch, utc: e.utc_first, mjd: e.mjd_mean, pred: e.pred_xy,
-    label: `${fmtDate(e.utc_first)}${e.utc_last.slice(0, 10) !== e.utc_first.slice(0, 10) ? " → " + fmtDate(e.utc_last) : ""} · ${e.n_frames} frames added · ${e.wl_min_um}–${e.wl_max_um} µm${partial(b, e) ? " · ⚠ covers only part of this band, so colour differences can look like brightness changes" : ""}`, e }));
+  const wiseItem = (S.wiseOn && S.field.wise) ? [{ i: 0, png: S.field.wise.png, epoch: 0, utc: S.field.wise.utc + "T00:00:00Z", mjd: S.field.wise.mjd,
+    pred: S.field.wise.pred_xy, wise: true, label: S.field.wise.label }] : [];
+  return wiseItem.concat(b.epochs.map((e, i) => ({ i: i + wiseItem.length, png: e.png, epoch: e.epoch, utc: e.utc_first, mjd: e.mjd_mean, pred: e.pred_xy,
+    label: `SPHEREx ${fmtDate(e.utc_first)}${e.utc_last.slice(0, 10) !== e.utc_first.slice(0, 10) ? " → " + fmtDate(e.utc_last) : ""} · ${e.n_frames} frames added · ${e.wl_min_um}–${e.wl_max_um} µm${partial(b, e) ? " · ⚠ covers only part of this band, so colour differences can look like brightness changes" : ""}`, e })));
 }
 function partial(b, e) {
   const full = Math.max(...b.epochs.map(x => x.wl_max_um - x.wl_min_um));
@@ -137,6 +139,8 @@ async function showField(f, meta, q) {
     if (q.get("chan")) S.chan = q.get("chan");
     if (q.get("mode")) S.mode = q.get("mode");
   }
+  S.wiseOn = !!(f.wise && f.story && f.story.wise_default);
+  if (q && q.get("wise")) S.wiseOn = q.get("wise") === "1" && !!f.wise;
   if (!band()) S.det = f.bands[0].detector;
   if (S.data === "chan" && !f.channels.length) S.data = "band";
   const n = seq().length;
@@ -172,7 +176,7 @@ function resetDates() { const n = seq().length; S.a = 0; S.b = Math.max(0, n - 1
 
 function renderDates() {
   const items = seq();
-  const opts = items.map((it, i) => `<option value="${i}">${esc(fmtDate(it.utc))} (visit ${it.epoch})</option>`).join("");
+  const opts = items.map((it, i) => `<option value="${i}">${it.wise ? "WISE " + esc(fmtDate(it.utc)) + " (older telescope)" : "SPHEREx " + esc(fmtDate(it.utc)) + " (visit " + it.epoch + ")"}</option>`).join("");
   $("#selA").innerHTML = opts; $("#selB").innerHTML = opts;
   $("#selA").value = S.a; $("#selB").value = S.b;
   const sl = $("#tSlider"); sl.max = Math.max(0, items.length - 1); sl.value = S.t;
@@ -194,6 +198,7 @@ function syncButtons() {
   };
   $("#modeHelp").textContent = help[S.mode];
   $("#rawWrap").hidden = S.mode !== "diff";
+  $("#wiseWrap").hidden = !(S.field && S.field.wise) || S.data !== "band"; $("#wiseOn").checked = !!S.wiseOn;
   $("#playBtn").textContent = S.playing ? "❚❚ Pause" : "▶ Play";
   $("#swipeHandle").hidden = S.mode !== "swipe";
   $("#simBanner").hidden = !S.px;
@@ -206,6 +211,7 @@ function updateURL() {
   const q = new URLSearchParams({ field: S.fieldId, data: S.data, mode: S.mode, a: S.a, b: S.b, t: S.t });
   if (S.data === "band") q.set("det", S.det); else q.set("chan", S.chan);
   if (S.px) { q.set("px", 1); q.set("au", S.pxD); }
+  if (S.field && S.field.wise) q.set("wise", S.wiseOn ? 1 : 0);
   history.replaceState(null, "", "?" + q.toString() + location.hash);
 }
 
@@ -265,6 +271,12 @@ function flagged(im) {
 
 function dpng(d) { return (!S.rawDiff && d.sig_png) ? d.sig_png : d.png; }
 function findDiff(A, B) {
+  if (A.wise || B.wise) {
+    const items = seq().filter(x => !x.wise); if (items.length < 2) return null;
+    const r = findDiff(items[0], items[items.length - 1]);
+    if (r) r.note = `Difference only compares SPHEREx with SPHEREx (WISE is a different telescope). Showing ${fmtDate(items[items.length - 1].utc)} minus ${fmtDate(items[0].utc)}.`;
+    return r;
+  }
   if (S.data === "chan") {
     const c = chan(); const d = c.diffs.find(x => x.a === A.i && x.b === B.i);
     if (d) return { png: dpng(d), A, B };
@@ -529,6 +541,7 @@ function bindUI() {
   $("#ovGaia").addEventListener("change", e => { S.ovGaia = e.target.checked; draw(); });
   $("#ovFlags").addEventListener("change", e => { S.ovFlags = e.target.checked; draw(); });
   $("#rawDiff").addEventListener("change", e => { S.rawDiff = e.target.checked; syncButtons(); draw(); });
+  $("#wiseOn").addEventListener("change", e => { S.wiseOn = e.target.checked; resetDates(); });
   $("#gameBtn").addEventListener("click", startGame);
   $("#pxOn").addEventListener("change", e => { S.px = e.target.checked; $("#pxPanel").open = true; syncButtons(); pxInfo(); draw(); });
   $("#pxDist").addEventListener("input", e => { S.pxD = Math.round(100 * Math.pow(10, +e.target.value)); $("#pxDistVal").textContent = S.pxD; pxInfo(); draw(); });

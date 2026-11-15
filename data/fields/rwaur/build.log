@@ -2,3 +2,4 @@
 [rwaur] 205/334 cutouts extracted (1s)
 [rwaur] 205 usable frames in 3 epochs
 [rwaur] cleaned + reprojected (6s)
+[rwaur] WISE epoch 2010-06-08 pred [58.01, 57.93] meas [57.84, 57.88]
