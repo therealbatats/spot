@@ -371,6 +371,21 @@ function drawOverlays(ctx, cur, A, B, items) {
       ctx.fillText(lab, Math.min(x + 5.5 * k, ctx.canvas.width - ctx.measureText(lab).width - 4), y - 4 * k + (j ? 9 * k : 0));
     });
   }
+  // crosshair at the coordinates the visitor typed (ready-made fields only)
+  if (S.typed && S.typed.id === f.id && !hidden) {
+    const g = skyToGrid(S.typed.ra, S.typed.dec), x = (g[0] + 0.5) * k, y = (g[1] + 0.5) * k, a = 3 * k, b = 7 * k;
+    if (isFinite(x) && isFinite(y)) {
+      for (const [col, lw] of [["#000000", 5 / zf], ["#FFFFFF", 2 / zf]]) {
+        ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.beginPath();
+        ctx.moveTo(x - b, y); ctx.lineTo(x - a, y); ctx.moveTo(x + a, y); ctx.lineTo(x + b, y);
+        ctx.moveTo(x, y - b); ctx.lineTo(x, y - a); ctx.moveTo(x, y + a); ctx.lineTo(x, y + b); ctx.stroke();
+      }
+      const lab = "you typed this position"; ctx.font = `600 ${3.6 * k / zf}px Plex, system-ui`; ctx.fillStyle = "#FFFFFF";
+      ctx.shadowColor = "#000000"; ctx.shadowBlur = 4;
+      const tw = ctx.measureText(lab).width; ctx.fillText(lab, Math.max(4, Math.min(x - tw / 2, ctx.canvas.width - tw - 4)), Math.min(y + b + 5 * k / zf, ctx.canvas.height - 4));
+      ctx.shadowBlur = 0;
+    }
+  }
   // Gaia overlay (positions moved to the image date with Gaia proper motions)
   if (S.ovGaia && f.gaia && !hidden) {
     const it = pts[0]; const mjd = it ? itemMJD(it) : null; const yr = mjd ? mjdToYear(mjd) : 2016.0;
@@ -597,8 +612,8 @@ function goCoords(raS, decS, fromURL, fromURLForceLive) {
   let best = null;
   for (const f of S.manifest.fields) { const d = sepDeg(ra, dec, f.ra_deg, f.dec_deg); if (!best || d < best.d) best = { f, d }; }
   if (best && best.d < best.f.size_deg / 2 && !fromURLForceLive) {
-    msg.textContent = `RA ${ra.toFixed(4)}°, Dec ${dec.toFixed(4)}° is inside the ready-made field "${best.f.title}" (${(best.d * 60).toFixed(1)} arcmin from its centre). Opening it.`;
-    openField(best.f.id); return;
+    msg.textContent = `RA ${ra.toFixed(4)}°, Dec ${dec.toFixed(4)}° is inside the ready-made field "${best.f.title}" (${(best.d * 60).toFixed(1)} arcmin from its centre). Opening it. The white crosshair marks the position you typed.`;
+    S.typed = { id: best.f.id, ra, dec }; openField(best.f.id); return;
   }
   if (window.SpotLive && window.SpotLive.available()) { window.SpotLive.run(ra, dec, msg); return; }
   msg.innerHTML = `RA ${ra.toFixed(4)}°, Dec ${dec.toFixed(4)}° is not one of the ready-made fields yet${best ? ` (nearest: ${esc(best.f.title)}, ${best.d.toFixed(1)}° away)` : ""}. Anyone can add it with one command from our open pipeline: <code>python pipeline/make_field.py --ra ${ra.toFixed(5)} --dec ${dec.toFixed(5)} --name myfield</code>`;
