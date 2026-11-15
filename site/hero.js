@@ -50,6 +50,7 @@
   cv.addEventListener("click", () => { if (window.openField) { openField("barnard"); } });
   window.addEventListener("resize", draw);
   draw();
-  if (intro.p < 1) { btn.textContent = "Pause"; window.gsap.to(intro, { p: 1, duration: 1.2, ease: "power2.out", onUpdate: draw, onComplete: () => setPlay(true) }); }
+  if (intro.p < 1) { btn.textContent = "Pause"; window.gsap.to(intro, { p: 1, duration: 1.2, ease: "power2.out", onUpdate: draw, onComplete: () => setPlay(true) });
+    setTimeout(() => { if (intro.p < 1) { window.gsap.killTweensOf(intro); intro.p = 1; draw(); setPlay(true); } }, 2500); }
   else setPlay(playing);
 })();
