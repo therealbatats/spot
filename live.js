@@ -233,7 +233,32 @@
     v.sort((a, b) => a - b); if (!v.length) return [0, 1];
     return [v[Math.floor(v.length * 0.02)], Math.max(v[Math.floor(v.length * 0.998)], v[Math.floor(v.length * 0.02)] + 1e-6)];
   }
-  function toURL(im, G, lo, hi, signed) {
+  // DISPLAY ONLY: fill masked holes (not those touching the border). Next to a bright source -> white,
+  // elsewhere -> local median; in differences -> 0. Filled pixels get alpha 254 so the flag overlay finds them.
+  function displayFill(im, G, hi, signed) {
+    const a = Float32Array.from(im), hole = new Uint8Array(G * G), seen = new Uint8Array(G * G);
+    const stack = [];
+    for (let i = 0; i < G * G; i++) { const x = i % G, y = (i / G) | 0; if (!Number.isFinite(a[i]) && (x === 0 || y === 0 || x === G - 1 || y === G - 1)) { seen[i] = 1; stack.push(i); } }
+    while (stack.length) { const i = stack.pop(), x = i % G, y = (i / G) | 0; for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const X = x + dx, Y = y + dy; if (X < 0 || Y < 0 || X >= G || Y >= G) continue; const j = Y * G + X; if (!seen[j] && !Number.isFinite(a[j])) { seen[j] = 1; stack.push(j); } } }
+    for (let i = 0; i < G * G; i++) if (!Number.isFinite(a[i]) && !seen[i]) hole[i] = 1;
+    if (signed) { for (let i = 0; i < G * G; i++) if (hole[i]) a[i] = 0; return [a, hole]; }
+    for (let it = 0; it < 12; it++) {
+      const upd = []; let left = 0;
+      for (let i = 0; i < G * G; i++) {
+        if (!hole[i] || Number.isFinite(a[i])) continue; left++;
+        const x = i % G, y = (i / G) | 0, v = []; let mx = -Infinity;
+        for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) { const X = x + dx, Y = y + dy; if (X < 0 || Y < 0 || X >= G || Y >= G) continue; const w = a[Y * G + X]; if (Number.isFinite(w)) { v.push(w); if (w > mx) mx = w; } }
+        if (!v.length) continue;
+        v.sort((p, q) => p - q);
+        upd.push([i, mx >= hi ? hi * 4 : v[v.length >> 1]]);
+      }
+      for (const [i, w] of upd) a[i] = w;
+      if (!left) break;
+    }
+    return [a, hole];
+  }
+  function toURL(im0, G, lo, hi, signed) {
+    const [im, hole] = displayFill(im0, G, hi, signed);
     const c = document.createElement("canvas"); c.width = G; c.height = G;
     const ctx = c.getContext("2d"), d = ctx.createImageData(G, G);
     const as = Math.asinh(8);
@@ -242,7 +267,7 @@
       if (!Number.isFinite(v)) { d.data[4 * i + 3] = 0; continue; }
       if (signed) z = 0.5 + 0.5 * Math.max(-1, Math.min(1, v / hi));
       else { z = Math.max(0, Math.min(1, (v - lo) / (hi - lo))); z = Math.asinh(8 * z) / as; }
-      const g = Math.round(z * 255); d.data[4 * i] = d.data[4 * i + 1] = d.data[4 * i + 2] = g; d.data[4 * i + 3] = 255;
+      const g = Math.round(z * 255); d.data[4 * i] = d.data[4 * i + 1] = d.data[4 * i + 2] = g; d.data[4 * i + 3] = hole[i] ? 254 : 255;
     }
     ctx.putImageData(d, 0, 0); return c.toDataURL("image/png");
   }

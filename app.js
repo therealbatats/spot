@@ -147,6 +147,7 @@ async function showField(f, meta, q) {
   S.game = null; $("#gameMsg").textContent = ""; $("#gameBtn").textContent = "Start";
   renderBandBtns(); renderDates(); renderExplain(); renderProv(); renderSpectrum(); renderLightCurve(); syncButtons();
   await draw();
+  if (!reduceMotion && seq().length > 1 && (S.mode === "blink" || S.mode === "timeline")) play(); // start moving at once
   if (!q) $("#viewer").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
 }
 
@@ -185,11 +186,14 @@ function syncButtons() {
   const help = {
     blink: "Flips between dates A and B. Things that jump are moving; things that flash are changing brightness.",
     swipe: "Drag the orange line. Left of it: date A. Right of it: date B.",
-    diff: "B minus A. Grey = no change. White = brighter at B. Black = brighter at A. A moving star leaves a black-and-white pair.",
+    diff: S.rawDiff
+      ? "Raw difference, later minus earlier. Even stars that do not change leave small black-and-white pairs here, because the pixels are coarse and the two visits are never perfectly sharp in the same way."
+      : "Significance of change, later minus earlier. Grey: nothing changed beyond what steady stars show. White: brighter later. Black: brighter earlier. A moving star leaves a black-and-white pair. Full white or black means about 5 times the change steady stars show: a bright star must change by more than about 60% of its peak, or move by roughly one pixel (6 arcseconds) or more. Lone dots are usually artifacts (cosmic rays, satellite trails, reflections of very bright stars): check the frames before trusting one.",
     timeline: "Plays every date in order, like a little video. Drag the slider to scrub.",
     sum: "All dates added together: fainter things become easier to see, but anything that moved gets smeared.",
   };
   $("#modeHelp").textContent = help[S.mode];
+  $("#rawWrap").hidden = S.mode !== "diff";
   $("#playBtn").textContent = S.playing ? "❚❚ Pause" : "▶ Play";
   $("#swipeHandle").hidden = S.mode !== "swipe";
   $("#simBanner").hidden = !S.px;
@@ -221,7 +225,7 @@ async function draw() {
   else if (S.mode === "sum") { const b = band(); srcs = [fieldPath(b.all_png)]; label = `All ${items.length} visits added together (detector ${S.det})`; cur = null; }
   else if (S.mode === "diff") {
     const d = findDiff(A, B);
-    if (d) { srcs = [fieldPath(d.png)]; label = d.note || `Difference: ${fmtDate(d.B.utc)} minus ${fmtDate(d.A.utc)}`; }
+    if (d) { srcs = [fieldPath(d.png)]; label = d.note || `${S.rawDiff || !S.field.bands[0].diffs[0]?.sig_png ? "Raw difference" : "Significance of change"}: ${fmtDate(d.B.utc)} minus ${fmtDate(d.A.utc)}`; }
     else { label = "No difference image for these two dates."; }
     cur = null;
   }
@@ -233,36 +237,49 @@ async function draw() {
   if (S.ovFlags) { ctx.fillStyle = "#ff2fa8"; } else { ctx.fillStyle = S.mode === "diff" ? "#808080" : "#000"; }
   ctx.fillRect(0, 0, cv.width, cv.height);
   if (S.mode === "swipe") {
-    ctx.drawImage(ims[0], 0, 0, cv.width, cv.height);
+    ctx.drawImage(S.ovFlags ? flagged(ims[0]) : ims[0], 0, 0, cv.width, cv.height);
     const x = Math.round(S.swipeX * cv.width);
     ctx.save(); ctx.beginPath(); ctx.rect(x, 0, cv.width - x, cv.height); ctx.clip();
     if (S.ovFlags) { ctx.fillStyle = "#ff2fa8"; ctx.fillRect(x, 0, cv.width - x, cv.height); } else { ctx.fillStyle = "#000"; ctx.fillRect(x, 0, cv.width - x, cv.height); }
-    ctx.drawImage(ims[1], 0, 0, cv.width, cv.height); ctx.restore();
+    ctx.drawImage(S.ovFlags ? flagged(ims[1]) : ims[1], 0, 0, cv.width, cv.height); ctx.restore();
     $("#swipeHandle").style.left = (S.swipeX * 100) + "%";
   } else if (ims[0]) {
-    ctx.drawImage(ims[0], 0, 0, cv.width, cv.height);
+    ctx.drawImage(S.ovFlags ? flagged(ims[0]) : ims[0], 0, 0, cv.width, cv.height);
   }
   drawOverlays(ctx, cur, A, B, items);
   $("#frameLabel").textContent = label;
   renderLegend();
 }
 
+// Pixels SPHEREx flagged are stored with alpha 254 (filled for display) or 0 (no data).
+// With the flag overlay on, paint both kinds pink so nothing is hidden.
+const flagCache = new WeakMap();
+function flagged(im) {
+  if (flagCache.has(im)) return flagCache.get(im);
+  const c = document.createElement("canvas"); c.width = im.naturalWidth; c.height = im.naturalHeight;
+  const x = c.getContext("2d"); x.drawImage(im, 0, 0);
+  const d = x.getImageData(0, 0, c.width, c.height);
+  for (let i = 0; i < d.data.length; i += 4) if (d.data[i + 3] < 255) { d.data[i] = 255; d.data[i + 1] = 47; d.data[i + 2] = 168; d.data[i + 3] = 255; }
+  x.putImageData(d, 0, 0); flagCache.set(im, c); return c;
+}
+
+function dpng(d) { return (!S.rawDiff && d.sig_png) ? d.sig_png : d.png; }
 function findDiff(A, B) {
   if (S.data === "chan") {
     const c = chan(); const d = c.diffs.find(x => x.a === A.i && x.b === B.i);
-    if (d) return { png: d.png, A, B };
+    if (d) return { png: dpng(d), A, B };
     const d2 = c.diffs.find(x => x.b === B.i) || c.diffs[0];
     const items = seq();
-    return d2 ? { png: d2.png, A: items[d2.a], B: items[d2.b], note: `Showing ${fmtDate(items[d2.b].utc)} minus ${fmtDate(items[d2.a].utc)} (differences are made for neighbouring dates)` } : null;
+    return d2 ? { png: dpng(d2), A: items[d2.a], B: items[d2.b], note: `Showing ${fmtDate(items[d2.b].utc)} minus ${fmtDate(items[d2.a].utc)} (differences are made for neighbouring dates)` } : null;
   }
   const b = band();
   const d = b.diffs.find(x => x.a === A.epoch && x.b === B.epoch);
-  if (d) return { png: d.png, A, B };
+  if (d) return { png: dpng(d), A, B };
   const items = seq();
   const d2 = b.diffs.find(x => x.b === B.epoch) || b.diffs[0];
   if (!d2) return null;
   const IA = items.find(x => x.epoch === d2.a), IB = items.find(x => x.epoch === d2.b);
-  return { png: d2.png, A: IA, B: IB, note: `Showing ${fmtDate(IB.utc)} minus ${fmtDate(IA.utc)} (precomputed for neighbouring visits and first→last)` };
+  return { png: dpng(d2), A: IA, B: IB, note: `Showing ${fmtDate(IB.utc)} minus ${fmtDate(IA.utc)} (precomputed for neighbouring visits and first→last)` };
 }
 
 function drawOverlays(ctx, cur, A, B, items) {
@@ -279,7 +296,9 @@ function drawOverlays(ctx, cur, A, B, items) {
       const p = targetXY(it); if (!p) return;
       const x = (p[0] + 0.5) * k, y = (p[1] + 0.5) * k;
       ctx.strokeStyle = "#6fd3ff"; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(x, y, 5 * k, 0, 2 * Math.PI); ctx.stroke();
-      ctx.fillStyle = "#6fd3ff"; ctx.font = `bold ${4 * k}px system-ui`; ctx.fillText(pts.length > 1 ? (j ? "B" : "A") : "target", x + 5.5 * k, y - 4 * k);
+      ctx.fillStyle = "#6fd3ff"; ctx.font = `bold ${4 * k}px system-ui`;
+      const lab = pts.length > 1 ? (j ? "later" : "earlier") : "target";
+      ctx.fillText(lab, Math.min(x + 5.5 * k, ctx.canvas.width - ctx.measureText(lab).width - 4), y - 4 * k + (j ? 9 * k : 0));
     });
   }
   // Gaia overlay (positions moved to the image date with Gaia proper motions)
@@ -316,7 +335,9 @@ function drawOverlays(ctx, cur, A, B, items) {
       ctx.fillStyle = g; ctx.beginPath(); ctx.arc(X, Y, 1.6 * k, 0, 2 * Math.PI); ctx.fill();
       if (!hidden) {
         ctx.setLineDash([6, 5]); ctx.strokeStyle = "#ff6bd6"; ctx.lineWidth = 2; ctx.strokeRect(X - 5 * k, Y - 5 * k, 10 * k, 10 * k); ctx.setLineDash([]);
-        ctx.fillStyle = "#ff6bd6"; ctx.font = `bold ${3.6 * k}px system-ui`; ctx.fillText("SIMULATED", X - 5 * k, Y + 9 * k);
+        ctx.fillStyle = "#ff6bd6"; ctx.font = `bold ${3.6 * k}px system-ui`;
+        const tw = ctx.measureText("SIMULATED").width;
+        ctx.fillText("SIMULATED", Math.max(2, Math.min(X - 5 * k, ctx.canvas.width - tw - 2)), Y + 9 * k > ctx.canvas.height - 4 ? Y - 6 * k : Y + 9 * k);
       }
     });
   }
@@ -339,7 +360,8 @@ function renderLegend() {
   const parts = [];
   if (S.ovTarget && S.field.kind !== "control") parts.push("○ blue circle = where catalogue data predict the target on that date");
   if (S.ovGaia) parts.push("+ orange = Gaia stars (ESA), moved to the image date");
-  if (S.ovFlags) parts.push("pink = no data or pixel flagged unreliable by the SPHEREx pipeline");
+  parts.push("very bright stars overload SPHEREx; their centres are drawn white");
+  if (S.ovFlags) parts.push("pink = no data or pixel flagged unreliable by the SPHEREx pipeline (shown filled when the overlay is off)");
   if (S.px) parts.push("dashed pink square = SIMULATED planet (not real)");
   $("#legend").textContent = parts.join(" · ");
 }
@@ -506,6 +528,7 @@ function bindUI() {
   $("#ovTarget").addEventListener("change", e => { S.ovTarget = e.target.checked; draw(); });
   $("#ovGaia").addEventListener("change", e => { S.ovGaia = e.target.checked; draw(); });
   $("#ovFlags").addEventListener("change", e => { S.ovFlags = e.target.checked; draw(); });
+  $("#rawDiff").addEventListener("change", e => { S.rawDiff = e.target.checked; syncButtons(); draw(); });
   $("#gameBtn").addEventListener("click", startGame);
   $("#pxOn").addEventListener("change", e => { S.px = e.target.checked; $("#pxPanel").open = true; syncButtons(); pxInfo(); draw(); });
   $("#pxDist").addEventListener("input", e => { S.pxD = Math.round(100 * Math.pow(10, +e.target.value)); $("#pxDistVal").textContent = S.pxD; pxInfo(); draw(); });

@@ -63,13 +63,14 @@
       "2025W45_1A_0153_1"
      ],
      "png": "b1_e2.png",
+     "saturated_frac": 0.0,
+     "phot_method": "core",
      "flux_ujy": 1002.5,
      "noise_ujy": 250.7,
      "synth_grid_um": [
       0.767,
       1.064
      ],
-     "saturated_frac": 0.0,
      "pred_xy": [
       57.75,
       58.0
@@ -98,20 +99,21 @@
       "2026W19_1A_0594_2"
      ],
      "png": "b1_e3.png",
+     "saturated_frac": 0.0,
+     "phot_method": "core",
      "flux_ujy": 1101.7,
      "noise_ujy": 23.6,
      "synth_grid_um": [
       0.798,
       0.969
      ],
-     "saturated_frac": 0.0,
      "pred_xy": [
       58.56,
       57.91
      ],
      "meas_xy": [
       58.94,
-      57.32
+      57.33
      ]
     }
    ],
@@ -120,13 +122,19 @@
     {
      "a": 2,
      "b": 3,
-     "png": "b1_d2_3.png"
+     "png": "b1_d2_3.png",
+     "sig_png": "b1_s2_3.png",
+     "n_pix_over_5": 280,
+     "sky_sigma": 0.005545309375378454,
+     "star_resid_median": 0.166,
+     "n_stars": 8
     }
    ],
    "stretch": [
-    -0.015070651812109053,
-    4.485963706920337
-   ]
+    -0.01504294315707395,
+    4.0407545884584914
+   ],
+   "phot_method": "core aperture (r = 2 px)"
   },
   {
    "detector": 2,
@@ -158,13 +166,14 @@
       "2025W19_1B_0231_4"
      ],
      "png": "b2_e1.png",
+     "saturated_frac": 0.0,
+     "phot_method": "core",
      "flux_ujy": 669.9,
      "noise_ujy": 29.3,
      "synth_grid_um": [
       1.28,
       1.59
      ],
-     "saturated_frac": 0.0,
      "pred_xy": [
       57.23,
       58.02
@@ -193,20 +202,21 @@
       "2025W50_2A_0374_1"
      ],
      "png": "b2_e2.png",
+     "saturated_frac": 0.0,
+     "phot_method": "core",
      "flux_ujy": 867.3,
      "noise_ujy": 25.8,
      "synth_grid_um": [
       1.287,
       1.592
      ],
-     "saturated_frac": 0.0,
      "pred_xy": [
       57.79,
       58.0
      ],
      "meas_xy": [
       58.89,
-      57.38
+      57.37
      ]
     },
     {
@@ -226,13 +236,14 @@
       "2026W20_1A_1166_1"
      ],
      "png": "b2_e3.png",
+     "saturated_frac": 0.0,
+     "phot_method": "core",
      "flux_ujy": 921.4,
      "noise_ujy": 28.8,
      "synth_grid_um": [
       1.405,
       1.59
      ],
-     "saturated_frac": 0.0,
      "pred_xy": [
       58.58,
       57.9
@@ -248,23 +259,39 @@
     {
      "a": 1,
      "b": 2,
-     "png": "b2_d1_2.png"
+     "png": "b2_d1_2.png",
+     "sig_png": "b2_s1_2.png",
+     "n_pix_over_5": 10,
+     "sky_sigma": 0.005986460438695473,
+     "star_resid_median": 0.145,
+     "n_stars": 8
     },
     {
      "a": 2,
      "b": 3,
-     "png": "b2_d2_3.png"
+     "png": "b2_d2_3.png",
+     "sig_png": "b2_s2_3.png",
+     "n_pix_over_5": 8,
+     "sky_sigma": 0.005992992272556418,
+     "star_resid_median": 0.169,
+     "n_stars": 8
     },
     {
      "a": 1,
      "b": 3,
-     "png": "b2_d1_3.png"
+     "png": "b2_d1_3.png",
+     "sig_png": "b2_s1_3.png",
+     "n_pix_over_5": 6,
+     "sky_sigma": 0.006061630212731646,
+     "star_resid_median": 0.165,
+     "n_stars": 8
     }
    ],
    "stretch": [
-    -0.015670190511179925,
-    5.055200026666032
-   ]
+    -0.015654835417335707,
+    4.275030834234455
+   ],
+   "phot_method": "core aperture (r = 2 px)"
   },
   {
    "detector": 3,
@@ -301,13 +328,14 @@
       "2025W46_2A_0226_4"
      ],
      "png": "b3_e2.png",
+     "saturated_frac": 0.0,
+     "phot_method": "core",
      "flux_ujy": 561.5,
      "noise_ujy": 20.5,
      "synth_grid_um": [
       1.787,
       2.333
      ],
-     "saturated_frac": 0.0,
      "pred_xy": [
       57.79,
       58.0
@@ -339,13 +367,14 @@
       "2026W20_1A_0033_1"
      ],
      "png": "b3_e3.png",
+     "saturated_frac": 0.0,
+     "phot_method": "core",
      "flux_ujy": 644.1,
      "noise_ujy": 18.1,
      "synth_grid_um": [
       1.754,
       2.363
      ],
-     "saturated_frac": 0.0,
      "pred_xy": [
       58.53,
       57.91
@@ -361,13 +390,19 @@
     {
      "a": 2,
      "b": 3,
-     "png": "b3_d2_3.png"
+     "png": "b3_d2_3.png",
+     "sig_png": "b3_s2_3.png",
+     "n_pix_over_5": 31,
+     "sky_sigma": 0.004915790580081598,
+     "star_resid_median": 0.2,
+     "n_stars": 9
     }
    ],
    "stretch": [
-    -0.012798794206917397,
-    3.3784114817373236
-   ]
+    -0.012792947067283298,
+    3.4166424711233665
+   ],
+   "phot_method": "core aperture (r = 2 px)"
   },
   {
    "detector": 4,
@@ -405,13 +440,14 @@
       "2025W45_1A_0110_4"
      ],
      "png": "b4_e2.png",
+     "saturated_frac": 0.0,
+     "phot_method": "core",
      "flux_ujy": 273.3,
      "noise_ujy": 16.8,
      "synth_grid_um": [
       2.563,
       3.632
      ],
-     "saturated_frac": 0.0,
      "pred_xy": [
       57.75,
       58.0
@@ -438,13 +474,14 @@
       "2026W19_1A_0594_1"
      ],
      "png": "b4_e3.png",
+     "saturated_frac": 0.0,
+     "phot_method": "core",
      "flux_ujy": 297.8,
      "noise_ujy": 19.8,
      "synth_grid_um": [
       2.682,
       3.269
      ],
-     "saturated_frac": 0.0,
      "pred_xy": [
       58.56,
       57.91
@@ -460,13 +497,19 @@
     {
      "a": 2,
      "b": 3,
-     "png": "b4_d2_3.png"
+     "png": "b4_d2_3.png",
+     "sig_png": "b4_s2_3.png",
+     "n_pix_over_5": 2,
+     "sky_sigma": 0.003995758794089269,
+     "star_resid_median": 0.223,
+     "n_stars": 9
     }
    ],
    "stretch": [
-    -0.011495675557834005,
-    1.9168497741904649
-   ]
+    -0.01132089034715442,
+    1.8136643699253567
+   ],
+   "phot_method": "core aperture (r = 2 px)"
   },
   {
    "detector": 5,
@@ -497,13 +540,14 @@
       "2025W19_1B_0231_4"
      ],
      "png": "b5_e1.png",
+     "saturated_frac": 0.0,
+     "phot_method": "core",
      "flux_ujy": 511.6,
      "noise_ujy": 53.8,
      "synth_grid_um": [
       4.039,
       4.332
      ],
-     "saturated_frac": 0.0,
      "pred_xy": [
       57.23,
       58.02
@@ -531,13 +575,14 @@
       "2025W50_2A_0391_1"
      ],
      "png": "b5_e2.png",
+     "saturated_frac": 0.0,
+     "phot_method": "core",
      "flux_ujy": 471.9,
      "noise_ujy": 47.2,
      "synth_grid_um": [
       4.047,
       4.334
      ],
-     "saturated_frac": 0.0,
      "pred_xy": [
       57.81,
       58.0
@@ -562,13 +607,14 @@
       "2026W20_1A_0939_1"
      ],
      "png": "b5_e3.png",
+     "saturated_frac": 0.0,
+     "phot_method": "core",
      "flux_ujy": 793.6,
      "noise_ujy": 64.7,
      "synth_grid_um": [
       4.18,
       4.332
      ],
-     "saturated_frac": 0.0,
      "pred_xy": [
       58.58,
       57.9
@@ -584,23 +630,39 @@
     {
      "a": 1,
      "b": 2,
-     "png": "b5_d1_2.png"
+     "png": "b5_d1_2.png",
+     "sig_png": "b5_s1_2.png",
+     "n_pix_over_5": 1,
+     "sky_sigma": 0.012870798035694186,
+     "star_resid_median": 0.144,
+     "n_stars": 9
     },
     {
      "a": 2,
      "b": 3,
-     "png": "b5_d2_3.png"
+     "png": "b5_d2_3.png",
+     "sig_png": "b5_s2_3.png",
+     "n_pix_over_5": 8,
+     "sky_sigma": 0.014009765172977843,
+     "star_resid_median": 0.161,
+     "n_stars": 8
     },
     {
      "a": 1,
      "b": 3,
-     "png": "b5_d1_3.png"
+     "png": "b5_d1_3.png",
+     "sig_png": "b5_s1_3.png",
+     "n_pix_over_5": 6,
+     "sky_sigma": 0.01343960339038922,
+     "star_resid_median": 0.163,
+     "n_stars": 8
     }
    ],
    "stretch": [
-    -0.029080846577913943,
-    1.1024428814000196
-   ]
+    -0.028760219907622436,
+    1.0912076027410627
+   ],
+   "phot_method": "core aperture (r = 2 px)"
   },
   {
    "detector": 6,
@@ -637,13 +699,14 @@
       "2025W46_2A_0226_4"
      ],
      "png": "b6_e2.png",
+     "saturated_frac": 0.0,
+     "phot_method": "core",
      "flux_ujy": 606.5,
      "noise_ujy": 67.7,
      "synth_grid_um": [
       4.546,
       4.946
      ],
-     "saturated_frac": 0.0,
      "pred_xy": [
       57.79,
       58.0
@@ -674,13 +737,14 @@
       "2026W19_2A_0952_1"
      ],
      "png": "b6_e3.png",
+     "saturated_frac": 0.0,
+     "phot_method": "core",
      "flux_ujy": 526.0,
      "noise_ujy": 55.8,
      "synth_grid_um": [
       4.519,
       4.931
      ],
-     "saturated_frac": 0.0,
      "pred_xy": [
       58.53,
       57.91
@@ -696,13 +760,19 @@
     {
      "a": 2,
      "b": 3,
-     "png": "b6_d2_3.png"
+     "png": "b6_d2_3.png",
+     "sig_png": "b6_s2_3.png",
+     "n_pix_over_5": 2,
+     "sky_sigma": 0.017101471523021394,
+     "star_resid_median": 0.145,
+     "n_stars": 9
     }
    ],
    "stretch": [
-    -0.035305251438507455,
+    -0.03518980673099728,
     0.8453746766610706
-   ]
+   ],
+   "phot_method": "core aperture (r = 2 px)"
   }
  ],
  "channels": [
@@ -743,7 +813,8 @@
     {
      "a": 0,
      "b": 1,
-     "png": "c1_d0.png"
+     "png": "c1_d0.png",
+     "sig_png": "c1_s0.png"
     }
    ]
   },
@@ -797,12 +868,14 @@
     {
      "a": 0,
      "b": 1,
-     "png": "c2_d0.png"
+     "png": "c2_d0.png",
+     "sig_png": "c2_s0.png"
     },
     {
      "a": 1,
      "b": 2,
-     "png": "c2_d1.png"
+     "png": "c2_d1.png",
+     "sig_png": "c2_s1.png"
     }
    ]
   },
@@ -856,12 +929,14 @@
     {
      "a": 0,
      "b": 1,
-     "png": "c3_d0.png"
+     "png": "c3_d0.png",
+     "sig_png": "c3_s0.png"
     },
     {
      "a": 1,
      "b": 2,
-     "png": "c3_d1.png"
+     "png": "c3_d1.png",
+     "sig_png": "c3_s1.png"
     }
    ]
   },
@@ -902,7 +977,8 @@
     {
      "a": 0,
      "b": 1,
-     "png": "c4_d0.png"
+     "png": "c4_d0.png",
+     "sig_png": "c4_s0.png"
     }
    ]
   },
@@ -956,12 +1032,14 @@
     {
      "a": 0,
      "b": 1,
-     "png": "c5_d0.png"
+     "png": "c5_d0.png",
+     "sig_png": "c5_s0.png"
     },
     {
      "a": 1,
      "b": 2,
-     "png": "c5_d1.png"
+     "png": "c5_d1.png",
+     "sig_png": "c5_s1.png"
     }
    ]
   },
@@ -1002,7 +1080,8 @@
     {
      "a": 0,
      "b": 1,
-     "png": "c6_d0.png"
+     "png": "c6_d0.png",
+     "sig_png": "c6_s0.png"
     }
    ]
   }
@@ -1027,7 +1106,11 @@
     "err_ujy": 62.11,
     "bad_in_aperture": 0,
     "x": 86.66,
-    "y": 85.36
+    "y": 85.36,
+    "wing_ujy": 449.84,
+    "wing_err_ujy": 161.64,
+    "wing2_ujy": 1762.31,
+    "wing2_err_ujy": 244.85
    },
    "target_radec": [
     133.7609776,
@@ -1053,7 +1136,11 @@
     "err_ujy": 208.84,
     "bad_in_aperture": 0,
     "x": 87.14,
-    "y": 85.99
+    "y": 85.99,
+    "wing_ujy": -936.0,
+    "wing_err_ujy": 594.4,
+    "wing2_ujy": 923.16,
+    "wing2_err_ujy": 897.34
    },
    "target_radec": [
     133.7609776,
@@ -1079,7 +1166,11 @@
     "err_ujy": 55.0,
     "bad_in_aperture": 0,
     "x": 87.04,
-    "y": 85.99
+    "y": 85.99,
+    "wing_ujy": -209.71,
+    "wing_err_ujy": 152.0,
+    "wing2_ujy": 2055.31,
+    "wing2_err_ujy": 238.14
    },
    "target_radec": [
     133.7609768,
@@ -1105,7 +1196,11 @@
     "err_ujy": 196.75,
     "bad_in_aperture": 0,
     "x": 87.11,
-    "y": 86.18
+    "y": 86.18,
+    "wing_ujy": 892.28,
+    "wing_err_ujy": 556.83,
+    "wing2_ujy": -6057.16,
+    "wing2_err_ujy": 849.62
    },
    "target_radec": [
     133.7609768,
@@ -1131,7 +1226,11 @@
     "err_ujy": 71.87,
     "bad_in_aperture": 0,
     "x": 86.84,
-    "y": 85.61
+    "y": 85.61,
+    "wing_ujy": 212.49,
+    "wing_err_ujy": 178.24,
+    "wing2_ujy": 2113.06,
+    "wing2_err_ujy": 278.47
    },
    "target_radec": [
     133.7609751,
@@ -1157,7 +1256,11 @@
     "err_ujy": 135.82,
     "bad_in_aperture": 0,
     "x": 86.39,
-    "y": 85.59
+    "y": 85.59,
+    "wing_ujy": -915.72,
+    "wing_err_ujy": 355.76,
+    "wing2_ujy": 1410.72,
+    "wing2_err_ujy": 538.05
    },
    "target_radec": [
     133.7609751,
@@ -1183,7 +1286,11 @@
     "err_ujy": 71.74,
     "bad_in_aperture": 0,
     "x": 86.54,
-    "y": 85.94
+    "y": 85.94,
+    "wing_ujy": 405.47,
+    "wing_err_ujy": 182.37,
+    "wing2_ujy": 2847.25,
+    "wing2_err_ujy": 287.77
    },
    "target_radec": [
     133.7609751,
@@ -1209,7 +1316,11 @@
     "err_ujy": 132.55,
     "bad_in_aperture": 0,
     "x": 86.53,
-    "y": 86.07
+    "y": 86.07,
+    "wing_ujy": 257.68,
+    "wing_err_ujy": 336.92,
+    "wing2_ujy": -370.05,
+    "wing2_err_ujy": 530.42
    },
    "target_radec": [
     133.7609751,
@@ -1235,7 +1346,11 @@
     "err_ujy": 75.33,
     "bad_in_aperture": 2,
     "x": 86.75,
-    "y": 86.24
+    "y": 86.24,
+    "wing_ujy": 495.91,
+    "wing_err_ujy": 179.3,
+    "wing2_ujy": 2429.1,
+    "wing2_err_ujy": 275.17
    },
    "target_radec": [
     133.7609751,
@@ -1261,7 +1376,11 @@
     "err_ujy": 65.38,
     "bad_in_aperture": 0,
     "x": 87.11,
-    "y": 85.85
+    "y": 85.85,
+    "wing_ujy": -253.89,
+    "wing_err_ujy": 194.79,
+    "wing2_ujy": 2166.08,
+    "wing2_err_ujy": 283.8
    },
    "target_radec": [
     133.760973,
@@ -1287,7 +1406,11 @@
     "err_ujy": 103.83,
     "bad_in_aperture": 0,
     "x": 87.13,
-    "y": 85.96
+    "y": 85.96,
+    "wing_ujy": -131.63,
+    "wing_err_ujy": 293.77,
+    "wing2_ujy": -273.57,
+    "wing2_err_ujy": 446.11
    },
    "target_radec": [
     133.760973,
@@ -1313,7 +1436,11 @@
     "err_ujy": 115.05,
     "bad_in_aperture": 0,
     "x": 86.8,
-    "y": 85.74
+    "y": 85.74,
+    "wing_ujy": 304.6,
+    "wing_err_ujy": 294.2,
+    "wing2_ujy": -406.6,
+    "wing2_err_ujy": 458.06
    },
    "target_radec": [
     133.760973,
@@ -1339,7 +1466,11 @@
     "err_ujy": 73.61,
     "bad_in_aperture": 0,
     "x": 86.87,
-    "y": 85.39
+    "y": 85.39,
+    "wing_ujy": 57.89,
+    "wing_err_ujy": 181.43,
+    "wing2_ujy": 2785.09,
+    "wing2_err_ujy": 283.85
    },
    "target_radec": [
     133.760973,
@@ -1365,7 +1496,11 @@
     "err_ujy": 111.36,
     "bad_in_aperture": 0,
     "x": 87.01,
-    "y": 85.59
+    "y": 85.59,
+    "wing_ujy": -256.12,
+    "wing_err_ujy": 294.62,
+    "wing2_ujy": -582.06,
+    "wing2_err_ujy": 459.18
    },
    "target_radec": [
     133.760973,
@@ -1391,7 +1526,11 @@
     "err_ujy": 72.97,
     "bad_in_aperture": 0,
     "x": 86.63,
-    "y": 86.14
+    "y": 86.14,
+    "wing_ujy": -11.47,
+    "wing_err_ujy": 179.85,
+    "wing2_ujy": 3101.34,
+    "wing2_err_ujy": 281.35
    },
    "target_radec": [
     133.760973,
@@ -1417,7 +1556,11 @@
     "err_ujy": 68.55,
     "bad_in_aperture": 0,
     "x": 86.25,
-    "y": 85.88
+    "y": 85.88,
+    "wing_ujy": 137.59,
+    "wing_err_ujy": 183.62,
+    "wing2_ujy": 2208.98,
+    "wing2_err_ujy": 281.24
    },
    "target_radec": [
     133.7609726,
@@ -1443,7 +1586,11 @@
     "err_ujy": 49.86,
     "bad_in_aperture": 0,
     "x": 86.29,
-    "y": 85.73
+    "y": 85.73,
+    "wing_ujy": 547.5,
+    "wing_err_ujy": 129.79,
+    "wing2_ujy": 696.87,
+    "wing2_err_ujy": 200.5
    },
    "target_radec": [
     133.7609726,
@@ -1469,7 +1616,11 @@
     "err_ujy": 71.33,
     "bad_in_aperture": 0,
     "x": 86.8,
-    "y": 85.66
+    "y": 85.66,
+    "wing_ujy": 250.83,
+    "wing_err_ujy": 181.32,
+    "wing2_ujy": 2145.33,
+    "wing2_err_ujy": 283.96
    },
    "target_radec": [
     133.7609726,
@@ -1495,7 +1646,11 @@
     "err_ujy": 49.77,
     "bad_in_aperture": 0,
     "x": 86.64,
-    "y": 85.61
+    "y": 85.61,
+    "wing_ujy": 78.94,
+    "wing_err_ujy": 128.79,
+    "wing2_ujy": 464.55,
+    "wing2_err_ujy": 200.16
    },
    "target_radec": [
     133.7609726,
@@ -1521,7 +1676,11 @@
     "err_ujy": 75.66,
     "bad_in_aperture": 0,
     "x": 86.9,
-    "y": 85.37
+    "y": 85.37,
+    "wing_ujy": -100.77,
+    "wing_err_ujy": 195.86,
+    "wing2_ujy": 1909.39,
+    "wing2_err_ujy": 299.75
    },
    "target_radec": [
     133.7609726,
@@ -1547,7 +1706,11 @@
     "err_ujy": 47.86,
     "bad_in_aperture": 0,
     "x": 86.52,
-    "y": 85.41
+    "y": 85.41,
+    "wing_ujy": -49.24,
+    "wing_err_ujy": 127.39,
+    "wing2_ujy": 1199.48,
+    "wing2_err_ujy": 198.91
    },
    "target_radec": [
     133.7609726,
@@ -1573,7 +1736,11 @@
     "err_ujy": 1774.03,
     "bad_in_aperture": 0,
     "x": 86.65,
-    "y": 85.98
+    "y": 85.98,
+    "wing_ujy": -713.24,
+    "wing_err_ujy": 4750.54,
+    "wing2_ujy": 373.56,
+    "wing2_err_ujy": 7333.88
    },
    "target_radec": [
     133.7609726,
@@ -1599,7 +1766,11 @@
     "err_ujy": 47.8,
     "bad_in_aperture": 0,
     "x": 87.07,
-    "y": 86.14
+    "y": 86.14,
+    "wing_ujy": -4.78,
+    "wing_err_ujy": 137.64,
+    "wing2_ujy": 622.83,
+    "wing2_err_ujy": 205.4
    },
    "target_radec": [
     133.7609726,
@@ -1625,7 +1796,11 @@
     "err_ujy": 67.65,
     "bad_in_aperture": 0,
     "x": 85.89,
-    "y": 85.89
+    "y": 85.89,
+    "wing_ujy": 78.54,
+    "wing_err_ujy": 193.56,
+    "wing2_ujy": 1783.02,
+    "wing2_err_ujy": 288.48
    },
    "target_radec": [
     133.7600955,
@@ -1651,7 +1826,11 @@
     "err_ujy": 74.03,
     "bad_in_aperture": 0,
     "x": 85.68,
-    "y": 86.16
+    "y": 86.16,
+    "wing_ujy": 135.22,
+    "wing_err_ujy": 192.83,
+    "wing2_ujy": 2016.74,
+    "wing2_err_ujy": 291.09
    },
    "target_radec": [
     133.7600954,
@@ -1677,7 +1856,11 @@
     "err_ujy": 52.58,
     "bad_in_aperture": 0,
     "x": 85.66,
-    "y": 85.92
+    "y": 85.92,
+    "wing_ujy": 57.39,
+    "wing_err_ujy": 133.66,
+    "wing2_ujy": 1166.32,
+    "wing2_err_ujy": 211.59
    },
    "target_radec": [
     133.7600954,
@@ -1703,7 +1886,11 @@
     "err_ujy": 74.01,
     "bad_in_aperture": 0,
     "x": 85.43,
-    "y": 86.4
+    "y": 86.4,
+    "wing_ujy": 275.03,
+    "wing_err_ujy": 190.36,
+    "wing2_ujy": 2155.79,
+    "wing2_err_ujy": 294.01
    },
    "target_radec": [
     133.7600954,
@@ -1729,7 +1916,11 @@
     "err_ujy": 74.97,
     "bad_in_aperture": 0,
     "x": 85.26,
-    "y": 85.62
+    "y": 85.62,
+    "wing_ujy": 135.41,
+    "wing_err_ujy": 198.7,
+    "wing2_ujy": 2049.36,
+    "wing2_err_ujy": 300.08
    },
    "target_radec": [
     133.7600954,
@@ -1755,7 +1946,11 @@
     "err_ujy": 51.17,
     "bad_in_aperture": 0,
     "x": 85.81,
-    "y": 85.61
+    "y": 85.61,
+    "wing_ujy": 109.75,
+    "wing_err_ujy": 132.47,
+    "wing2_ujy": 1112.73,
+    "wing2_err_ujy": 204.26
    },
    "target_radec": [
     133.7600954,
@@ -1781,7 +1976,11 @@
     "err_ujy": 54.21,
     "bad_in_aperture": 0,
     "x": 86.13,
-    "y": 86.51
+    "y": 86.51,
+    "wing_ujy": 85.08,
+    "wing_err_ujy": 135.95,
+    "wing2_ujy": 719.74,
+    "wing2_err_ujy": 210.07
    },
    "target_radec": [
     133.7600951,
@@ -1807,7 +2006,11 @@
     "err_ujy": 76.59,
     "bad_in_aperture": 0,
     "x": 85.7,
-    "y": 86.55
+    "y": 86.55,
+    "wing_ujy": 55.66,
+    "wing_err_ujy": 196.99,
+    "wing2_ujy": 1988.86,
+    "wing2_err_ujy": 305.02
    },
    "target_radec": [
     133.7600951,
@@ -1833,7 +2036,11 @@
     "err_ujy": 52.6,
     "bad_in_aperture": 0,
     "x": 85.83,
-    "y": 85.78
+    "y": 85.78,
+    "wing_ujy": 260.37,
+    "wing_err_ujy": 136.12,
+    "wing2_ujy": 1083.75,
+    "wing2_err_ujy": 211.68
    },
    "target_radec": [
     133.7600951,
@@ -1859,7 +2066,11 @@
     "err_ujy": 80.22,
     "bad_in_aperture": 0,
     "x": 85.56,
-    "y": 85.87
+    "y": 85.87,
+    "wing_ujy": 120.82,
+    "wing_err_ujy": 200.02,
+    "wing2_ujy": 2459.46,
+    "wing2_err_ujy": 309.25
    },
    "target_radec": [
     133.760095,
@@ -1885,7 +2096,11 @@
     "err_ujy": 81.35,
     "bad_in_aperture": 0,
     "x": 85.44,
-    "y": 85.88
+    "y": 85.88,
+    "wing_ujy": 183.01,
+    "wing_err_ujy": 204.07,
+    "wing2_ujy": 2149.5,
+    "wing2_err_ujy": 314.39
    },
    "target_radec": [
     133.760095,
@@ -1911,7 +2126,11 @@
     "err_ujy": 50.37,
     "bad_in_aperture": 0,
     "x": 86.09,
-    "y": 86.32
+    "y": 86.32,
+    "wing_ujy": 410.31,
+    "wing_err_ujy": 134.89,
+    "wing2_ujy": 632.02,
+    "wing2_err_ujy": 210.39
    },
    "target_radec": [
     133.760095,
@@ -1937,7 +2156,11 @@
     "err_ujy": 89.95,
     "bad_in_aperture": 0,
     "x": 85.27,
-    "y": 85.84
+    "y": 85.84,
+    "wing_ujy": 233.09,
+    "wing_err_ujy": 230.02,
+    "wing2_ujy": 1823.3,
+    "wing2_err_ujy": 355.45
    },
    "target_radec": [
     133.760095,
@@ -1963,7 +2186,11 @@
     "err_ujy": 54.0,
     "bad_in_aperture": 0,
     "x": 85.68,
-    "y": 86.38
+    "y": 86.38,
+    "wing_ujy": -21.69,
+    "wing_err_ujy": 142.24,
+    "wing2_ujy": 103.3,
+    "wing2_err_ujy": 217.18
    },
    "target_radec": [
     133.760095,
@@ -1989,7 +2216,11 @@
     "err_ujy": 2997.48,
     "bad_in_aperture": 0,
     "x": 86.11,
-    "y": 85.77
+    "y": 85.77,
+    "wing_ujy": 580.79,
+    "wing_err_ujy": 7979.97,
+    "wing2_ujy": 6344.01,
+    "wing2_err_ujy": 12391.64
    },
    "target_radec": [
     133.760095,
@@ -2015,7 +2246,11 @@
     "err_ujy": 58.14,
     "bad_in_aperture": 0,
     "x": 85.32,
-    "y": 86.41
+    "y": 86.41,
+    "wing_ujy": 221.5,
+    "wing_err_ujy": 149.55,
+    "wing2_ujy": 340.78,
+    "wing2_err_ujy": 232.68
    },
    "target_radec": [
     133.760095,
@@ -2041,7 +2276,11 @@
     "err_ujy": 53.59,
     "bad_in_aperture": 0,
     "x": 85.57,
-    "y": 85.97
+    "y": 85.97,
+    "wing_ujy": 276.03,
+    "wing_err_ujy": 143.47,
+    "wing2_ujy": 676.34,
+    "wing2_err_ujy": 222.1
    },
    "target_radec": [
     133.7600781,
@@ -2067,7 +2306,11 @@
     "err_ujy": 79.41,
     "bad_in_aperture": 2,
     "x": 85.33,
-    "y": 86.28
+    "y": 86.28,
+    "wing_ujy": -37.5,
+    "wing_err_ujy": 192.3,
+    "wing2_ujy": 1588.14,
+    "wing2_err_ujy": 290.11
    },
    "target_radec": [
     133.7600781,
@@ -2093,7 +2336,11 @@
     "err_ujy": 73.37,
     "bad_in_aperture": 0,
     "x": 85.74,
-    "y": 86.34
+    "y": 86.34,
+    "wing_ujy": -72.09,
+    "wing_err_ujy": 194.32,
+    "wing2_ujy": 2188.2,
+    "wing2_err_ujy": 291.45
    },
    "target_radec": [
     133.7600781,
@@ -2119,7 +2366,11 @@
     "err_ujy": 48.41,
     "bad_in_aperture": 0,
     "x": 85.99,
-    "y": 86.25
+    "y": 86.25,
+    "wing_ujy": 121.67,
+    "wing_err_ujy": 146.4,
+    "wing2_ujy": 1179.0,
+    "wing2_err_ujy": 219.26
    },
    "target_radec": [
     133.7600781,
@@ -2145,7 +2396,11 @@
     "err_ujy": 55.05,
     "bad_in_aperture": 0,
     "x": 86.19,
-    "y": 86.34
+    "y": 86.34,
+    "wing_ujy": 191.36,
+    "wing_err_ujy": 140.8,
+    "wing2_ujy": 319.82,
+    "wing2_err_ujy": 221.38
    },
    "target_radec": [
     133.760078,
@@ -2171,7 +2426,11 @@
     "err_ujy": 77.13,
     "bad_in_aperture": 0,
     "x": 85.44,
-    "y": 85.77
+    "y": 85.77,
+    "wing_ujy": 271.82,
+    "wing_err_ujy": 194.47,
+    "wing2_ujy": 1644.54,
+    "wing2_err_ujy": 297.52
    },
    "target_radec": [
     133.7600768,
@@ -2197,7 +2456,11 @@
     "err_ujy": 74.08,
     "bad_in_aperture": 0,
     "x": 86.23,
-    "y": 85.81
+    "y": 85.81,
+    "wing_ujy": 231.18,
+    "wing_err_ujy": 192.87,
+    "wing2_ujy": 2198.99,
+    "wing2_err_ujy": 296.51
    },
    "target_radec": [
     133.7600543,
@@ -2223,7 +2486,11 @@
     "err_ujy": 108.72,
     "bad_in_aperture": 0,
     "x": 86.17,
-    "y": 85.64
+    "y": 85.64,
+    "wing_ujy": -264.48,
+    "wing_err_ujy": 281.59,
+    "wing2_ujy": -485.59,
+    "wing2_err_ujy": 435.03
    },
    "target_radec": [
     133.7600543,
@@ -2249,7 +2516,11 @@
     "err_ujy": 73.26,
     "bad_in_aperture": 0,
     "x": 85.8,
-    "y": 85.83
+    "y": 85.83,
+    "wing_ujy": 388.81,
+    "wing_err_ujy": 187.33,
+    "wing2_ujy": 2211.19,
+    "wing2_err_ujy": 292.47
    },
    "target_radec": [
     133.7600543,
@@ -2275,7 +2546,11 @@
     "err_ujy": 110.68,
     "bad_in_aperture": 0,
     "x": 86.18,
-    "y": 85.79
+    "y": 85.79,
+    "wing_ujy": 52.89,
+    "wing_err_ujy": 286.4,
+    "wing2_ujy": -1126.7,
+    "wing2_err_ujy": 440.73
    },
    "target_radec": [
     133.7600543,
@@ -2301,7 +2576,11 @@
     "err_ujy": 76.44,
     "bad_in_aperture": 0,
     "x": 85.55,
-    "y": 86.34
+    "y": 86.34,
+    "wing_ujy": 82.74,
+    "wing_err_ujy": 198.93,
+    "wing2_ujy": 1849.21,
+    "wing2_err_ujy": 310.67
    },
    "target_radec": [
     133.7600534,
@@ -2327,7 +2606,11 @@
     "err_ujy": 130.14,
     "bad_in_aperture": 2,
     "x": 85.81,
-    "y": 86.56
+    "y": 86.56,
+    "wing_ujy": 593.29,
+    "wing_err_ujy": 307.52,
+    "wing2_ujy": 628.65,
+    "wing2_err_ujy": 489.29
    },
    "target_radec": [
     133.7600534,
@@ -2353,7 +2636,11 @@
     "err_ujy": 109.65,
     "bad_in_aperture": 0,
     "x": 85.97,
-    "y": 86.49
+    "y": 86.49,
+    "wing_ujy": -85.51,
+    "wing_err_ujy": 298.94,
+    "wing2_ujy": 611.77,
+    "wing2_err_ujy": 456.64
    },
    "target_radec": [
     133.7600534,
@@ -2379,7 +2666,11 @@
     "err_ujy": 75.8,
     "bad_in_aperture": 0,
     "x": 85.37,
-    "y": 86.29
+    "y": 86.29,
+    "wing_ujy": 530.38,
+    "wing_err_ujy": 196.09,
+    "wing2_ujy": 1027.35,
+    "wing2_err_ujy": 299.53
    },
    "target_radec": [
     133.7600508,
@@ -2405,7 +2696,11 @@
     "err_ujy": 71.29,
     "bad_in_aperture": 0,
     "x": 86.23,
-    "y": 86.09
+    "y": 86.09,
+    "wing_ujy": 457.36,
+    "wing_err_ujy": 190.91,
+    "wing2_ujy": 1833.45,
+    "wing2_err_ujy": 297.0
    },
    "target_radec": [
     133.7600508,
@@ -2431,7 +2726,11 @@
     "err_ujy": 115.33,
     "bad_in_aperture": 0,
     "x": 86.0,
-    "y": 86.44
+    "y": 86.44,
+    "wing_ujy": -57.97,
+    "wing_err_ujy": 308.84,
+    "wing2_ujy": 715.83,
+    "wing2_err_ujy": 476.84
    },
    "target_radec": [
     133.7600508,
@@ -2457,7 +2756,11 @@
     "err_ujy": 78.42,
     "bad_in_aperture": 1,
     "x": 85.53,
-    "y": 85.73
+    "y": 85.73,
+    "wing_ujy": 437.07,
+    "wing_err_ujy": 192.76,
+    "wing2_ujy": 2559.85,
+    "wing2_err_ujy": 287.06
    },
    "target_radec": [
     133.7600504,
@@ -2483,7 +2786,11 @@
     "err_ujy": 72.78,
     "bad_in_aperture": 0,
     "x": 85.35,
-    "y": 86.28
+    "y": 86.28,
+    "wing_ujy": 433.71,
+    "wing_err_ujy": 188.28,
+    "wing2_ujy": 1919.92,
+    "wing2_err_ujy": 287.62
    },
    "target_radec": [
     133.7600504,
@@ -2509,7 +2816,11 @@
     "err_ujy": 133.42,
     "bad_in_aperture": 0,
     "x": 85.6,
-    "y": 86.19
+    "y": 86.19,
+    "wing_ujy": -30.95,
+    "wing_err_ujy": 330.71,
+    "wing2_ujy": -379.26,
+    "wing2_err_ujy": 515.83
    },
    "target_radec": [
     133.7600504,
@@ -2535,7 +2846,11 @@
     "err_ujy": 126.81,
     "bad_in_aperture": 0,
     "x": 85.77,
-    "y": 85.87
+    "y": 85.87,
+    "wing_ujy": 92.99,
+    "wing_err_ujy": 337.52,
+    "wing2_ujy": -615.51,
+    "wing2_err_ujy": 517.7
    },
    "target_radec": [
     133.7600503,
@@ -2561,7 +2876,11 @@
     "err_ujy": 74.9,
     "bad_in_aperture": 0,
     "x": 85.3,
-    "y": 85.62
+    "y": 85.62,
+    "wing_ujy": 419.06,
+    "wing_err_ujy": 197.28,
+    "wing2_ujy": 2824.46,
+    "wing2_err_ujy": 296.71
    },
    "target_radec": [
     133.7600499,
@@ -2587,7 +2906,11 @@
     "err_ujy": 127.63,
     "bad_in_aperture": 0,
     "x": 85.88,
-    "y": 85.91
+    "y": 85.91,
+    "wing_ujy": 495.33,
+    "wing_err_ujy": 361.01,
+    "wing2_ujy": -915.16,
+    "wing2_err_ujy": 544.22
    },
    "target_radec": [
     133.7600499,
@@ -2613,7 +2936,11 @@
     "err_ujy": 67.91,
     "bad_in_aperture": 0,
     "x": 86.12,
-    "y": 85.99
+    "y": 85.99,
+    "wing_ujy": 401.85,
+    "wing_err_ujy": 195.65,
+    "wing2_ujy": 2670.29,
+    "wing2_err_ujy": 293.26
    },
    "target_radec": [
     133.7600499,
@@ -2639,7 +2966,11 @@
     "err_ujy": 152.36,
     "bad_in_aperture": 1,
     "x": 86.14,
-    "y": 86.39
+    "y": 86.39,
+    "wing_ujy": 292.18,
+    "wing_err_ujy": 359.65,
+    "wing2_ujy": 268.13,
+    "wing2_err_ujy": 567.44
    },
    "target_radec": [
     133.7600499,
@@ -2665,7 +2996,11 @@
     "err_ujy": 73.63,
     "bad_in_aperture": 0,
     "x": 85.96,
-    "y": 86.37
+    "y": 86.37,
+    "wing_ujy": 22.26,
+    "wing_err_ujy": 191.61,
+    "wing2_ujy": 3095.95,
+    "wing2_err_ujy": 293.22
    },
    "target_radec": [
     133.7600499,
@@ -2691,7 +3026,11 @@
     "err_ujy": 76.05,
     "bad_in_aperture": 0,
     "x": 85.67,
-    "y": 86.1
+    "y": 86.1,
+    "wing_ujy": 565.38,
+    "wing_err_ujy": 196.85,
+    "wing2_ujy": 2875.25,
+    "wing2_err_ujy": 301.28
    },
    "target_radec": [
     133.7600482,
@@ -2717,7 +3056,11 @@
     "err_ujy": 73.1,
     "bad_in_aperture": 0,
     "x": 85.57,
-    "y": 85.7
+    "y": 85.7,
+    "wing_ujy": 346.96,
+    "wing_err_ujy": 192.54,
+    "wing2_ujy": 2438.84,
+    "wing2_err_ujy": 292.57
    },
    "target_radec": [
     133.7600345,
@@ -2743,7 +3086,11 @@
     "err_ujy": 160.69,
     "bad_in_aperture": 0,
     "x": 85.67,
-    "y": 86.51
+    "y": 86.51,
+    "wing_ujy": 415.02,
+    "wing_err_ujy": 415.69,
+    "wing2_ujy": 312.73,
+    "wing2_err_ujy": 633.45
    },
    "target_radec": [
     133.7600345,
@@ -2769,7 +3116,11 @@
     "err_ujy": 64.5,
     "bad_in_aperture": 0,
     "x": 86.11,
-    "y": 86.02
+    "y": 86.02,
+    "wing_ujy": 375.25,
+    "wing_err_ujy": 184.7,
+    "wing2_ujy": 2716.17,
+    "wing2_err_ujy": 277.83
    },
    "target_radec": [
     133.7600345,
@@ -2795,7 +3146,11 @@
     "err_ujy": 160.06,
     "bad_in_aperture": 1,
     "x": 86.02,
-    "y": 85.94
+    "y": 85.94,
+    "wing_ujy": -396.88,
+    "wing_err_ujy": 429.47,
+    "wing2_ujy": -972.04,
+    "wing2_err_ujy": 660.56
    },
    "target_radec": [
     133.7600345,
@@ -2821,7 +3176,11 @@
     "err_ujy": 72.25,
     "bad_in_aperture": 1,
     "x": 86.09,
-    "y": 86.41
+    "y": 86.41,
+    "wing_ujy": 725.74,
+    "wing_err_ujy": 179.69,
+    "wing2_ujy": 1134.68,
+    "wing2_err_ujy": 286.07
    },
    "target_radec": [
     133.760034,
@@ -2847,7 +3206,11 @@
     "err_ujy": 190.96,
     "bad_in_aperture": 2,
     "x": 85.57,
-    "y": 85.61
+    "y": 85.61,
+    "wing_ujy": -182.78,
+    "wing_err_ujy": 454.55,
+    "wing2_ujy": -113.39,
+    "wing2_err_ujy": 704.88
    },
    "target_radec": [
     133.760034,
@@ -2873,7 +3236,11 @@
     "err_ujy": 166.31,
     "bad_in_aperture": 0,
     "x": 85.84,
-    "y": 85.89
+    "y": 85.89,
+    "wing_ujy": 159.24,
+    "wing_err_ujy": 467.86,
+    "wing2_ujy": 1619.06,
+    "wing2_err_ujy": 712.74
    },
    "target_radec": [
     133.760034,
@@ -2899,7 +3266,11 @@
     "err_ujy": 64.83,
     "bad_in_aperture": 0,
     "x": 86.11,
-    "y": 85.72
+    "y": 85.72,
+    "wing_ujy": 332.12,
+    "wing_err_ujy": 172.65,
+    "wing2_ujy": 1420.37,
+    "wing2_err_ujy": 272.82
    },
    "target_radec": [
     133.760034,
@@ -2925,7 +3296,11 @@
     "err_ujy": 65.39,
     "bad_in_aperture": 0,
     "x": 85.77,
-    "y": 86.37
+    "y": 86.37,
+    "wing_ujy": 235.41,
+    "wing_err_ujy": 170.17,
+    "wing2_ujy": 2273.04,
+    "wing2_err_ujy": 260.4
    },
    "target_radec": [
     133.76003,
@@ -2951,7 +3326,11 @@
     "err_ujy": 189.62,
     "bad_in_aperture": 0,
     "x": 85.31,
-    "y": 86.17
+    "y": 86.17,
+    "wing_ujy": -974.54,
+    "wing_err_ujy": 482.0,
+    "wing2_ujy": -381.39,
+    "wing2_err_ujy": 753.07
    },
    "target_radec": [
     133.76003,
@@ -2977,7 +3356,11 @@
     "err_ujy": 58.33,
     "bad_in_aperture": 0,
     "x": 86.06,
-    "y": 86.01
+    "y": 86.01,
+    "wing_ujy": 453.45,
+    "wing_err_ujy": 165.16,
+    "wing2_ujy": 2130.94,
+    "wing2_err_ujy": 257.71
    },
    "target_radec": [
     133.7600066,
@@ -3003,7 +3386,11 @@
     "err_ujy": 187.53,
     "bad_in_aperture": 1,
     "x": 86.17,
-    "y": 86.03
+    "y": 86.03,
+    "wing_ujy": -710.47,
+    "wing_err_ujy": 515.57,
+    "wing2_ujy": 277.85,
+    "wing2_err_ujy": 770.37
    },
    "target_radec": [
     133.7600066,
@@ -3029,7 +3416,11 @@
     "err_ujy": 59.23,
     "bad_in_aperture": 0,
     "x": 85.77,
-    "y": 86.1
+    "y": 86.1,
+    "wing_ujy": 180.65,
+    "wing_err_ujy": 159.66,
+    "wing2_ujy": 1585.73,
+    "wing2_err_ujy": 244.85
    },
    "target_radec": [
     133.7600066,
@@ -3055,7 +3446,11 @@
     "err_ujy": 224.04,
     "bad_in_aperture": 3,
     "x": 85.66,
-    "y": 86.24
+    "y": 86.24,
+    "wing_ujy": -596.63,
+    "wing_err_ujy": 514.71,
+    "wing2_ujy": -1208.23,
+    "wing2_err_ujy": 788.36
    },
    "target_radec": [
     133.7600066,
@@ -3081,7 +3476,11 @@
     "err_ujy": 212.33,
     "bad_in_aperture": 0,
     "x": 86.15,
-    "y": 86.4
+    "y": 86.4,
+    "wing_ujy": 1049.46,
+    "wing_err_ujy": 529.64,
+    "wing2_ujy": 197.26,
+    "wing2_err_ujy": 812.54
    },
    "target_radec": [
     133.7600066,
@@ -3107,7 +3506,11 @@
     "err_ujy": 55.42,
     "bad_in_aperture": 0,
     "x": 86.17,
-    "y": 86.16
+    "y": 86.16,
+    "wing_ujy": 235.94,
+    "wing_err_ujy": 155.89,
+    "wing2_ujy": 1369.59,
+    "wing2_err_ujy": 238.11
    },
    "target_radec": [
     133.7600066,
@@ -3133,7 +3536,11 @@
     "err_ujy": 60.07,
     "bad_in_aperture": 0,
     "x": 85.7,
-    "y": 85.83
+    "y": 85.83,
+    "wing_ujy": 528.74,
+    "wing_err_ujy": 155.49,
+    "wing2_ujy": 1681.74,
+    "wing2_err_ujy": 240.37
    },
    "target_radec": [
     133.7600062,
@@ -3159,7 +3566,11 @@
     "err_ujy": 206.88,
     "bad_in_aperture": 0,
     "x": 85.96,
-    "y": 86.27
+    "y": 86.27,
+    "wing_ujy": -1958.63,
+    "wing_err_ujy": 550.96,
+    "wing2_ujy": -473.09,
+    "wing2_err_ujy": 857.31
    },
    "target_radec": [
     133.7600062,
@@ -3185,7 +3596,11 @@
     "err_ujy": 222.88,
     "bad_in_aperture": 0,
     "x": 85.42,
-    "y": 86.23
+    "y": 86.23,
+    "wing_ujy": -951.97,
+    "wing_err_ujy": 583.52,
+    "wing2_ujy": -38.36,
+    "wing2_err_ujy": 903.77
    },
    "target_radec": [
     133.7600062,
@@ -3211,7 +3626,11 @@
     "err_ujy": 56.98,
     "bad_in_aperture": 0,
     "x": 85.98,
-    "y": 86.5
+    "y": 86.5,
+    "wing_ujy": 105.45,
+    "wing_err_ujy": 153.53,
+    "wing2_ujy": 1476.68,
+    "wing2_err_ujy": 236.7
    },
    "target_radec": [
     133.7600062,
@@ -3237,7 +3656,11 @@
     "err_ujy": 59.17,
     "bad_in_aperture": 1,
     "x": 85.52,
-    "y": 86.36
+    "y": 86.36,
+    "wing_ujy": 277.5,
+    "wing_err_ujy": 159.25,
+    "wing2_ujy": 1277.07,
+    "wing2_err_ujy": 232.46
    },
    "target_radec": [
     133.7600062,
@@ -3263,7 +3686,11 @@
     "err_ujy": 218.55,
     "bad_in_aperture": 0,
     "x": 86.17,
-    "y": 86.13
+    "y": 86.13,
+    "wing_ujy": 574.98,
+    "wing_err_ujy": 607.51,
+    "wing2_ujy": 991.09,
+    "wing2_err_ujy": 941.59
    },
    "target_radec": [
     133.7600062,
@@ -3289,7 +3716,11 @@
     "err_ujy": 62.89,
     "bad_in_aperture": 0,
     "x": 85.63,
-    "y": 85.95
+    "y": 85.95,
+    "wing_ujy": 446.28,
+    "wing_err_ujy": 164.64,
+    "wing2_ujy": 879.49,
+    "wing2_err_ujy": 249.8
    },
    "target_radec": [
     133.7600039,
@@ -3315,7 +3746,11 @@
     "err_ujy": 110.54,
     "bad_in_aperture": 2,
     "x": 85.93,
-    "y": 86.44
+    "y": 86.44,
+    "wing_ujy": -61.6,
+    "wing_err_ujy": 261.7,
+    "wing2_ujy": -664.59,
+    "wing2_err_ujy": 406.86
    },
    "target_radec": [
     133.7598112,
@@ -3341,7 +3776,11 @@
     "err_ujy": 67.37,
     "bad_in_aperture": 0,
     "x": 85.97,
-    "y": 85.68
+    "y": 85.68,
+    "wing_ujy": 360.15,
+    "wing_err_ujy": 176.74,
+    "wing2_ujy": 2312.79,
+    "wing2_err_ujy": 275.38
    },
    "target_radec": [
     133.7598034,
@@ -3367,7 +3806,11 @@
     "err_ujy": 101.89,
     "bad_in_aperture": 0,
     "x": 86.27,
-    "y": 86.1
+    "y": 86.1,
+    "wing_ujy": 465.17,
+    "wing_err_ujy": 267.97,
+    "wing2_ujy": 187.73,
+    "wing2_err_ujy": 421.19
    },
    "target_radec": [
     133.7598029,
@@ -3393,7 +3836,11 @@
     "err_ujy": 65.52,
     "bad_in_aperture": 0,
     "x": 85.26,
-    "y": 85.76
+    "y": 85.76,
+    "wing_ujy": 506.91,
+    "wing_err_ujy": 169.59,
+    "wing2_ujy": 2200.98,
+    "wing2_err_ujy": 266.07
    },
    "target_radec": [
     133.7587696,
@@ -3419,7 +3866,11 @@
     "err_ujy": 142.82,
     "bad_in_aperture": 0,
     "x": 85.06,
-    "y": 86.25
+    "y": 86.25,
+    "wing_ujy": 522.83,
+    "wing_err_ujy": 382.59,
+    "wing2_ujy": 187.7,
+    "wing2_err_ujy": 590.49
    },
    "target_radec": [
     133.7587696,
@@ -3445,7 +3896,11 @@
     "err_ujy": 63.18,
     "bad_in_aperture": 0,
     "x": 85.01,
-    "y": 85.6
+    "y": 85.6,
+    "wing_ujy": 418.81,
+    "wing_err_ujy": 169.15,
+    "wing2_ujy": 1896.23,
+    "wing2_err_ujy": 258.58
    },
    "target_radec": [
     133.7587696,
@@ -3471,7 +3926,11 @@
     "err_ujy": 150.2,
     "bad_in_aperture": 0,
     "x": 85.62,
-    "y": 86.21
+    "y": 86.21,
+    "wing_ujy": 523.84,
+    "wing_err_ujy": 386.42,
+    "wing2_ujy": -1017.72,
+    "wing2_err_ujy": 598.0
    },
    "target_radec": [
     133.7587696,
@@ -3497,7 +3956,11 @@
     "err_ujy": 62.79,
     "bad_in_aperture": 0,
     "x": 85.83,
-    "y": 86.38
+    "y": 86.38,
+    "wing_ujy": 295.83,
+    "wing_err_ujy": 163.67,
+    "wing2_ujy": 1999.64,
+    "wing2_err_ujy": 252.53
    },
    "target_radec": [
     133.7587696,
@@ -3523,7 +3986,11 @@
     "err_ujy": 146.99,
     "bad_in_aperture": 0,
     "x": 85.2,
-    "y": 86.13
+    "y": 86.13,
+    "wing_ujy": -451.52,
+    "wing_err_ujy": 391.2,
+    "wing2_ujy": -811.88,
+    "wing2_err_ujy": 603.09
    },
    "target_radec": [
     133.7587696,
@@ -3549,7 +4016,11 @@
     "err_ujy": 63.52,
     "bad_in_aperture": 0,
     "x": 85.38,
-    "y": 85.89
+    "y": 85.89,
+    "wing_ujy": 598.72,
+    "wing_err_ujy": 156.55,
+    "wing2_ujy": 1141.68,
+    "wing2_err_ujy": 246.19
    },
    "target_radec": [
     133.7587651,
@@ -3575,7 +4046,11 @@
     "err_ujy": 170.21,
     "bad_in_aperture": 0,
     "x": 85.4,
-    "y": 85.86
+    "y": 85.86,
+    "wing_ujy": 283.08,
+    "wing_err_ujy": 416.93,
+    "wing2_ujy": -1122.51,
+    "wing2_err_ujy": 654.63
    },
    "target_radec": [
     133.7587651,
@@ -3601,7 +4076,11 @@
     "err_ujy": 61.68,
     "bad_in_aperture": 0,
     "x": 85.19,
-    "y": 86.51
+    "y": 86.51,
+    "wing_ujy": 210.12,
+    "wing_err_ujy": 158.37,
+    "wing2_ujy": 1373.13,
+    "wing2_err_ujy": 237.88
    },
    "target_radec": [
     133.7587651,
@@ -3627,7 +4106,11 @@
     "err_ujy": 156.2,
     "bad_in_aperture": 0,
     "x": 85.03,
-    "y": 85.6
+    "y": 85.6,
+    "wing_ujy": -904.54,
+    "wing_err_ujy": 423.26,
+    "wing2_ujy": -1387.18,
+    "wing2_err_ujy": 649.05
    },
    "target_radec": [
     133.7587651,
@@ -3653,7 +4136,11 @@
     "err_ujy": 170.58,
     "bad_in_aperture": 0,
     "x": 85.63,
-    "y": 86.2
+    "y": 86.2,
+    "wing_ujy": -205.62,
+    "wing_err_ujy": 433.61,
+    "wing2_ujy": 53.53,
+    "wing2_err_ujy": 689.71
    },
    "target_radec": [
     133.7587651,
@@ -3679,7 +4166,11 @@
     "err_ujy": 59.98,
     "bad_in_aperture": 0,
     "x": 85.69,
-    "y": 86.46
+    "y": 86.46,
+    "wing_ujy": 188.89,
+    "wing_err_ujy": 156.11,
+    "wing2_ujy": 2036.29,
+    "wing2_err_ujy": 238.86
    },
    "target_radec": [
     133.7587473,
@@ -3705,7 +4196,11 @@
     "err_ujy": 56.15,
     "bad_in_aperture": 0,
     "x": 85.29,
-    "y": 85.89
+    "y": 85.89,
+    "wing_ujy": 330.65,
+    "wing_err_ujy": 156.65,
+    "wing2_ujy": 151.18,
+    "wing2_err_ujy": 237.54
    },
    "target_radec": [
     133.7587473,
@@ -3731,7 +4226,11 @@
     "err_ujy": 193.11,
     "bad_in_aperture": 0,
     "x": 85.49,
-    "y": 86.31
+    "y": 86.31,
+    "wing_ujy": 522.45,
+    "wing_err_ujy": 484.15,
+    "wing2_ujy": -112.45,
+    "wing2_err_ujy": 733.68
    },
    "target_radec": [
     133.7587473,
@@ -3757,7 +4256,11 @@
     "err_ujy": 56.82,
     "bad_in_aperture": 0,
     "x": 85.37,
-    "y": 86.32
+    "y": 86.32,
+    "wing_ujy": 154.45,
+    "wing_err_ujy": 150.59,
+    "wing2_ujy": 1224.51,
+    "wing2_err_ujy": 227.36
    },
    "target_radec": [
     133.7587451,
@@ -3783,7 +4286,11 @@
     "err_ujy": 98.7,
     "bad_in_aperture": 0,
     "x": 85.79,
-    "y": 86.39
+    "y": 86.39,
+    "wing_ujy": 270.77,
+    "wing_err_ujy": 252.41,
+    "wing2_ujy": 398.83,
+    "wing2_err_ujy": 394.99
    },
    "target_radec": [
     133.7587124,
@@ -3809,7 +4316,11 @@
     "err_ujy": 67.49,
     "bad_in_aperture": 0,
     "x": 85.35,
-    "y": 86.34
+    "y": 86.34,
+    "wing_ujy": 386.56,
+    "wing_err_ujy": 175.65,
+    "wing2_ujy": 1826.4,
+    "wing2_err_ujy": 268.79
    },
    "target_radec": [
     133.7587124,
@@ -3835,7 +4346,11 @@
     "err_ujy": 97.38,
     "bad_in_aperture": 0,
     "x": 85.56,
-    "y": 85.96
+    "y": 85.96,
+    "wing_ujy": -194.45,
+    "wing_err_ujy": 257.64,
+    "wing2_ujy": -36.68,
+    "wing2_err_ujy": 404.62
    },
    "target_radec": [
     133.7587124,
@@ -3861,7 +4376,11 @@
     "err_ujy": 95.1,
     "bad_in_aperture": 0,
     "x": 85.08,
-    "y": 86.17
+    "y": 86.17,
+    "wing_ujy": -4.18,
+    "wing_err_ujy": 269.07,
+    "wing2_ujy": -372.18,
+    "wing2_err_ujy": 413.89
    },
    "target_radec": [
     133.7587124,
@@ -3887,7 +4406,11 @@
     "err_ujy": 50.61,
     "bad_in_aperture": 0,
     "x": 84.97,
-    "y": 86.27
+    "y": 86.27,
+    "wing_ujy": 144.77,
+    "wing_err_ujy": 134.73,
+    "wing2_ujy": 445.17,
+    "wing2_err_ujy": 211.33
    },
    "target_radec": [
     133.758712,
@@ -3913,7 +4436,11 @@
     "err_ujy": 1428.82,
     "bad_in_aperture": 0,
     "x": 85.79,
-    "y": 86.03
+    "y": 86.03,
+    "wing_ujy": 451.64,
+    "wing_err_ujy": 3996.26,
+    "wing2_ujy": 288.6,
+    "wing2_err_ujy": 6139.28
    },
    "target_radec": [
     133.758712,
@@ -3939,7 +4466,11 @@
     "err_ujy": 66.95,
     "bad_in_aperture": 0,
     "x": 84.96,
-    "y": 86.3
+    "y": 86.3,
+    "wing_ujy": 61.03,
+    "wing_err_ujy": 170.2,
+    "wing2_ujy": 934.33,
+    "wing2_err_ujy": 265.92
    },
    "target_radec": [
     133.7587077,
@@ -3965,7 +4496,11 @@
     "err_ujy": 55.6,
     "bad_in_aperture": 0,
     "x": 85.49,
-    "y": 86.31
+    "y": 86.31,
+    "wing_ujy": 366.81,
+    "wing_err_ujy": 142.67,
+    "wing2_ujy": 884.03,
+    "wing2_err_ujy": 212.88
    },
    "target_radec": [
     133.7587077,
@@ -3991,7 +4526,11 @@
     "err_ujy": 71.86,
     "bad_in_aperture": 0,
     "x": 85.72,
-    "y": 86.47
+    "y": 86.47,
+    "wing_ujy": 114.16,
+    "wing_err_ujy": 181.19,
+    "wing2_ujy": 1584.1,
+    "wing2_err_ujy": 275.1
    },
    "target_radec": [
     133.7587073,
@@ -4017,7 +4556,11 @@
     "err_ujy": 69.86,
     "bad_in_aperture": 0,
     "x": 85.64,
-    "y": 86.46
+    "y": 86.46,
+    "wing_ujy": 443.35,
+    "wing_err_ujy": 182.9,
+    "wing2_ujy": 1766.61,
+    "wing2_err_ujy": 276.79
    },
    "target_radec": [
     133.7587073,
@@ -4043,7 +4586,11 @@
     "err_ujy": 108.98,
     "bad_in_aperture": 0,
     "x": 85.22,
-    "y": 86.46
+    "y": 86.46,
+    "wing_ujy": -353.29,
+    "wing_err_ujy": 276.38,
+    "wing2_ujy": -397.32,
+    "wing2_err_ujy": 416.07
    },
    "target_radec": [
     133.7587073,
@@ -4069,7 +4616,11 @@
     "err_ujy": 69.39,
     "bad_in_aperture": 0,
     "x": 85.38,
-    "y": 86.07
+    "y": 86.07,
+    "wing_ujy": 137.75,
+    "wing_err_ujy": 178.49,
+    "wing2_ujy": 2389.98,
+    "wing2_err_ujy": 274.27
    },
    "target_radec": [
     133.7587021,
@@ -4095,7 +4646,11 @@
     "err_ujy": 114.72,
     "bad_in_aperture": 0,
     "x": 85.23,
-    "y": 85.68
+    "y": 85.68,
+    "wing_ujy": 530.79,
+    "wing_err_ujy": 295.25,
+    "wing2_ujy": 166.73,
+    "wing2_err_ujy": 455.56
    },
    "target_radec": [
     133.7587021,
@@ -4121,7 +4676,11 @@
     "err_ujy": 68.54,
     "bad_in_aperture": 0,
     "x": 85.36,
-    "y": 85.76
+    "y": 85.76,
+    "wing_ujy": 183.99,
+    "wing_err_ujy": 180.54,
+    "wing2_ujy": 2194.67,
+    "wing2_err_ujy": 272.24
    },
    "target_radec": [
     133.7587021,
@@ -4147,7 +4706,11 @@
     "err_ujy": 65.95,
     "bad_in_aperture": 0,
     "x": 85.37,
-    "y": 85.66
+    "y": 85.66,
+    "wing_ujy": 146.73,
+    "wing_err_ujy": 172.65,
+    "wing2_ujy": 1521.71,
+    "wing2_err_ujy": 263.26
    },
    "target_radec": [
     133.7587017,
@@ -4173,7 +4736,11 @@
     "err_ujy": 61.61,
     "bad_in_aperture": 0,
     "x": 85.05,
-    "y": 86.15
+    "y": 86.15,
+    "wing_ujy": 222.33,
+    "wing_err_ujy": 173.29,
+    "wing2_ujy": 1322.86,
+    "wing2_err_ujy": 265.42
    },
    "target_radec": [
     133.7587017,
@@ -4199,7 +4766,11 @@
     "err_ujy": 51.0,
     "bad_in_aperture": 0,
     "x": 85.26,
-    "y": 85.79
+    "y": 85.79,
+    "wing_ujy": 373.59,
+    "wing_err_ujy": 131.22,
+    "wing2_ujy": 608.0,
+    "wing2_err_ujy": 206.17
    },
    "target_radec": [
     133.7587017,
@@ -4225,7 +4796,11 @@
     "err_ujy": 68.31,
     "bad_in_aperture": 0,
     "x": 85.62,
-    "y": 85.7
+    "y": 85.7,
+    "wing_ujy": 189.77,
+    "wing_err_ujy": 176.72,
+    "wing2_ujy": 1298.75,
+    "wing2_err_ujy": 271.26
    },
    "target_radec": [
     133.7587017,
@@ -4251,7 +4826,11 @@
     "err_ujy": 48.37,
     "bad_in_aperture": 0,
     "x": 85.38,
-    "y": 86.52
+    "y": 86.52,
+    "wing_ujy": 264.53,
+    "wing_err_ujy": 130.28,
+    "wing2_ujy": 866.2,
+    "wing2_err_ujy": 200.57
    },
    "target_radec": [
     133.7587017,
@@ -4277,7 +4856,11 @@
     "err_ujy": 69.79,
     "bad_in_aperture": 0,
     "x": 85.24,
-    "y": 85.83
+    "y": 85.83,
+    "wing_ujy": 424.06,
+    "wing_err_ujy": 179.52,
+    "wing2_ujy": 2159.87,
+    "wing2_err_ujy": 278.67
    },
    "target_radec": [
     133.7586937,
@@ -4303,7 +4886,11 @@
     "err_ujy": 47.71,
     "bad_in_aperture": 0,
     "x": 85.51,
-    "y": 86.56
+    "y": 86.56,
+    "wing_ujy": 157.92,
+    "wing_err_ujy": 125.49,
+    "wing2_ujy": 214.86,
+    "wing2_err_ujy": 199.23
    },
    "target_radec": [
     133.7586937,
@@ -4329,7 +4916,11 @@
     "err_ujy": 66.97,
     "bad_in_aperture": 0,
     "x": 85.04,
-    "y": 86.33
+    "y": 86.33,
+    "wing_ujy": 124.98,
+    "wing_err_ujy": 181.37,
+    "wing2_ujy": 1585.47,
+    "wing2_err_ujy": 265.32
    },
    "target_radec": [
     133.7586933,
@@ -4355,7 +4946,11 @@
     "err_ujy": 50.27,
     "bad_in_aperture": 0,
     "x": 85.6,
-    "y": 86.28
+    "y": 86.28,
+    "wing_ujy": 274.54,
+    "wing_err_ujy": 130.84,
+    "wing2_ujy": 609.28,
+    "wing2_err_ujy": 202.26
    },
    "target_radec": [
     133.7586933,
@@ -4381,7 +4976,11 @@
     "err_ujy": 70.5,
     "bad_in_aperture": 0,
     "x": 85.82,
-    "y": 85.6
+    "y": 85.6,
+    "wing_ujy": 228.94,
+    "wing_err_ujy": 174.74,
+    "wing2_ujy": 1637.54,
+    "wing2_err_ujy": 271.16
    },
    "target_radec": [
     133.7586933,
@@ -4407,7 +5006,11 @@
     "err_ujy": 44.43,
     "bad_in_aperture": 1,
     "x": 85.0,
-    "y": 85.94
+    "y": 85.94,
+    "wing_ujy": 110.13,
+    "wing_err_ujy": 123.65,
+    "wing2_ujy": 552.15,
+    "wing2_err_ujy": 194.78
    },
    "target_radec": [
     133.758689,
@@ -4433,7 +5036,11 @@
     "err_ujy": 63.76,
     "bad_in_aperture": 0,
     "x": 84.95,
-    "y": 85.98
+    "y": 85.98,
+    "wing_ujy": 172.07,
+    "wing_err_ujy": 179.43,
+    "wing2_ujy": 1828.21,
+    "wing2_err_ujy": 275.3
    },
    "target_radec": [
     133.7586874,
@@ -4459,7 +5066,11 @@
     "err_ujy": 49.52,
     "bad_in_aperture": 0,
     "x": 85.86,
-    "y": 86.29
+    "y": 86.29,
+    "wing_ujy": -6.13,
+    "wing_err_ujy": 125.88,
+    "wing2_ujy": 518.48,
+    "wing2_err_ujy": 198.7
    },
    "target_radec": [
     133.7586874,
@@ -4485,7 +5096,11 @@
     "err_ujy": 66.71,
     "bad_in_aperture": 0,
     "x": 85.74,
-    "y": 86.07
+    "y": 86.07,
+    "wing_ujy": -77.98,
+    "wing_err_ujy": 179.82,
+    "wing2_ujy": 1441.6,
+    "wing2_err_ujy": 275.09
    },
    "target_radec": [
     133.7586874,
@@ -4511,7 +5126,11 @@
     "err_ujy": 190.07,
     "bad_in_aperture": 0,
     "x": 84.98,
-    "y": 86.17
+    "y": 86.17,
+    "wing_ujy": -86.89,
+    "wing_err_ujy": 528.36,
+    "wing2_ujy": -482.78,
+    "wing2_err_ujy": 819.05
    },
    "target_radec": [
     133.7586666,
@@ -4537,7 +5156,11 @@
     "err_ujy": 55.15,
     "bad_in_aperture": 0,
     "x": 85.88,
-    "y": 85.83
+    "y": 85.83,
+    "wing_ujy": 196.87,
+    "wing_err_ujy": 156.08,
+    "wing2_ujy": 1178.59,
+    "wing2_err_ujy": 240.69
    },
    "target_radec": [
     133.7586653,
@@ -4563,7 +5186,11 @@
     "err_ujy": 58.38,
     "bad_in_aperture": 0,
     "x": 85.26,
-    "y": 85.97
+    "y": 85.97,
+    "wing_ujy": 556.84,
+    "wing_err_ujy": 155.42,
+    "wing2_ujy": 967.11,
+    "wing2_err_ujy": 241.95
    },
    "target_radec": [
     133.7586633,
@@ -4589,7 +5216,11 @@
     "err_ujy": 212.41,
     "bad_in_aperture": 0,
     "x": 85.08,
-    "y": 86.23
+    "y": 86.23,
+    "wing_ujy": -51.81,
+    "wing_err_ujy": 565.36,
+    "wing2_ujy": 1411.75,
+    "wing2_err_ujy": 871.53
    },
    "target_radec": [
     133.7586633,
@@ -4615,7 +5246,11 @@
     "err_ujy": 213.76,
     "bad_in_aperture": 0,
     "x": 85.77,
-    "y": 85.95
+    "y": 85.95,
+    "wing_ujy": 265.66,
+    "wing_err_ujy": 587.18,
+    "wing2_ujy": 6.89,
+    "wing2_err_ujy": 932.51
    },
    "target_radec": [
     133.7586608,
@@ -4641,7 +5276,11 @@
     "err_ujy": 57.85,
     "bad_in_aperture": 0,
     "x": 85.02,
-    "y": 85.94
+    "y": 85.94,
+    "wing_ujy": 220.02,
+    "wing_err_ujy": 159.85,
+    "wing2_ujy": 1270.11,
+    "wing2_err_ujy": 251.02
    },
    "target_radec": [
     133.7586539,
@@ -4667,7 +5306,11 @@
     "err_ujy": 229.52,
     "bad_in_aperture": 0,
     "x": 85.44,
-    "y": 86.46
+    "y": 86.46,
+    "wing_ujy": -1195.78,
+    "wing_err_ujy": 603.68,
+    "wing2_ujy": -675.86,
+    "wing2_err_ujy": 953.57
    },
    "target_radec": [
     133.7586539,
@@ -4693,7 +5336,11 @@
     "err_ujy": 67.63,
     "bad_in_aperture": 0,
     "x": 85.38,
-    "y": 86.0
+    "y": 86.0,
+    "wing_ujy": 0.78,
+    "wing_err_ujy": 184.51,
+    "wing2_ujy": 2023.97,
+    "wing2_err_ujy": 278.9
    },
    "target_radec": [
     133.7586474,
@@ -4719,7 +5366,11 @@
     "err_ujy": 132.75,
     "bad_in_aperture": 0,
     "x": 85.46,
-    "y": 85.87
+    "y": 85.87,
+    "wing_ujy": -255.44,
+    "wing_err_ujy": 329.05,
+    "wing2_ujy": -502.29,
+    "wing2_err_ujy": 513.08
    },
    "target_radec": [
     133.7586474,
@@ -4745,7 +5396,11 @@
     "err_ujy": 67.96,
     "bad_in_aperture": 0,
     "x": 85.73,
-    "y": 86.06
+    "y": 86.06,
+    "wing_ujy": 432.93,
+    "wing_err_ujy": 178.72,
+    "wing2_ujy": 2645.2,
+    "wing2_err_ujy": 280.96
    },
    "target_radec": [
     133.7586421,
@@ -4771,7 +5426,11 @@
     "err_ujy": 126.63,
     "bad_in_aperture": 0,
     "x": 85.26,
-    "y": 86.03
+    "y": 86.03,
+    "wing_ujy": 81.05,
+    "wing_err_ujy": 337.04,
+    "wing2_ujy": -817.91,
+    "wing2_err_ujy": 523.48
    },
    "target_radec": [
     133.7586421,
@@ -4797,7 +5456,11 @@
     "err_ujy": 76.77,
     "bad_in_aperture": 0,
     "x": 85.8,
-    "y": 86.46
+    "y": 86.46,
+    "wing_ujy": 509.93,
+    "wing_err_ujy": 198.33,
+    "wing2_ujy": 1957.92,
+    "wing2_err_ujy": 296.78
    },
    "target_radec": [
     133.7586385,
@@ -4823,7 +5486,11 @@
     "err_ujy": 141.77,
     "bad_in_aperture": 0,
     "x": 85.81,
-    "y": 86.59
+    "y": 86.59,
+    "wing_ujy": 285.48,
+    "wing_err_ujy": 355.66,
+    "wing2_ujy": -109.06,
+    "wing2_err_ujy": 553.65
    },
    "target_radec": [
     133.7586385,
@@ -4849,7 +5516,11 @@
     "err_ujy": 72.92,
     "bad_in_aperture": 0,
     "x": 85.38,
-    "y": 86.06
+    "y": 86.06,
+    "wing_ujy": 449.34,
+    "wing_err_ujy": 203.58,
+    "wing2_ujy": 2591.05,
+    "wing2_err_ujy": 298.21
    },
    "target_radec": [
     133.7586349,
@@ -4875,7 +5546,11 @@
     "err_ujy": 138.57,
     "bad_in_aperture": 0,
     "x": 85.81,
-    "y": 86.32
+    "y": 86.32,
+    "wing_ujy": -294.6,
+    "wing_err_ujy": 356.64,
+    "wing2_ujy": 128.03,
+    "wing2_err_ujy": 555.78
    },
    "target_radec": [
     133.7586349,
@@ -6083,5 +6758,11 @@
    17.49
   ]
  ],
- "gaia_note": "ESA Gaia DR3 (via MAST), G < 17.5; [ra, dec, pmra mas/yr, pmdec mas/yr, G] at epoch 2016.0"
+ "gaia_note": "ESA Gaia DR3 (via MAST), G < 17.5; [ra, dec, pmra mas/yr, pmdec mas/yr, G] at epoch 2016.0",
+ "diff_floor": {
+  "f_used": 0.12,
+  "star_resid_this_field": 0.162,
+  "n_star_measurements": 84,
+  "stars": 9
+ }
 }
