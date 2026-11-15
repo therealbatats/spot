@@ -614,7 +614,8 @@ def build(t, half=None):
                            "obsids": [m["obsid"] for m in ms], "detectors": sorted({m["detector"] for m in ms}),
                            "pred_xy": [round(float(xe), 2), round(float(shape[0] - 1 - ye), 2)],
                            "meas_xy": [round(c[0], 2), round(float(shape[0] - 1 - c[1]), 2)] if c else None})
-        lo0, hi0 = stretch_params(imgs0)
+        v0 = np.concatenate([i[np.isfinite(i)] for i in imgs0])
+        lo0, hi0 = float(np.percentile(v0, 2)), float(np.percentile(v0, 99.0))  # harder stretch: faint movers
         for it, im in zip(items0, imgs0):
             it["png"] = f"b0_e{it['epoch']}.png"
             to_png(im, lo0, hi0, outdir / it["png"])

@@ -45,6 +45,15 @@
       <label>Declination <input id="decIn" name="dec" placeholder="-07d14m42s or -7.245" required></label>
       <button type="submit" class="btn primary">Show this sky</button>
     </form>
+    <div class="chanbtns" id="examples" aria-label="Examples">
+      <button type="button" data-f="pluto">Pluto</button>
+      <button type="button" data-f="barnard">Barnard's Star</button>
+      <button type="button" data-f="wise0855">WISE 0855−0714</button>
+      <button type="button" data-f="epsindb">Epsilon Indi B</button>
+      <button type="button" data-f="rdra">R Draconis</button>
+      <button type="button" data-f="rwaur">RW Aurigae</button>
+      <button type="button" data-ra="83.8221" data-dec="-5.3911">Orion Nebula (built live)</button>
+    </div>
     <p class="small muted">Every image is real NASA SPHEREx data. Anything we draw ourselves is labelled <span class="simtag">SIMULATED</span>.</p>
     <details class="liveopts">
       <summary>Options for positions that are not ready-made (built live in your browser)</summary>
@@ -202,7 +211,7 @@
   <p>Images: NASA SPHEREx Level-2 spectral images and NASA WISE (AllWISE) images from the NASA/IPAC Infrared Science Archive (IRSA), read from IRSA's public AWS mirrors. <span id="citation"></span></p>
   <p>Made by Ali (team AITHMAC, Baghdad) for the 2026 NASA Space Apps Challenge. Parts of the code and text were written with AI assistance and reviewed by the author. Not an official NASA product. Code under the MIT License. <span id="buildInfo"></span></p>
 </footer>
-<script src="app.js?v=26"></script>
+<script src="app.js?v=27"></script>
 <script src="live.js?v=9"></script>
 <script src="hero.js?v=3"></script>
 </body>

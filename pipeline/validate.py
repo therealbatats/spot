@@ -121,17 +121,7 @@ def main():
                 P(f"Predicted total shift first→last visit: {np.hypot(tr[-1]['x'] - tr[0]['x'], tr[-1]['y'] - tr[0]['y']):.2f} px "
                   f"({np.hypot(tr[-1]['x'] - tr[0]['x'], tr[-1]['y'] - tr[0]['y']) * 6.15:.1f}″) between {tr[0]['utc'][:10]} and {tr[-1]['utc'][:10]}.")
                 P()
-        if f["kind"] == "control":
-            P("**Check 4 — control field** (fraction of difference-image pixels at the ±saturation of the symmetric display stretch, per band; the stretch is set at the 99.5th percentile so ~0.5% is expected from noise alone)")
-            P()
-            for b in f["bands"]:
-                fr = []
-                for df in b["diffs"]:
-                    im = np.array(Image.open(d / df["png"]))
-                    v, al = im[..., 0].astype(int), im[..., 1] > 0
-                    fr.append(f"{df['a']}→{df['b']}: {np.mean((np.abs(v[al] - 127.5) > 126)) * 100:.2f}%")
-                P(f"- D{b['detector']}: " + ", ".join(fr))
-            P()
+        # (old check 4 removed: a fixed-percentile stretch makes it pass by construction; see check_diff.py)
     text = "\n".join(lines)
     (ROOT / "cache" / "validation_auto.md").write_text(text)
     print(text)
