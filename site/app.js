@@ -92,6 +92,7 @@ async function init() {
   const m = S.manifest;
   $("#appName").textContent = m.app_name || "SPOT";
   $("#citation").textContent = m.citation || "";
+  if ($("#buildInfo")) $("#buildInfo").textContent = `Version 1.0.0. Data built ${String(m.generated_utc || "").slice(0, 10)} from SPHEREx releases ${(m.data_releases || []).join(", ")}.`;
   if (m.repo_url) $("#repoLink").href = m.repo_url;
   renderCards();
   renderAbout();
@@ -100,7 +101,7 @@ async function init() {
   if (q.get("ra") && q.get("dec")) { $("#raIn").value = q.get("ra"); $("#decIn").value = q.get("dec"); goCoords(q.get("ra"), q.get("dec"), true, q.get("live") === "1"); }
   else if (q.get("field")) {
     await openField(q.get("field"), q);
-    if (q.get("px") === "1") { $("#pxOn").checked = true; S.px = true; if (q.get("au")) { S.pxD = +q.get("au"); $("#pxDistVal").textContent = S.pxD; $("#pxDist").value = Math.log10(S.pxD / 100); } $("#pxPanel").open = true; syncButtons(); pxInfo(); draw(); }
+    if (q.get("px") === "1") { $("#pxOn").checked = true; S.px = true; if (q.get("au")) { S.pxD = +q.get("au"); $("#pxDistVal").textContent = S.pxD; $("#pxDist").value = Math.log10(S.pxD / 100); } openTab("pxPanel"); syncButtons(); pxInfo(); draw(); }
     if (location.hash === "#viewer") $("#viewer").scrollIntoView();
   }
 }
@@ -140,6 +141,8 @@ async function showField(f, meta, q) {
     if (q.get("mode")) S.mode = q.get("mode");
   }
   S.wiseOn = !!(f.wise && f.story && f.story.wise_default);
+  S.vc = null; S.zoom = q && q.get("zoom") ? +q.get("zoom") : (S.zoom || 1); if ($("#zoomSel")) $("#zoomSel").value = S.zoom;
+  openTab("explainPanel");
   if (q && q.get("wise")) S.wiseOn = q.get("wise") === "1" && !!f.wise;
   if (!band()) S.det = f.bands[0].detector;
   if (S.data === "chan" && !f.channels.length) S.data = "band";
@@ -158,14 +161,15 @@ async function showField(f, meta, q) {
 function renderBandBtns() {
   const f = S.field, box = $("#bandBtns");
   if (S.data === "band") {
-    box.innerHTML = [1, 2, 3, 4, 5, 6].map(d => {
-      const b = f.bands.find(x => x.detector === d);
-      return `<button data-det="${d}" ${b ? "" : "disabled"} aria-pressed="${d === S.det}" title="${b ? esc(b.label) : "no data"}">D${d}<br>${b ? b.range_um[0] + "–" + b.range_um[1] + " µm" : "—"}</button>`;
-    }).join("");
+    const R = { 1: [0.75, 1.09], 2: [1.10, 1.62], 3: [1.63, 2.41], 4: [2.42, 3.82], 5: [3.83, 4.41], 6: [4.42, 5.00] };
+    box.innerHTML = `<div class="rulerbar" role="group" aria-label="Wavelength: choose a detector band">` + [1, 2, 3, 4, 5, 6].map(d => {
+      const b = f.bands.find(x => x.detector === d), w = R[d][1] - R[d][0];
+      return `<button data-det="${d}" ${b ? "" : "disabled"} aria-pressed="${d === S.det}" style="flex:${w.toFixed(2)} 1 0;background:var(--d${d})" title="${b ? esc(b.label) : "no data"}" aria-label="D${d}, ${R[d][0]} to ${R[d][1]} micrometres">D${d}</button>`;
+    }).join("") + `</div><div class="rulerscale"><span>0.75 µm</span><span>2 µm</span><span>5 µm</span></div>`;
     const b = band();
-    $("#dataHelp").innerHTML = b ? `<strong>${esc(b.label)}.</strong> All frames this detector took of this spot during one visit are added together for a cleaner picture (the challenge's suggestion). Each visit is compared with the same detector at the other visits.` : "";
+    $("#dataHelp").innerHTML = b ? `<strong>${esc(b.label)}.</strong> All frames this detector took of this spot during one visit are added for a cleaner picture, using only the wavelengths every visit covered.` : "";
   } else {
-    box.innerHTML = f.channels.map(c => `<button data-chan="${c.id}" aria-pressed="${c.id === S.chan}">${c.wavelength_um.toFixed(2)} µm<br>D${c.detector}</button>`).join("") || "<p class='small muted'>No matched wavelengths for this field.</p>";
+    box.innerHTML = `<div class="chanbtns">` + (f.channels.map(c => `<button data-chan="${c.id}" aria-pressed="${c.id === S.chan}">${c.wavelength_um.toFixed(2)} µm · D${c.detector}</button>`).join("") || "<p class='small muted'>No matched wavelengths for this field.</p>") + `</div>`;
     const c = chan();
     $("#dataHelp").innerHTML = c ? `Single frames whose wavelength at the target differs by less than half a bandwidth (${(c.bandwidth_um / 2).toFixed(3)} µm). This is the strictest comparison: same colour of light, different dates.` : "";
   }
@@ -188,8 +192,8 @@ function syncButtons() {
   $("#dataSeg button[data-data=chan]").disabled = !S.field.channels.length;
   const sumBtn = $("#modeSeg button[data-mode=sum]"); sumBtn.disabled = S.data === "chan";
   const help = {
-    blink: "Flips between dates A and B. Things that jump are moving; things that flash are changing brightness.",
-    swipe: "Drag the orange line. Left of it: date A. Right of it: date B.",
+    blink: "Flips between the earlier and the later date. Things that jump are moving; things that flash are changing brightness.",
+    swipe: "Drag the orange line. Left of it: the earlier date. Right of it: the later date.",
     diff: S.rawDiff
       ? "Raw difference, later minus earlier. Even stars that do not change leave small black-and-white pairs here, because the pixels are coarse and the two visits are never perfectly sharp in the same way."
       : "Significance of change, later minus earlier. Grey: nothing changed beyond what steady stars show. White: brighter later. Black: brighter earlier. A moving star leaves a black-and-white pair. Full white or black means about 5 times the change steady stars show: a bright star must change by more than about 60% of its peak, or move by roughly one pixel (6 arcseconds) or more. Lone dots are usually artifacts (cosmic rays, satellite trails, reflections of very bright stars): check the frames before trusting one.",
@@ -199,7 +203,7 @@ function syncButtons() {
   $("#modeHelp").textContent = help[S.mode];
   $("#rawWrap").hidden = S.mode !== "diff";
   $("#wiseWrap").hidden = !(S.field && S.field.wise) || S.data !== "band"; $("#wiseOn").checked = !!S.wiseOn;
-  $("#playBtn").textContent = S.playing ? "❚❚ Pause" : "▶ Play";
+  $("#playBtn").textContent = S.playing ? "Pause" : "Play"; $("#stagePlay").textContent = S.playing ? "Pause" : "Play";
   $("#swipeHandle").hidden = S.mode !== "swipe";
   $("#simBanner").hidden = !S.px;
   updateURL();
@@ -211,6 +215,7 @@ function updateURL() {
   const q = new URLSearchParams({ field: S.fieldId, data: S.data, mode: S.mode, a: S.a, b: S.b, t: S.t });
   if (S.data === "band") q.set("det", S.det); else q.set("chan", S.chan);
   if (S.px) { q.set("px", 1); q.set("au", S.pxD); }
+  if ((S.zoom || 1) > 1) q.set("zoom", S.zoom);
   if (S.field && S.field.wise) q.set("wise", S.wiseOn ? 1 : 0);
   history.replaceState(null, "", "?" + q.toString() + location.hash);
 }
@@ -225,9 +230,9 @@ async function draw() {
   if (!items.length) { ctx.fillStyle = "#000"; ctx.fillRect(0, 0, cv.width, cv.height); $("#frameLabel").textContent = "No data for this selection."; return; }
   const A = items[S.a] || items[0], B = items[S.b] || items[items.length - 1];
   let cur = A, label = "", srcs = [];
-  if (S.mode === "blink") { cur = S.phase ? B : A; srcs = [fieldPath(cur.png)]; label = `${S.phase ? "B" : "A"}: ${cur.label}`; }
+  if (S.mode === "blink") { cur = S.phase ? B : A; srcs = [fieldPath(cur.png)]; label = `${S.phase ? "Later" : "Earlier"}: ${cur.label}`; }
   else if (S.mode === "timeline") { cur = items[S.t] || A; srcs = [fieldPath(cur.png)]; label = `${S.t + 1}/${items.length}: ${cur.label}`; }
-  else if (S.mode === "swipe") { srcs = [fieldPath(A.png), fieldPath(B.png)]; label = `Left A: ${fmtDate(A.utc)} · Right B: ${fmtDate(B.utc)}`; }
+  else if (S.mode === "swipe") { srcs = [fieldPath(A.png), fieldPath(B.png)]; label = `Left: ${fmtDate(A.utc)}. Right: ${fmtDate(B.utc)}`; }
   else if (S.mode === "sum") { const b = band(); srcs = [fieldPath(b.all_png)]; label = `All ${items.length} visits added together (detector ${S.det})`; cur = null; }
   else if (S.mode === "diff") {
     const d = findDiff(A, B);
@@ -239,6 +244,9 @@ async function draw() {
   try { ims = await Promise.all(srcs.map(loadImg)); } catch (e) { $("#frameLabel").textContent = "Image failed to load."; return; }
   if (tok !== drawToken) return;
   ctx.imageSmoothingEnabled = false;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  const vt = viewXform(cv, cur || A);
+  ctx.setTransform(vt.z, 0, 0, vt.z, -vt.ox * vt.z, -vt.oy * vt.z);
   // background: missing / flagged pixels show through (transparent in the PNG)
   if (S.ovFlags) { ctx.fillStyle = "#ff2fa8"; } else { ctx.fillStyle = S.mode === "diff" ? "#808080" : "#000"; }
   ctx.fillRect(0, 0, cv.width, cv.height);
@@ -253,8 +261,50 @@ async function draw() {
     ctx.drawImage(S.ovFlags ? flagged(ims[0]) : ims[0], 0, 0, cv.width, cv.height);
   }
   drawOverlays(ctx, cur, A, B, items);
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  drawFrameInfo(ctx, cv, vt, cur);
   $("#frameLabel").textContent = label;
   renderLegend();
+}
+
+// ---- zoom: S.zoom (1, 2, 4) and centre S.vc (grid px). Returns canvas-space origin and scale.
+function viewXform(cv, it) {
+  const z = S.zoom || 1, W = cv.width, n = S.field.grid_px;
+  let c = S.vc;
+  if (!c) { const p = it && targetXY(it); c = p && S.field.kind !== "control" ? p : [(n - 1) / 2, (n - 1) / 2]; }
+  const cx = (c[0] + 0.5) * SCALE, cy = (c[1] + 0.5) * SCALE;
+  const ox = Math.min(Math.max(cx - W / (2 * z), 0), W - W / z), oy = Math.min(Math.max(cy - W / (2 * z), 0), W - W / z);
+  return { z, ox, oy };
+}
+function canvasToGrid(e) {
+  const cv = $("#cv"), r = cv.getBoundingClientRect(), vt = S.vt || { z: 1, ox: 0, oy: 0 };
+  const px = (e.clientX - r.left) / r.width * cv.width, py = (e.clientY - r.top) / r.height * cv.height;
+  return [(vt.ox + px / vt.z) / SCALE, (vt.oy + py / vt.z) / SCALE, px, py];
+}
+function gridToSky(gx, gy) { // inverse of skyToGrid (TAN projection)
+  const f = S.field, r = Math.PI / 180, n = f.grid_px, s = f.pixel_scale_arcsec / 3600;
+  const xi = -(gx - (n - 1) / 2) * s * r, eta = -(gy - (n - 1) / 2) * s * r, d0 = f.dec_deg * r, rho = Math.hypot(xi, eta), c = Math.atan(rho);
+  if (!rho) return [f.ra_deg, f.dec_deg];
+  const dec = Math.asin(Math.cos(c) * Math.sin(d0) + eta * Math.sin(c) * Math.cos(d0) / rho);
+  const ra = f.ra_deg * r + Math.atan2(xi * Math.sin(c), rho * Math.cos(d0) * Math.cos(c) - eta * Math.sin(d0) * Math.sin(c));
+  return [((ra / r) % 360 + 360) % 360, dec / r];
+}
+function hms(ra) { const h = ra / 15, H = Math.floor(h), m = (h - H) * 60, M = Math.floor(m), sec = (m - M) * 60; return `${String(H).padStart(2, "0")}h${String(M).padStart(2, "0")}m${sec.toFixed(1).padStart(4, "0")}s`; }
+function dms(d) { const sg = d < 0 ? "−" : "+", a = Math.abs(d), D = Math.floor(a), m = (a - D) * 60, M = Math.floor(m), sec = (m - M) * 60; return `${sg}${String(D).padStart(2, "0")}°${String(M).padStart(2, "0")}′${sec.toFixed(0).padStart(2, "0")}″`; }
+// compass, scale bar and zoom tag, drawn in screen space on top of the image
+function drawFrameInfo(ctx, cv, vt, cur) {
+  S.vt = vt;
+  const k = cv.width / 702, pad = 14 * k;
+  ctx.font = `600 ${15 * k}px Plex, system-ui`; ctx.lineWidth = 2 * k; ctx.strokeStyle = "#E8EEF7"; ctx.fillStyle = "#E8EEF7";
+  ctx.shadowColor = "#000"; ctx.shadowBlur = 3;
+  ctx.beginPath(); ctx.moveTo(pad + 12 * k, pad + 34 * k); ctx.lineTo(pad + 12 * k, pad + 8 * k); ctx.moveTo(pad + 12 * k, pad + 34 * k); ctx.lineTo(pad + 38 * k, pad + 34 * k); ctx.stroke();
+  ctx.fillText("N", pad + 6 * k, pad + 6 * k); ctx.fillText("E", pad + 42 * k, pad + 39 * k);
+  const L = 60 / S.field.pixel_scale_arcsec * SCALE * vt.z; // one arcminute on screen
+  const x1 = cv.width - pad, y1 = cv.height - pad;
+  ctx.beginPath(); ctx.moveTo(x1 - L, y1); ctx.lineTo(x1, y1); ctx.stroke();
+  const lab = "1′", tw = ctx.measureText(lab).width; ctx.fillText(lab, x1 - L / 2 - tw / 2, y1 - 6 * k);
+  if (vt.z > 1) ctx.fillText(`${vt.z}×`, cv.width - pad - 26 * k, pad + 14 * k);
+  ctx.shadowBlur = 0;
 }
 
 // Pixels SPHEREx flagged are stored with alpha 254 (filled for display) or 0 (no data).
@@ -295,20 +345,21 @@ function findDiff(A, B) {
 }
 
 function drawOverlays(ctx, cur, A, B, items) {
-  const f = S.field, k = SCALE, hidden = S.game && !S.game.revealed;
+  const f = S.field, k = SCALE, zf = S.zoom || 1, hidden = S.game && !S.game.revealed;
   const pts = [];
   if (cur) pts.push(cur); else { pts.push(A); if (B !== A) pts.push(B); }
   // target marker(s)
   if (S.ovTarget && !hidden && f.kind !== "control" && f.kind !== "custom") {
     // faint trail of all predicted positions
-    ctx.strokeStyle = "rgba(111,211,255,0.45)"; ctx.lineWidth = 2; ctx.beginPath();
+    ctx.strokeStyle = "rgba(255,106,61,0.55)"; ctx.lineWidth = 2; ctx.beginPath();
     items.forEach((it, i) => { const p = targetXY(it); if (!p) return; const x = (p[0] + 0.5) * k, y = (p[1] + 0.5) * k; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
     ctx.stroke();
     pts.forEach((it, j) => {
       const p = targetXY(it); if (!p) return;
       const x = (p[0] + 0.5) * k, y = (p[1] + 0.5) * k;
-      ctx.strokeStyle = "#6fd3ff"; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(x, y, 5 * k, 0, 2 * Math.PI); ctx.stroke();
-      ctx.fillStyle = "#6fd3ff"; ctx.font = `bold ${4 * k}px system-ui`;
+      ctx.strokeStyle = "#0B1220"; ctx.lineWidth = 5 / zf; ctx.beginPath(); ctx.arc(x, y, 5 * k, 0, 2 * Math.PI); ctx.stroke();
+      ctx.strokeStyle = "#FF6A3D"; ctx.lineWidth = 3 / zf; ctx.beginPath(); ctx.arc(x, y, 5 * k, 0, 2 * Math.PI); ctx.stroke();
+      ctx.fillStyle = "#FF6A3D"; ctx.font = `600 ${4 * k / zf}px Plex, system-ui`;
       const lab = pts.length > 1 ? (j ? "later" : "earlier") : "target";
       ctx.fillText(lab, Math.min(x + 5.5 * k, ctx.canvas.width - ctx.measureText(lab).width - 4), y - 4 * k + (j ? 9 * k : 0));
     });
@@ -316,7 +367,7 @@ function drawOverlays(ctx, cur, A, B, items) {
   // Gaia overlay (positions moved to the image date with Gaia proper motions)
   if (S.ovGaia && f.gaia && !hidden) {
     const it = pts[0]; const mjd = it ? itemMJD(it) : null; const yr = mjd ? mjdToYear(mjd) : 2016.0;
-    ctx.strokeStyle = "rgba(255,181,71,0.9)"; ctx.lineWidth = 2;
+    ctx.strokeStyle = "rgba(169,188,214,0.9)"; ctx.lineWidth = 2;
     for (const g of f.gaia) {
       const dt = yr - 2016.0;
       const dec = g[1] + (g[3] || 0) * dt / 3.6e6, ra = g[0] + (g[2] || 0) * dt / 3.6e6 / Math.cos(g[1] * Math.PI / 180);
@@ -336,7 +387,7 @@ function drawOverlays(ctx, cur, A, B, items) {
         ctx.save(); ctx.translate(ex, ey); ctx.rotate(ang); ctx.fillStyle = "#ff6bd6";
         ctx.beginPath(); ctx.moveTo(4 * k, 0); ctx.lineTo(-3 * k, -3 * k); ctx.lineTo(-3 * k, 3 * k); ctx.closePath(); ctx.fill(); ctx.restore();
         const off = Math.hypot(dx, dy) * f.pixel_scale_arcsec / 60;
-        ctx.fillStyle = "#ff6bd6"; ctx.font = `bold ${3.4 * k}px system-ui`;
+        ctx.fillStyle = "#ff6bd6"; ctx.font = `600 ${3.4 * k / zf}px Plex, system-ui`;
         const tx = Math.min(Math.max(ex - 30 * k, 2 * k), (n - 62) * k), ty = Math.min(Math.max(ey + (ey > n * k / 2 ? -5 * k : 8 * k), 5 * k), (n - 2) * k);
         ctx.fillText(`SIMULATED planet${pts.length > 1 ? (j ? " (B)" : " (A)") : ""}: off field, ${off.toFixed(0)}′ from centre`, tx, ty);
         return;
@@ -347,7 +398,7 @@ function drawOverlays(ctx, cur, A, B, items) {
       ctx.fillStyle = g; ctx.beginPath(); ctx.arc(X, Y, 1.6 * k, 0, 2 * Math.PI); ctx.fill();
       if (!hidden) {
         ctx.setLineDash([6, 5]); ctx.strokeStyle = "#ff6bd6"; ctx.lineWidth = 2; ctx.strokeRect(X - 5 * k, Y - 5 * k, 10 * k, 10 * k); ctx.setLineDash([]);
-        ctx.fillStyle = "#ff6bd6"; ctx.font = `bold ${3.6 * k}px system-ui`;
+        ctx.fillStyle = "#ff6bd6"; ctx.font = `600 ${3.6 * k / zf}px Plex, system-ui`;
         const tw = ctx.measureText("SIMULATED").width;
         ctx.fillText("SIMULATED", Math.max(2, Math.min(X - 5 * k, ctx.canvas.width - tw - 2)), Y + 9 * k > ctx.canvas.height - 4 ? Y - 6 * k : Y + 9 * k);
       }
@@ -370,8 +421,8 @@ function pxPos(epoch) {
 
 function renderLegend() {
   const parts = [];
-  if (S.ovTarget && S.field.kind !== "control") parts.push("○ blue circle = where catalogue data predict the target on that date");
-  if (S.ovGaia) parts.push("+ orange = Gaia stars (ESA), moved to the image date");
+  if (S.ovTarget && S.field.kind !== "control") parts.push("orange ring: where catalogue data predict the target on that date");
+  if (S.ovGaia) parts.push("+ grey-blue: Gaia stars (ESA), moved to the image date");
   parts.push("very bright stars overload SPHEREx; their centres are drawn white");
   if (S.ovFlags) parts.push("pink = no data or pixel flagged unreliable by the SPHEREx pipeline (shown filled when the overlay is off)");
   if (S.px) parts.push("dashed pink square = SIMULATED planet (not real)");
@@ -417,7 +468,7 @@ function renderSpectrum() {
   const ys = ys0.map(v => v / div), lo = Math.min(0, ...ys), hi = Math.max(...ys) * 1.08 || 1;
   const X = w => L + (w - 0.7) / (5.05 - 0.7) * (W - L - R), Y = v => T + (1 - (v - lo) / (hi - lo)) * (H - T - Bm);
   const eps = [...new Set(pts.map(p => p.epoch))].sort((a, b) => a - b);
-  const cols = ["#6fd3ff", "#ffb547", "#7be08f", "#ff6bd6", "#c9a0ff", "#ff7b7b", "#ffffff"];
+  const cols = ["#6FA8FF", "#FF9C6E", "#E8EEF7", "#F6C9A8", "#A3C4F3", "#FF6A3D", "#5B7BA6"];
   const marks = ["circle", "square", "diamond", "triangle", "circle", "square", "diamond"];
   const shape = (m, x, y, c, hollow) => {
     const fill = hollow ? "none" : c, s = `stroke="${c}" stroke-width="1.5" fill="${fill}"`;
@@ -427,9 +478,9 @@ function renderSpectrum() {
     return `<circle cx="${x}" cy="${y}" r="3.8" ${s}/>`;
   };
   let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Target brightness versus wavelength, coloured by visit date">`;
-  for (let w = 1; w <= 5; w++) svg += `<line x1="${X(w)}" x2="${X(w)}" y1="${T}" y2="${H - Bm}" stroke="#2a3754"/><text x="${X(w)}" y="${H - Bm + 16}" fill="#9fb0cc" font-size="12" text-anchor="middle">${w}</text>`;
+  for (let w = 1; w <= 5; w++) svg += `<line x1="${X(w)}" x2="${X(w)}" y1="${T}" y2="${H - Bm}" stroke="#263553"/><text x="${X(w)}" y="${H - Bm + 16}" fill="#9fb0cc" font-size="12" text-anchor="middle">${w}</text>`;
   svg += `<text x="${(W + L) / 2}" y="${H - 6}" fill="#9fb0cc" font-size="12" text-anchor="middle">wavelength (µm)</text>`;
-  for (let i = 0; i <= 4; i++) { const v = lo + (hi - lo) * i / 4; svg += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="#1d2840"/><text x="${L - 6}" y="${Y(v) + 4}" fill="#9fb0cc" font-size="11" text-anchor="end">${+v.toPrecision(3)}</text>`; }
+  for (let i = 0; i <= 4; i++) { const v = lo + (hi - lo) * i / 4; svg += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="#1A2540"/><text x="${L - 6}" y="${Y(v) + 4}" fill="#9fb0cc" font-size="11" text-anchor="end">${+v.toPrecision(3)}</text>`; }
   svg += `<text x="14" y="${(H - Bm) / 2}" fill="#9fb0cc" font-size="12" transform="rotate(-90 14 ${(H - Bm) / 2})" text-anchor="middle">flux (${unit})</text>`;
   for (const p of pts) {
     const ei = eps.indexOf(p.epoch), c = cols[ei % cols.length], x = X(p.wavelength_um), fv = p.phot.flux_ujy / div, y = Y(fv);
@@ -444,7 +495,7 @@ function renderSpectrum() {
 function bindHide() { const h = $("#hideFlag"); if (h) h.addEventListener("change", e => { S.hideFlagged = e.target.checked; renderSpectrum(); }); }
 
 function renderLightCurve() {
-  const f = S.field, cols = { 1: "#c9a0ff", 2: "#6fd3ff", 3: "#7be08f", 4: "#ffb547", 5: "#ff7b7b", 6: "#ff6bd6" };
+  const f = S.field, cols = { 1: "#6FA8FF", 2: "#A3C4F3", 3: "#D3DBE6", 4: "#F6C9A8", 5: "#FF9C6E", 6: "#FF6A3D" };
   const series = f.bands.map(b => {
     const pts = b.epochs.filter(e => e.flux_ujy != null && isFinite(e.flux_ujy) && e.flux_ujy > 0);
     if (pts.length < 2) return null;
@@ -459,7 +510,7 @@ function renderLightCurve() {
   ylo = Math.max(ylo, -100); yhi = Math.min(yhi, 300);
   const X = t => L + (t - t0) / (t1 - t0) * (W - L - R), Y = v => T + (1 - (Math.min(yhi, Math.max(ylo, v)) - ylo) / (yhi - ylo)) * (H - T - Bm);
   let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Target brightness change over time by detector band">`;
-  for (let i = 0; i <= 4; i++) { const v = ylo + (yhi - ylo) * i / 4; svg += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="#1d2840"/><text x="${L - 6}" y="${Y(v) + 4}" fill="#9fb0cc" font-size="11" text-anchor="end">${v > 0 ? "+" : ""}${Math.round(v)}%</text>`; }
+  for (let i = 0; i <= 4; i++) { const v = ylo + (yhi - ylo) * i / 4; svg += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="#1A2540"/><text x="${L - 6}" y="${Y(v) + 4}" fill="#9fb0cc" font-size="11" text-anchor="end">${v > 0 ? "+" : ""}${Math.round(v)}%</text>`; }
   svg += `<line x1="${L}" x2="${W - R}" y1="${Y(0)}" y2="${Y(0)}" stroke="#56688a" stroke-dasharray="4 4"/>`;
   const months = []; for (let m = Math.ceil(t0 / 30.44); m * 30.44 < t1; m += 2) months.push(m * 30.44);
   for (const t of months) { const d = new Date((t - 40587) * 864e5).toISOString().slice(0, 7); svg += `<text x="${X(t)}" y="${H - Bm + 16}" fill="#9fb0cc" font-size="11" text-anchor="middle">${d}</text>`; }
@@ -472,13 +523,17 @@ function renderLightCurve() {
   $("#lc").innerHTML = svg + `<p class="small">${series.map(s => `<span style="color:${cols[s.det]}">● D${s.det}</span>`).join(" &nbsp; ")} (detector bands). Values outside −100% to +300% are clipped to the edge.</p>`;
 }
 
+function openTab(id) {
+  $$("#tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === id));
+  ["explainPanel", "lcPanel", "specPanel", "provPanel", "pxPanel"].forEach(p => { $("#" + p).hidden = p !== id; });
+}
 function renderAbout() {
   const m = S.manifest;
   $("#aboutBody").innerHTML = m.about_html || "";
 }
 
 // ------------------------------------------------------------ play / game / coords
-function stop() { S.playing = false; clearInterval(S.timer); S.timer = null; S.phase = 0; if ($("#playBtn")) $("#playBtn").textContent = "▶ Play"; }
+function stop() { S.playing = false; clearInterval(S.timer); S.timer = null; S.phase = 0; if ($("#playBtn")) $("#playBtn").textContent = "Play"; if ($("#stagePlay")) $("#stagePlay").textContent = "Play"; }
 function play() {
   stop(); S.playing = true;
   if (S.mode !== "blink" && S.mode !== "timeline") S.mode = "blink";
@@ -543,14 +598,28 @@ function bindUI() {
   $("#rawDiff").addEventListener("change", e => { S.rawDiff = e.target.checked; syncButtons(); draw(); });
   $("#wiseOn").addEventListener("change", e => { S.wiseOn = e.target.checked; resetDates(); });
   $("#gameBtn").addEventListener("click", startGame);
-  $("#pxOn").addEventListener("change", e => { S.px = e.target.checked; $("#pxPanel").open = true; syncButtons(); pxInfo(); draw(); });
+  $("#pxOn").addEventListener("change", e => { S.px = e.target.checked; openTab("pxPanel"); syncButtons(); pxInfo(); draw(); });
   $("#pxDist").addEventListener("input", e => { S.pxD = Math.round(100 * Math.pow(10, +e.target.value)); $("#pxDistVal").textContent = S.pxD; pxInfo(); draw(); });
   const cv = $("#cv");
   cv.addEventListener("click", e => {
-    if (!S.game || S.game.revealed) return;
-    const r = cv.getBoundingClientRect(), n = S.field.grid_px;
-    gameTap((e.clientX - r.left) / r.width * n, (e.clientY - r.top) / r.height * n);
+    const [gx, gy] = canvasToGrid(e);
+    if (S.game && !S.game.revealed) { gameTap(gx, gy); return; }
+    if ((S.zoom || 1) > 1 && S.mode !== "swipe") { S.vc = [gx, gy]; draw(); }
   });
+  cv.addEventListener("mousemove", e => {
+    if (!S.field) return;
+    const [gx, gy, px, py] = canvasToGrid(e), [ra, dec] = gridToSky(gx, gy);
+    let lvl = ""; try { const d = cv.getContext("2d").getImageData(Math.floor(px), Math.floor(py), 1, 1).data; lvl = ` · display level ${d[0]}/255`; } catch (_) {}
+    $("#readout").textContent = `RA ${hms(ra)}  Dec ${dms(dec)}  (${ra.toFixed(4)}°, ${dec.toFixed(4)}°)${lvl}`;
+  });
+  $$("#tabs button").forEach(b => b.addEventListener("click", () => openTab(b.dataset.tab)));
+  const applyFilter = () => { $("#cv").style.filter = `brightness(${$("#bright").value}) contrast(${$("#contrast").value})${$("#plate").checked ? " invert(1)" : ""}`; };
+  ["bright", "contrast", "plate"].forEach(id => $("#" + id).addEventListener("input", applyFilter));
+  $("#plate").addEventListener("change", applyFilter);
+  $("#zoomSel").addEventListener("change", e => { S.zoom = +e.target.value; S.vc = null; draw(); updateURL(); });
+  $("#resetView").addEventListener("click", () => { $("#bright").value = 1; $("#contrast").value = 1; $("#plate").checked = false; $("#zoomSel").value = 1; S.zoom = 1; S.vc = null; applyFilter(); draw(); updateURL(); });
+  $("#stagePlay").addEventListener("click", () => { S.playing ? (stop(), syncButtons()) : play(); });
+
   // swipe handle drag
   const stage = $("#stage"), h = $("#swipeHandle");
   const move = e => { const r = stage.getBoundingClientRect(); S.swipeX = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)); draw(); };
