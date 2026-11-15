@@ -470,13 +470,21 @@ function renderSpectrum() {
   const ctl = `<label class="chk small"><input type="checkbox" id="hideFlag" ${hideBad ? "checked" : ""}> Hide frames with flagged pixels in the measuring circle</label>`;
   if (!pts.length) { $("#spec").innerHTML = ctl + "<p class='small'>No measurements to show.</p>"; bindHide(); return; }
   const W = 720, H = 300, L = 70, R = 12, T = 12, Bm = 40;
-  const ys0 = pts.map(p => p.phot.flux_ujy), mx = Math.max(...ys0.map(Math.abs));
-  const [div, unit] = mx > 2e6 ? [1e6, "Jy"] : mx > 2e3 ? [1e3, "mJy"] : [1, "µJy"];
+  // Pluto: divide by the Sun (5,772 K blackbody, F_nu) to get relative reflectance, scaled to 1 at 1.0-1.5 um.
+  const refl = f.id === "pluto";
+  const sun = w => { const nu = 2.998e14 / w; return nu ** 3 / Math.expm1(6.626e-34 * nu / (1.381e-23 * 5772)); };
+  let norm = 1;
+  if (refl) { const r = pts.filter(p => p.wavelength_um > 1 && p.wavelength_um < 1.5 && !(p.phot.bad_in_aperture > 0)).map(p => p.phot.flux_ujy / sun(p.wavelength_um)).sort((a, b) => a - b); norm = r.length ? r[r.length >> 1] : 1; }
+  const val = p => refl ? p.phot.flux_ujy / sun(p.wavelength_um) / norm : p.phot.flux_ujy;
+  const vErr = p => refl ? p.phot.err_ujy / sun(p.wavelength_um) / norm : p.phot.err_ujy;
+  const ys0 = pts.map(val), mx = Math.max(...ys0.map(Math.abs));
+  const [div, unit] = refl ? [1, ""] : mx > 2e6 ? [1e6, "Jy"] : mx > 2e3 ? [1e3, "mJy"] : [1, "µJy"];
   const ys = ys0.map(v => v / div), lo = Math.min(0, ...ys), hi = Math.max(...ys) * 1.08 || 1;
   const X = w => L + (w - 0.7) / (5.05 - 0.7) * (W - L - R), Y = v => T + (1 - (v - lo) / (hi - lo)) * (H - T - Bm);
   const eps = [...new Set(pts.map(p => p.epoch))].sort((a, b) => a - b);
-  const cols = Array.from({ length: 7 }, (_, i) => `rgba(255,255,255,${(0.35 + 0.65 * i / 6).toFixed(2)})`); // dates: neutral white ramp, early = faint
-  const marks = ["circle", "square", "diamond", "triangle", "circle", "square", "diamond"];
+  const ne = Math.max(2, eps.length);
+  const cols = Array.from({ length: ne }, (_, i) => `rgba(255,255,255,${(0.35 + 0.65 * i / (ne - 1)).toFixed(2)})`); // dates: neutral white ramp, early = faint
+  const marks = ["circle", "square", "diamond", "triangle", "circle", "square", "diamond", "triangle"];
   const shape = (m, x, y, c, hollow) => {
     const fill = hollow ? "none" : c, s = `stroke="${c}" stroke-width="1.5" fill="${fill}"`;
     if (m === "square") return `<rect x="${x - 3.5}" y="${y - 3.5}" width="7" height="7" ${s}/>`;
@@ -487,16 +495,19 @@ function renderSpectrum() {
   let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Target brightness versus wavelength, coloured by visit date">`;
   for (let w = 1; w <= 5; w++) svg += `<line x1="${X(w)}" x2="${X(w)}" y1="${T}" y2="${H - Bm}" stroke="rgba(255,255,255,0.3)"/><text x="${X(w)}" y="${H - Bm + 16}" fill="rgba(255,255,255,0.65)" font-size="12" text-anchor="middle">${w}</text>`;
   svg += `<text x="${(W + L) / 2}" y="${H - 6}" fill="rgba(255,255,255,0.65)" font-size="12" text-anchor="middle">wavelength (µm)</text>`;
-  for (let i = 0; i <= 4; i++) { const v = lo + (hi - lo) * i / 4; svg += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="rgba(255,255,255,0.15)"/><text x="${L - 6}" y="${Y(v) + 4}" fill="rgba(255,255,255,0.65)" font-size="11" text-anchor="end">${+v.toPrecision(3)}</text>`; }
-  svg += `<text x="14" y="${(H - Bm) / 2}" fill="rgba(255,255,255,0.65)" font-size="12" transform="rotate(-90 14 ${(H - Bm) / 2})" text-anchor="middle">flux (${unit})</text>`;
+  if (refl) for (const [a, b, lab] of [[1.70, 1.74, ""], [1.77, 1.81, ""], [2.18, 2.40, "methane ice"]]) svg += `<rect x="${X(a)}" y="${T}" width="${X(b) - X(a)}" height="${H - Bm - T}" fill="#FE5101" fill-opacity=".22"/>` + (lab ? `<text x="${(X(a) + X(b)) / 2}" y="${T + 14}" fill="#FE5101" font-size="12" text-anchor="middle">${lab}</text>` : "");
+  const step = (() => { const raw = (hi - lo) / 4, m = 10 ** Math.floor(Math.log10(raw)); return [1, 2, 2.5, 5, 10].map(k => k * m).find(s => s >= raw); })();
+  for (let v = Math.ceil(lo / step) * step; v <= hi + 1e-9; v += step) { svg += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="rgba(255,255,255,0.15)"/><text x="${L - 6}" y="${Y(v) + 4}" fill="rgba(255,255,255,0.65)" font-size="11" text-anchor="end">${+v.toFixed(6)}</text>`; }
+  svg += `<text x="14" y="${(H - Bm) / 2}" fill="rgba(255,255,255,0.65)" font-size="12" transform="rotate(-90 14 ${(H - Bm) / 2})" text-anchor="middle">${refl ? "reflectance (relative)" : `flux (${unit})`}</text>`;
   for (const p of pts) {
-    const ei = eps.indexOf(p.epoch), c = cols[ei % cols.length], x = X(p.wavelength_um), fv = p.phot.flux_ujy / div, y = Y(fv);
-    const e = p.phot.err_ujy / div; svg += `<line x1="${x}" x2="${x}" y1="${Y(fv - e)}" y2="${Y(fv + e)}" stroke="${c}" stroke-opacity=".5"/>`;
+    const ei = eps.indexOf(p.epoch), c = cols[ei % cols.length], x = X(p.wavelength_um), fv = val(p) / div, y = Y(fv);
+    const e = vErr(p) / div; svg += `<line x1="${x}" x2="${x}" y1="${Y(fv - e)}" y2="${Y(fv + e)}" stroke="${c}" stroke-opacity=".5"/>`;
     svg += shape(marks[ei % marks.length], x, y, c, p.phot.bad_in_aperture > 0);
   }
   svg += `</svg>`;
   const legend = eps.map((e, i) => { const fr = pts.find(p => p.epoch === e); return `<span style="color:${cols[i % cols.length]}">● visit ${e} (${fmtDate(fr.utc)})</span>`; }).join(" &nbsp; ");
-  $("#spec").innerHTML = ctl + svg + `<p class="small">${legend}. Hollow symbols: some pixels in the measuring circle were flagged (often a saturated bright star); treat them with care.</p>`;
+  const plutoNote = refl ? `<p class="small"><strong>Pluto's ices.</strong> Pluto's light divided by the Sun's (the Sun approximated as a 5,772 K blackbody), scaled to 1 at 1.0–1.5 µm. Shaded: wavelengths where methane ice absorbs strongly on Pluto, from ground-based spectra (Grundy et al. 2013, Icarus; arXiv:1301.6284). In the frames without flagged pixels, Pluto's reflectance falls to about 0.25–0.5 between 2.2 and 2.4 µm, much more than the frame-to-frame scatter at 0.75–1.6 µm (±17%). Charon sits in the same pixel, so this is Pluto and Charon together. SPHEREx took no Pluto frames between 1.60 and 1.92 µm in these eight days, so the 1.72 and 1.79 µm bands are not tested here.</p>` : "";
+  $("#spec").innerHTML = ctl + svg + plutoNote + `<p class="small">${legend}. Hollow symbols: some pixels in the measuring circle were flagged (often a saturated bright star); treat them with care.</p>`;
   bindHide();
 }
 function bindHide() { const h = $("#hideFlag"); if (h) h.addEventListener("change", e => { S.hideFlagged = e.target.checked; renderSpectrum(); }); }
