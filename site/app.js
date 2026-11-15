@@ -273,7 +273,10 @@ async function draw() {
 function viewXform(cv, it) {
   const z = S.zoom || 1, W = cv.width, n = S.field.grid_px;
   let c = S.vc;
-  if (!c) { const p = it && targetXY(it); c = p && S.field.kind !== "control" ? p : [(n - 1) / 2, (n - 1) / 2]; }
+  if (!c) { // one fixed centre for every date: the middle of the target's whole track (never per frame)
+    const ps = seq().map(targetXY).filter(Boolean);
+    c = ps.length && S.field.kind !== "control" ? [ps.reduce((a, p) => a + p[0], 0) / ps.length, ps.reduce((a, p) => a + p[1], 0) / ps.length] : [(n - 1) / 2, (n - 1) / 2];
+  }
   const cx = (c[0] + 0.5) * SCALE, cy = (c[1] + 0.5) * SCALE;
   const ox = Math.min(Math.max(cx - W / (2 * z), 0), W - W / z), oy = Math.min(Math.max(cy - W / (2 * z), 0), W - W / z);
   return { z, ox, oy };

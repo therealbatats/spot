@@ -12,8 +12,7 @@ rows = """
 <tr><td>RW Aurigae</td><td>Infrared glow (2.4–5 µm) fell ~1.7–1.9× from Sept 2025 to Sept 2026 in three bands; shorter wavelengths within noise.</td></tr>
 <tr><td>M101 (control)</td><td>Nothing changes: differences at noise level; galaxy brightness steady to 2–6%.</td></tr>"""
 h = (here / "deck.html").read_text()
-h = (h.replace("LIVE_URL", live).replace("REPO_URL", repo).replace("SHOT_TOOL", "shot_tool.jpg").replace("SHOT_PX", "shot_px.jpg")
-       .replace("ALIGN_NUM", "0.03–0.29 px").replace("LIVE_NUM", "&lt; 40 s").replace("RESULT_ROWS", rows))
+h = h.replace("LIVE_URL", live).replace("REPO_URL", repo)
 (here / "deck_filled.html").write_text(h)
 chrome = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 subprocess.run([chrome, "--headless=new", "--disable-gpu", "--no-pdf-header-footer", f"--print-to-pdf={here / 'SPOT_deck.pdf'}",
