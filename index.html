@@ -5,40 +5,50 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SPOT — Sky Patches Over Time</title>
-<meta name="description" content="Flip between real SPHEREx infrared images of the same patch of sky taken months apart and see what moved or changed brightness.">
+<meta name="description" content="Blink real NASA SPHEREx infrared images of any patch of sky, taken months apart, and see what moved or changed brightness.">
 <meta name="generator" content="SPOT 1.0.0">
-<link rel="stylesheet" href="styles.css?v=3">
+<meta name="theme-color" content="#0B1220">
+<meta property="og:title" content="SPOT — Sky Patches Over Time">
+<meta property="og:description" content="The sky looks still. It isn't. Blink real SPHEREx infrared images of any patch of sky.">
+<meta property="og:type" content="website">
+<link rel="preload" href="fonts/plex-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.css?v=20">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 </head>
 <body>
 <a class="skip" href="#viewer">Skip to the viewer</a>
 <header class="top">
-  <div class="brand">
-    <h1><span id="appName">SPOT</span></h1>
-    <p class="tag">The sky looks still. It isn't. <span class="muted">SPOT: Sky Patches Over Time.</span></p>
-  </div>
+  <a class="brand" href="./" aria-label="SPOT home"><img src="logo.svg" alt="SPOT" width="96" height="28"><h1><span id="appName">SPOT</span></h1></a>
+  <span class="muted small">Sky Patches Over Time</span>
   <nav class="topnav" aria-label="Main">
-    <a href="#fields">Fields</a>
+    <a href="#fields">Targets</a>
     <a href="#viewer">Viewer</a>
     <a href="#about">How it works</a>
+    <a href="https://github.com/therealbatats/spot" id="repoLink">Source</a>
   </nav>
 </header>
 
 <main>
-  <section class="intro">
-    <p>Every image here is <strong>real data from NASA's SPHEREx space telescope</strong>, which maps the whole sky in infrared light every six months. Pick a patch of sky, then flip between dates. Stars far away stay put. Nearby stars and brown dwarfs <em>drift</em>. Some stars <em>change brightness</em>. Anything drawn by us is labelled <span class="simtag">SIMULATED</span>.</p>
+  <section class="hero" aria-label="Barnard's Star moving between 2010 and 2026">
+    <canvas id="heroCv" width="1280" height="560" role="img" aria-label="Real infrared images of Barnard's Star in 2010 and 2026, alternating: the star leaves the ring of the O in SPOT"></canvas>
+    <button id="heroPlay" class="btn heroPlay" aria-label="Pause or play the blink">Pause</button>
+    <div class="heroText">
+      <p>The sky looks still. It isn't.</p>
+      <span class="heroCap" id="heroCap">Real data: Barnard's Star, WISE 2010 and SPHEREx 2026, 4.4–5 µm. Tap to open it.</span>
+    </div>
   </section>
 
   <section class="coords" aria-labelledby="coordsTitle">
-    <h2 id="coordsTitle">Go to any coordinates</h2>
+    <h2 id="coordsTitle" style="margin-top:24px">Show any patch of sky</h2>
     <form id="coordForm" class="coordform" autocomplete="off">
-      <label>Right Ascension <input id="raIn" name="ra" placeholder="08h55m10.8s or 133.795" required></label>
+      <label>Right ascension <input id="raIn" name="ra" placeholder="08h55m10.8s or 133.795" required></label>
       <label>Declination <input id="decIn" name="dec" placeholder="-07d14m42s or -7.245" required></label>
       <button type="submit" class="btn primary">Show this sky</button>
     </form>
+    <p class="small muted">Every image is real NASA SPHEREx data. Anything we draw ourselves is labelled <span class="simtag">SIMULATED</span>.</p>
     <details class="liveopts">
-      <summary class="small">Options for positions that are not ready-made (live mode)</summary>
-      <div class="small" id="liveDets" role="group" aria-label="Detector bands to fetch">Detector bands to fetch:
+      <summary>Options for positions that are not ready-made (built live in your browser)</summary>
+      <div class="small" id="liveDets" role="group" aria-label="Detector bands to fetch">Detector bands:
         <label class="chk"><input type="checkbox" value="1"> D1 0.75–1.1 µm</label>
         <label class="chk"><input type="checkbox" value="2" checked> D2 1.1–1.6 µm</label>
         <label class="chk"><input type="checkbox" value="3"> D3 1.6–2.4 µm</label>
@@ -47,15 +57,15 @@
         <label class="chk"><input type="checkbox" value="6"> D6 4.4–5.0 µm</label>
       </div>
       <label class="small">Field of view <select id="liveSize"><option value="0.05">0.05° (fastest)</option><option value="0.1" selected>0.1°</option><option value="0.2">0.2° (slower, more data)</option></select></label>
-      <p class="small muted">Live mode reads real SPHEREx images straight from NASA/IPAC's public cloud copy (AWS) in your browser: about 1–3 MB per image, 10–40 images per band. A bigger field of view or more bands means a longer wait.</p>
+      <p class="small muted">Live mode reads real SPHEREx images straight from NASA/IPAC's public cloud copy (AWS): about 1–3 MB per image, 10–40 images per band.</p>
     </details>
     <p id="coordMsg" class="msg" role="status" aria-live="polite"></p>
     <div id="liveBox" class="livebox" hidden><div class="progress"><div id="liveBar"></div></div></div>
   </section>
 
   <section id="fields" aria-labelledby="fieldsTitle">
-    <h2 id="fieldsTitle">Ready-made fields</h2>
-    <p class="muted small">The five test targets named in the challenge, plus a galaxy where nothing should change (our control).</p>
+    <h2 id="fieldsTitle">Targets</h2>
+    <p class="muted small">The five test targets named in the challenge, and a galaxy where nothing should change (our control).</p>
     <div id="cards" class="cards"></div>
   </section>
 
@@ -72,18 +82,27 @@
         <div class="stage" id="stage">
           <canvas id="cv" width="702" height="702" aria-label="SPHEREx image of the selected field"></canvas>
           <div id="swipeHandle" class="swipehandle" hidden aria-hidden="true"></div>
+          <button id="stagePlay" class="btn stagePlay" aria-label="Play or pause (space)">Pause</button>
         </div>
         <div class="framebar">
           <span id="frameLabel" class="framelabel">—</span>
-          <span id="scaleNote" class="muted small"></span>
         </div>
-        <div class="legend small" id="legend"></div>
+        <div id="readout" class="readout" aria-live="off">Move over the image to read sky coordinates.</div>
+        <div class="viewtools">
+          <label>Zoom <select id="zoomSel"><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option></select></label>
+          <label>Brightness <input id="bright" type="range" min="0.5" max="2.5" step="0.05" value="1"></label>
+          <label>Contrast <input id="contrast" type="range" min="0.5" max="2.5" step="0.05" value="1"></label>
+          <label class="chk"><input type="checkbox" id="plate"> Plate view (dark stars on light)</label>
+          <button class="btn" id="resetView" type="button">Reset</button>
+        </div>
+        <div id="scaleNote" class="muted small"></div>
+        <div class="legend" id="legend"></div>
       </div>
 
       <div class="controls">
-        <fieldset>
-          <legend>How to compare</legend>
-          <div class="seg" role="radiogroup" id="modeSeg">
+        <div class="group">
+          <h3>Compare</h3>
+          <div class="seg" role="radiogroup" id="modeSeg" aria-label="How to compare">
             <button data-mode="blink" role="radio">Blink</button>
             <button data-mode="swipe" role="radio">Swipe</button>
             <button data-mode="diff" role="radio">Difference</button>
@@ -92,74 +111,77 @@
           </div>
           <p id="modeHelp" class="muted small"></p>
           <label class="chk small" id="rawWrap" hidden><input type="checkbox" id="rawDiff"> Show raw difference instead</label>
-        </fieldset>
+        </div>
 
-        <fieldset>
-          <legend>Which light</legend>
-          <div class="seg" role="radiogroup" id="dataSeg">
-            <button data-data="band" role="radio">Whole detector band</button>
+        <div class="group">
+          <h3>Light</h3>
+          <div class="seg" role="radiogroup" id="dataSeg" aria-label="Which light">
+            <button data-data="band" role="radio">Whole band, more signal</button>
             <button data-data="chan" role="radio">One exact wavelength</button>
           </div>
-          <div id="bandBtns" class="bandbtns"></div>
+          <div id="bandBtns" class="ruler"></div>
           <p id="dataHelp" class="muted small"></p>
-        </fieldset>
+        </div>
 
-        <fieldset>
-          <legend>Dates</legend>
+        <div class="group">
+          <h3>Dates</h3>
           <div class="epochrow">
-            <label>A <select id="selA"></select></label>
-            <label>B <select id="selB"></select></label>
+            <label>Earlier <select id="selA"></select></label>
+            <label>Later <select id="selB"></select></label>
           </div>
           <div class="timeline">
-            <button id="playBtn" class="btn" aria-label="Play or pause (space)">▶ Play</button>
+            <button id="playBtn" class="btn" aria-label="Play or pause (space)">Play</button>
             <input id="tSlider" type="range" min="0" max="0" value="0" aria-label="Date">
           </div>
-          <label class="chk small" id="wiseWrap" hidden><input type="checkbox" id="wiseOn"> Include WISE, about 2010 (older NASA infrared telescope, 4.6 µm): compare positions only</label>
-          <label class="small">Speed <input id="speed" type="range" min="0.5" max="2.5" step="0.5" value="1"> <span id="speedVal">1</span> flips/s</label>
-        </fieldset>
+          <label class="chk small" id="wiseWrap" hidden><input type="checkbox" id="wiseOn"> Include WISE, about 2010 (older NASA infrared telescope, 4.6 µm). Compare positions only</label>
+          <label class="small">Speed <input id="speed" type="range" min="0.5" max="2.5" step="0.5" value="1"> <span id="speedVal">1</span> flips per second</label>
+        </div>
 
-        <fieldset>
-          <legend>Overlays</legend>
-          <label class="chk"><input type="checkbox" id="ovTarget" checked> Target (predicted position, ○)</label>
-          <label class="chk"><input type="checkbox" id="ovGaia"> Gaia stars (other telescope, +)</label>
-          <label class="chk"><input type="checkbox" id="ovFlags"> Show missing / flagged pixels</label>
-        </fieldset>
+        <div class="group">
+          <h3>Overlays</h3>
+          <label class="chk"><input type="checkbox" id="ovTarget" checked> Target: predicted position (ring)</label>
+          <label class="chk"><input type="checkbox" id="ovGaia"> Gaia stars (another telescope, +)</label>
+          <label class="chk"><input type="checkbox" id="ovFlags"> Show missing or flagged pixels</label>
+        </div>
 
-        <fieldset class="game">
-          <legend>Spot the wanderer</legend>
-          <p class="small">Markers hide. Watch the blink, then tap where something moved or changed.</p>
+        <div class="group">
+          <h3>Spot the wanderer</h3>
+          <p class="small muted">Markers hide. Watch the blink, then tap where something moved or changed.</p>
           <button id="gameBtn" class="btn">Start</button>
           <p id="gameMsg" class="small" role="status" aria-live="polite"></p>
-        </fieldset>
+        </div>
       </div>
     </div>
 
-    <details class="panel" id="explainPanel" open>
-      <summary>What am I looking at?</summary>
+    <div class="tabs" role="tablist" id="tabs" aria-label="More about this field">
+      <button role="tab" data-tab="explainPanel" aria-selected="true">About this object</button>
+      <button role="tab" data-tab="lcPanel" aria-selected="false">Brightness</button>
+      <button role="tab" data-tab="specPanel" aria-selected="false">Spectrum</button>
+      <button role="tab" data-tab="provPanel" aria-selected="false">Frames</button>
+      <button role="tab" data-tab="pxPanel" aria-selected="false">Planet X simulator</button>
+    </div>
+
+    <section class="tabpanel" id="explainPanel" role="tabpanel">
       <div id="explain"></div>
-    </details>
+    </section>
 
-    <details class="panel" id="lcPanel">
-      <summary>Brightness over time (each detector band)</summary>
-      <p class="muted small">Brightness of the target in each visit's added image, shown as a change relative to that band's own average, so all six bands fit on one chart. A flat line means no change. <strong>Hollow symbols:</strong> the star is so bright that its centre is saturated, so we measure its unsaturated outer glow ("wings") instead; this is less precise (tested on Barnard's Star, it scatters by about 2–37% between visits).<br><strong>How big must a change be to count?</strong> In our control galaxy (M101), where nothing should change, this method still wobbles by 2–6% between visits. So treat changes below about 10% as noise, and be suspicious of a jump that shows up in only one band.</p>
+    <section class="tabpanel" id="lcPanel" role="tabpanel" hidden>
+      <p class="muted small">Brightness of the target over time, measured in every visit's added image and shown as a change from that band's own average, so all six bands share one axis. A flat line means no change. <strong>Hollow symbols:</strong> the star is so bright that its centre is saturated, so we measure its unsaturated outer glow instead; that is less precise (on Barnard's Star it scatters by about 2–37% between visits). In our control galaxy, where nothing should change, this method still wobbles by 2–6%. Treat changes below about 10% as noise, and be suspicious of a jump seen in only one band.</p>
       <div id="lc"></div>
-    </details>
+    </section>
 
-    <details class="panel" id="specPanel">
-      <summary>Spectrum of the target, by date (made on the fly from the frames)</summary>
-      <p class="muted small">Each dot is one SPHEREx frame: brightness of the target measured in a 12-arcsecond circle, plotted against that frame's wavelength. Colours = dates. If the colours separate, the object changed between visits. Fluxes are not aperture-corrected and are for comparison between dates only.</p>
+    <section class="tabpanel" id="specPanel" role="tabpanel" hidden>
+      <p class="muted small">Each dot is one SPHEREx frame: the target's brightness in a 12-arcsecond circle against that frame's wavelength. Colours are dates. If the colours separate, the object changed between visits. Fluxes are not aperture-corrected; use them to compare dates.</p>
       <div id="spec"></div>
-    </details>
+    </section>
 
-    <details class="panel" id="provPanel">
-      <summary>Provenance: every frame used</summary>
-      <p class="muted small">All frames are SPHEREx Level-2 spectral images. "Source" opens the original file at NASA/IPAC's archive (large file, ~65 MB). Flags show how many pixels SPHEREx's own pipeline marked as unreliable.</p>
-      <div class="tablewrap"><table id="provTable"><thead><tr><th>Date (UTC)</th><th>Det.</th><th>λ (µm)</th><th>Bandwidth</th><th>Flagged px</th><th>Target flux (µJy)</th><th>Release</th><th>Source</th></tr></thead><tbody></tbody></table></div>
-    </details>
+    <section class="tabpanel" id="provPanel" role="tabpanel" hidden>
+      <p class="muted small">Every frame is a SPHEREx Level-2 spectral image. "Source" opens the original file at NASA/IPAC's archive (about 65 MB). "Flagged" is the share of pixels SPHEREx's own pipeline marked as unreliable.</p>
+      <div class="tablewrap"><table id="provTable"><thead><tr><th>Date (UTC)</th><th>Detector</th><th>λ (µm)</th><th>Bandwidth</th><th>Flagged</th><th>Target flux (µJy)</th><th>Release</th><th>Source</th></tr></thead><tbody></tbody></table></div>
+    </section>
 
-    <details class="panel planetx" id="pxPanel">
-      <summary>Planet X simulator <span class="simtag">SIMULATED</span></summary>
-      <p class="small">A far-away planet does not sit still. As Earth (and SPHEREx with it) circles the Sun, the planet seems to shift back and forth (<em>parallax</em>), and it creeps slowly along its own orbit. Turn this on to draw a <strong>pretend</strong> planet into these real images, at the distance you choose.</p>
+    <section class="tabpanel planetx" id="pxPanel" role="tabpanel" hidden>
+      <p class="small">A distant planet does not sit still. As Earth, and SPHEREx with it, circles the Sun, the planet seems to shift back and forth (parallax), and it creeps along its own orbit. Turn this on to draw a <strong>pretend</strong> planet into these real images at the distance you choose. <span class="simtag">SIMULATED</span></p>
       <label class="chk"><input type="checkbox" id="pxOn"> Draw a simulated planet</label>
       <label class="small">Distance from the Sun: <input id="pxDist" type="range" min="0" max="1" step="0.001" value="0.6"> <strong id="pxDistVal">500</strong> AU</label>
       <p id="pxInfo" class="small muted"></p>
@@ -167,7 +189,7 @@
         <h3>Could SPHEREx really see Planet X?</h3>
         <p id="pxHonest">Probably not. A hypothetical "Planet Nine" a few hundred times farther from the Sun than Earth would shine only by faint reflected sunlight: published estimates put it around visual magnitude 22–25 near the far point of its orbit. SPHEREx's sensitivity per wavelength channel is about magnitude 18.4–19.5 (AB), so a planet like that would be below the noise in a single SPHEREx image. Our simulated dot is drawn much brighter than a real one would be, so you can learn what its motion looks like. Sources: see <a href="#about">How it works</a>.</p>
       </div>
-    </details>
+    </section>
   </section>
 
   <section id="about" class="about" aria-labelledby="aboutTitle">
@@ -177,10 +199,11 @@
 </main>
 
 <footer class="foot">
-  <p>Images: NASA SPHEREx Level-2 spectral images from the NASA/IPAC Infrared Science Archive (IRSA), read from IRSA's public AWS mirror. <span id="citation"></span></p>
-  <p>Made by Ali (team AITHMAC, Baghdad) for the 2026 NASA Space Apps Challenge. Parts of the code and text were written with AI assistance and reviewed by the author. Not an official NASA product. <a href="https://github.com/therealbatats/spot" id="repoLink">Source code</a>.</p>
+  <p>Images: NASA SPHEREx Level-2 spectral images and NASA WISE (AllWISE) images from the NASA/IPAC Infrared Science Archive (IRSA), read from IRSA's public AWS mirrors. <span id="citation"></span></p>
+  <p>Made by Ali (team AITHMAC, Baghdad) for the 2026 NASA Space Apps Challenge. Parts of the code and text were written with AI assistance and reviewed by the author. Not an official NASA product. Code under the MIT License. <span id="buildInfo"></span></p>
 </footer>
-<script src="app.js?v=16"></script>
+<script src="app.js?v=23"></script>
 <script src="live.js?v=9"></script>
+<script src="hero.js?v=2"></script>
 </body>
 </html>
