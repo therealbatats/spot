@@ -132,7 +132,7 @@ async function showField(f, meta, q) {
   $("#hook").textContent = (f.story && f.story.hook) || meta.hook || "";
   $("#scaleNote").textContent = `Each square pixel is ${f.pixel_scale_arcsec.toFixed(1)} arcseconds wide (the Moon is about 1,800 arcseconds). Field: ${f.size_deg}° across. North up, east left.`;
   // defaults
-  S.det = (f.story && f.story.best_band) || (f.bands[0] && f.bands[0].detector) || 2;
+  S.det = (f.story && f.story.best_band != null) ? f.story.best_band : ((f.bands[0] && f.bands[0].detector) || 2);
   S.data = "band"; S.chan = f.channels[0] ? f.channels[0].id : null; S.mode = "blink";
   if (q) {
     if (q.get("data")) S.data = q.get("data") === "chan" ? "chan" : "band";
@@ -145,6 +145,7 @@ async function showField(f, meta, q) {
   openTab("explainPanel");
   if (q && q.get("wise")) S.wiseOn = q.get("wise") === "1" && !!f.wise;
   if (!band()) S.det = f.bands[0].detector;
+  if (q && q.get("det") === "0" && f.bands.find(x => x.detector === 0)) S.det = 0;
   if (S.data === "chan" && !f.channels.length) S.data = "band";
   const n = seq().length;
   S.a = 0; S.b = Math.max(0, n - 1); S.t = 0;
@@ -165,7 +166,8 @@ function renderBandBtns() {
     box.innerHTML = `<div class="rulerbar" role="group" aria-label="Wavelength: choose a detector band">` + [1, 2, 3, 4, 5, 6].map(d => {
       const b = f.bands.find(x => x.detector === d), w = R[d][1] - R[d][0];
       return `<button data-det="${d}" ${b ? "" : "disabled"} aria-pressed="${d === S.det}" style="flex:${w.toFixed(2)} 1 0;background:var(--d${d})" title="${b ? esc(b.label) : "no data"}" aria-label="D${d}, ${R[d][0]} to ${R[d][1]} micrometres">D${d}</button>`;
-    }).join("") + `</div><div class="rulerscale"><span>0.75 µm</span><span>2 µm</span><span>5 µm</span></div>`;
+    }).join("") + `</div><div class="rulerscale"><span>0.75 µm</span><span>2 µm</span><span>5 µm</span></div>` +
+      (f.bands.find(x => x.detector === 0) ? `<div class="chanbtns"><button data-det="0" aria-pressed="${S.det === 0}">All bands, one image per day (positions only)</button></div>` : "");
     const b = band();
     $("#dataHelp").innerHTML = b ? `<strong>${esc(b.label)}.</strong> All frames this detector took of this spot during one visit are added for a cleaner picture, using only the wavelengths every visit covered.` : "";
   } else {

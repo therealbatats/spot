@@ -50,9 +50,18 @@ def log(*a):
 
 
 # ------------------------------------------------------------------ astrometry
+_PLUTO = None
+
+
 def star_position(t, mjd):
     """Astrometric (no aberration) geocentric RA/Dec of the target at time mjd, from catalogue
     position + proper motion + parallax. For plx=0 (galaxy) returns the fixed position."""
+    if t.get("ephem") == "pluto":  # solar-system body: JPL Horizons geocentric ephemeris
+        global _PLUTO
+        import pluto as PL
+        if _PLUTO is None:
+            _PLUTO = PL.ephem()
+        return PL.pos(mjd, _PLUTO)
     if not t.get("plx"):
         return t["ra"], t["dec"]
     c = SkyCoord(ra=t["ra"] * u.deg, dec=t["dec"] * u.deg, distance=(1000.0 / t["plx"]) * u.pc,
@@ -437,8 +446,13 @@ def build(t, half=None):
         half = int(np.ceil(size / 2 * np.sqrt(2) * 3600 / 6.15)) + 3
     outdir = SITE / "data" / "fields" / fid
     outdir.mkdir(parents=True, exist_ok=True)
-    ra_mid, dec_mid = star_position(t, Time("2026-01-01").mjd)
-    hits = find_frames(ra_mid, dec_mid, fid, log=log)
+    if t.get("hits") == "pluto":
+        hits = [h for h in json.loads((ROOT / "cache" / "search_pluto.json").read_text()) if t["window"][0] <= h["mjd"] <= t["window"][1]]
+        ra_mid, dec_mid = star_position(t, 0.5 * (t["window"][0] + t["window"][1]))
+        log(f"[{fid}] {len(hits)} frames contain Pluto in the window")
+    else:
+        ra_mid, dec_mid = star_position(t, Time("2026-01-01").mjd)
+        hits = find_frames(ra_mid, dec_mid, fid, log=log)
     if not hits:
         log(f"[{fid}] no SPHEREx frames found")
         return None
@@ -512,7 +526,8 @@ def build(t, half=None):
         # narrower than 35% of the band, drop the visit with the narrowest coverage and try again.
         width = BANDS[det][1] - BANDS[det][0]
         dropped = []
-        while True:
+        lo_c, hi_c = BANDS[det]
+        while not t.get("positions_only"):
             lo_c = max(min(m["wavelength_um"] for m in by[(det, e)]) for e in eps) - 0.005
             hi_c = min(max(m["wavelength_um"] for m in by[(det, e)]) for e in eps) + 0.005
             ok = hi_c - lo_c >= 0.35 * width and all(
@@ -528,7 +543,7 @@ def build(t, half=None):
             log(f"[{fid}] D{det}: dropped visit(s) {dropped} from the band view (too little shared wavelength range)")
         imgs, items, vmaps = [], [], []
         for e in eps:
-            ms = [m for m in by[(det, e)] if lo_c <= m["wavelength_um"] <= hi_c] or by[(det, e)]
+            ms = by[(det, e)] if t.get("positions_only") else ([m for m in by[(det, e)] if lo_c <= m["wavelength_um"] <= hi_c] or by[(det, e)])
             im, vm = wmean([cleaned[m["key"]][0] for m in ms], [cleaned[m["key"]][1] for m in ms])
             imgs.append(im)
             vmaps.append(vm)
@@ -570,6 +585,44 @@ def build(t, half=None):
                                "common_um": [round(lo_c, 3), round(hi_c, 3)], "dropped_visits": dropped,
                                "epochs": items, "all_png": f"b{det}_all.png", "diffs": diffs,
                                "stretch": [lo, hi]})
+
+    # ---- positions-only targets (solar system): one "all detectors, by day" sequence. Each detector's image
+    # for a day is divided by its own 99.5th percentile, then the available detectors are averaged. Brightness
+    # is NOT comparable between days in this view; it exists to show positions.
+    if t.get("positions_only") and n_ep >= 2:
+        per_day = defaultdict(list)
+        for (d, e), ms in by.items():
+            im, _ = wmean([cleaned[m["key"]][0] for m in ms], [cleaned[m["key"]][1] for m in ms])
+            sc = np.nanpercentile(im, 99.5) if np.isfinite(im).any() else np.nan
+            if np.isfinite(sc) and sc > 0:
+                per_day[e].append((im / sc, ms))
+        eps0 = sorted(per_day)
+        imgs0, items0 = [], []
+        for e in eps0:
+            stack = np.array([x[0] for x in per_day[e]])
+            with np.errstate(all="ignore"):
+                im = np.nanmean(stack, axis=0)
+            ms = [m for x in per_day[e] for m in x[1]]
+            imgs0.append(im)
+            wl = [m["wavelength_um"] for m in ms]
+            mjd = float(np.mean([m["mjd"] for m in ms]))
+            ra_e, dec_e = star_position(t, mjd)
+            xe, ye = gw.world_to_pixel_values(ra_e, dec_e)
+            c = centroid(im, float(xe), float(ye))
+            items0.append({"epoch": e, "n_frames": len(ms), "utc_first": min(m["utc"] for m in ms), "utc_last": max(m["utc"] for m in ms),
+                           "mjd_mean": round(mjd, 4), "wl_min_um": round(min(wl), 3), "wl_max_um": round(max(wl), 3),
+                           "obsids": [m["obsid"] for m in ms], "detectors": sorted({m["detector"] for m in ms}),
+                           "pred_xy": [round(float(xe), 2), round(float(shape[0] - 1 - ye), 2)],
+                           "meas_xy": [round(c[0], 2), round(float(shape[0] - 1 - c[1]), 2)] if c else None})
+        lo0, hi0 = stretch_params(imgs0)
+        for it, im in zip(items0, imgs0):
+            it["png"] = f"b0_e{it['epoch']}.png"
+            to_png(im, lo0, hi0, outdir / it["png"])
+        allm, _ = wmean(imgs0, [np.ones_like(i) for i in imgs0])
+        to_png(allm, lo0, hi0, outdir / "b0_all.png")
+        field["bands"].insert(0, {"detector": 0, "label": "All detectors, one image per day (positions only; brightness is not comparable here)",
+                                  "range_um": [0.75, 5.0], "common_um": [0.75, 5.0], "dropped_visits": [], "epochs": items0,
+                                  "all_png": "b0_all.png", "diffs": [], "stretch": [lo0, hi0], "positions_only": True})
 
     # ---- narrow channels: same wavelength (|dlambda| < half bandwidth) in 2+ epochs, same detector
     used = set()
@@ -637,6 +690,8 @@ def build(t, half=None):
     sat_bits_all = (1 << 1) | (1 << 26)
     for b in field["bands"]:
         det = b["detector"]
+        if det == 0:
+            continue
         bm = [m for it in b["epochs"] for m in by[(det, it["epoch"])] if m["obsid"] in set(it["obsids"])]
         sat = any((m["center_flags"] & sat_bits_all) != 0 for m in bm)
         n_in = sum(1 for m in bm if m.get("phot") and m["phot"].get("wing_ujy") is not None)
@@ -671,7 +726,7 @@ def build(t, half=None):
             it["meas_xy"] = [round(c[0], 2), round(float(shape[0] - 1 - c[1]), 2)] if c else None
     # ---- one light curve: every frame's brightness divided by the star's own time-median at that wavelength
     lc = []
-    for b in field["bands"]:
+    for b in [x for x in field["bands"] if x["detector"] != 0]:
         det = b["detector"]
         fk = f"{b['_wing']}_ujy" if b.get("_wing") else "flux_ujy"
         ek = f"{b['_wing']}_err_ujy" if b.get("_wing") else "err_ujy"
@@ -738,6 +793,8 @@ def build(t, half=None):
                             "model": "circular orbit, inclination = field ecliptic latitude, prograde, Kepler rate; observer = Earth centre"}
     # ---- older epoch from NASA's WISE mission (AllWISE Atlas W2, 4.6 um), same grid
     try:
+        if t.get("no_wise"):
+            raise RuntimeError("WISE epoch not used for this field")
         import wise_epoch as WE
         wimg, wmeta = WE.wise_on_grid(ra_mid, dec_mid, gw, shape, fid)
     except Exception as e:

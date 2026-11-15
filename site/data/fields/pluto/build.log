@@ -1,0 +1,6 @@
+[pluto] 87 frames contain Pluto in the window
+[pluto] selected 75 of 87 frames (max 12 per detector per visit, spread in wavelength)
+[pluto] 75/87 cutouts extracted (0s)
+[pluto] 75 usable frames in 8 epochs
+[pluto] cleaned + reprojected (2s)
+[pluto] WISE epoch failed: RuntimeError('WISE epoch not used for this field')

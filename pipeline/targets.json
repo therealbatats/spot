@@ -2,6 +2,37 @@
  "_note": "Written with AI assistance under the direction of Ali (team AITHMAC). Astrometry: Gaia DR3 via MAST TAP (queried Nov 15 2026) unless stated. Positions are propagated to each frame's date with astropy (proper motion + parallax).",
  "fields": [
   {
+   "id": "pluto",
+   "title": "Pluto — the first Planet X",
+   "kind": "mover",
+   "ephem": "pluto",
+   "hits": "pluto",
+   "window": [
+    60952.0,
+    60961.5
+   ],
+   "epoch_bin_days": 1,
+   "cap": 12,
+   "positions_only": true,
+   "no_wise": true,
+   "size_deg": 0.2,
+   "ra": 0,
+   "dec": 0,
+   "epoch": 2016.0,
+   "pmra": 0,
+   "pmdec": 0,
+   "plx": 1,
+   "astrometry_source": "JPL Horizons ephemeris for Pluto (target 999), geocentric, queried November 15, 2026",
+   "story": {
+    "best_band": 0,
+    "hook": "Pluto was found in 1930 by blinking two photographs. Here SPHEREx catches it walking past the stars, day by day.",
+    "what_to_look_for": "Press Play in Timeline: one image per day, October 4–12, 2025. The dot in the ring moves to the right (west) by about 13 pixels in eight days while every star stays put. Each day may show a different detector band, so compare positions, not brightness.",
+    "what_it_is": "Pluto, a dwarf planet about 5.8 billion km away. Percival Lowell's search for an unseen 'Planet X' led Clyde Tombaugh at Lowell Observatory to find Pluto on February 18, 1930, by flipping between photographic plates taken on January 23 and 29, 1930, with a blink comparator, the same idea SPOT uses.",
+    "answer": "The wanderer is Pluto, in the ring. Its path comes from NASA JPL's Horizons ephemeris and our measurement follows it.",
+    "honest": "The ring shows where JPL Horizons predicts Pluto (seen from Earth's centre; SPHEREx orbits Earth, which shifts Pluto by much less than a pixel). Daily images use whatever detector band covered Pluto that day, so brightness changes between days here are colour differences, not real changes."
+   }
+  },
+  {
    "id": "barnard",
    "title": "Barnard's Star",
    "kind": "mover",

@@ -3,5 +3,13 @@
   "app_name": "SPOT",
   "tagline": "The sky looks still. It isn't.",
   "repo_url": "https://github.com/therealbatats/spot",
-  "field_order": ["barnard", "wise0855", "epsindb", "rdra", "rwaur", "m101"]
+  "field_order": [
+    "pluto",
+    "barnard",
+    "wise0855",
+    "epsindb",
+    "rdra",
+    "rwaur",
+    "m101"
+  ]
 }
