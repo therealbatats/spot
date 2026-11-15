@@ -6,6 +6,7 @@ Version 1.0.0 · November (11) 15, 2026 · Team AITHMAC (Ali, Baghdad) · 2026 N
 
 **Live site:** https://therealbatats.github.io/spot/
 **Demo deck (PDF):** https://therealbatats.github.io/spot/deck/SPOT_deck.pdf
+**Demo video (28 s):** https://therealbatats.github.io/spot/deck/SPOT_demo.mp4
 
 SPOT is a free website that turns real images from NASA's SPHEREx infrared space telescope into a little video of any patch of sky. Type coordinates, or pick a target, and blink, swipe, subtract, add or play images taken days, months or (with NASA's older WISE telescope) sixteen years apart. Nearby stars and brown dwarfs drift, Pluto walks past the stars, variable stars change brightness, and distant galaxies stay still.
 
