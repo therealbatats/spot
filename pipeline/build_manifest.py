@@ -24,7 +24,7 @@ ABOUT = """
 <li><strong>Same brightness scale.</strong> All dates in one view share a single brightness scale, so a star that looks brighter really is brighter, not just displayed differently.</li>
 </ol>
 <h3>Comparing with WISE (2010)</h3>
-<p>For the fast movers, SPOT can also show the same patch as seen by NASA's earlier WISE telescope around 2010, put on exactly the same grid. Sixteen years make motions about ten times larger: Barnard's Star moved a measured 27.1 pixels (predicted 27.3) and WISE 0855 moved 20.7 pixels (predicted 20.9).</p>
+<p>For the fast movers, SPOT can also show the same patch as seen by NASA's earlier WISE telescope around 2010, put on exactly the same grid. Sixteen years make motions about 16 times larger than one year of SPHEREx alone: Barnard's Star moved a measured 27.1 pixels (predicted 27.3) and WISE 0855 moved 20.7 pixels (predicted 20.9).</p>
 <h3>Why things move</h3>
 <p>Nearby stars travel through the Galaxy, so over months they creep across the sky (<em>proper motion</em>). Earth also circles the Sun, so nearby objects seem to wobble back and forth once a year (<em>parallax</em>). Pluto was found in 1930 exactly this way: by comparing two photographs and spotting the dot that moved.</p>
 <h3>Limits (please read)</h3>
