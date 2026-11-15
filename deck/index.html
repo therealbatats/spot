@@ -1,117 +1,90 @@
 <!doctype html>
 <!-- SPOT demo deck. Written with AI assistance under the direction of Ali (team AITHMAC).
-     Screenshots are of the real website showing real SPHEREx data. No NASA or mission logos. -->
-<html lang="en"><head><meta charset="utf-8"><title>SPOT — demo deck</title><link rel="icon" href="../favicon.svg">
+     Every image is real telescope data (SPHEREx, WISE) or a screenshot of the public site. No logos. -->
+<html lang="en"><head><meta charset="utf-8"><title>SPOT — demo deck</title>
+<link rel="icon" href="../favicon.svg">
 <style>
+@font-face { font-family: "Plex"; src: url("../site/fonts/plex-sans-400.woff2") format("woff2"), url("../fonts/plex-sans-400.woff2") format("woff2"); font-weight: 400; }
+@font-face { font-family: "Plex"; src: url("../site/fonts/plex-sans-600.woff2") format("woff2"), url("../fonts/plex-sans-600.woff2") format("woff2"); font-weight: 600; }
 @page { size: 1280px 720px; margin: 0; }
 * { box-sizing: border-box; }
-body { margin: 0; font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #e9eef8; background: #0a0e16; }
-.slide { width: 1280px; height: 720px; padding: 54px 64px 46px; position: relative; page-break-after: always; overflow: hidden;
-  background: radial-gradient(1200px 600px at 85% -10%, #16233d 0%, #0a0e16 60%); }
-h1 { font-size: 64px; margin: 0 0 8px; letter-spacing: .5px; } h1 .ar { color: #ffb547; font-weight: 500; }
-h2 { font-size: 40px; margin: 0 0 22px; color: #ffb547; }
-p, li { font-size: 25px; line-height: 1.42; } li { margin-bottom: 10px; }
-.sub { font-size: 30px; color: #c7d3ea; margin: 0 0 30px; }
-.muted { color: #9fb0cc; }
-.foot { position: absolute; left: 64px; right: 64px; bottom: 18px; font-size: 15px; color: #8394b3; display: flex; justify-content: space-between; }
-.cols { display: grid; grid-template-columns: 1.05fr 1fr; gap: 36px; align-items: start; }
-.shot { width: 100%; border: 2px solid #2a3754; border-radius: 12px; display: block; }
-.big { font-size: 56px; font-weight: 800; color: #6fd3ff; line-height: 1; }
-.stat { background: #121a28; border: 1px solid #2a3754; border-radius: 12px; padding: 16px 20px; margin-bottom: 14px; }
-.stat p { margin: 6px 0 0; font-size: 21px; }
-.sim { background: #ff6bd6; color: #1a0016; font-weight: 800; padding: 2px 10px; border-radius: 6px; font-size: 20px; }
-.url { font-size: 28px; color: #6fd3ff; }
-table { border-collapse: collapse; font-size: 21px; width: 100%; } td, th { border-bottom: 1px solid #2a3754; padding: 8px 10px; text-align: left; }
-th { color: #ffb547; }
+body { margin: 0; font-family: "Plex", -apple-system, "Segoe UI", sans-serif; color: #E8EEF7; background: #0B1220; }
+.slide { width: 1280px; height: 720px; padding: 56px 64px; position: relative; page-break-after: always; overflow: hidden; background: #0B1220; display: grid; grid-template-columns: 1fr 1.25fr; gap: 48px; align-items: center; }
+.slide.full { display: block; }
+h1 { font-size: 88px; margin: 0; font-weight: 600; letter-spacing: 2px; }
+h2 { font-size: 44px; margin: 0 0 20px; font-weight: 600; line-height: 1.15; }
+p { font-size: 26px; line-height: 1.4; margin: 0 0 16px; color: #E8EEF7; }
+.haze { color: #A9BCD6; } .ember { color: #FF6A3D; }
+img { width: 100%; display: block; image-rendering: pixelated; }
+.url { font-size: 30px; color: #FF6A3D; font-weight: 600; }
+.small { font-size: 18px; color: #A9BCD6; }
+.sim { background: #FF4FD8; color: #0B1220; font-weight: 600; padding: 0 8px; border-radius: 4px; }
+.num { font-size: 64px; font-weight: 600; color: #FF6A3D; line-height: 1; }
 </style></head><body>
 
 <section class="slide">
-  <div style="margin-top:120px">
-    <h1>SPOT</h1>
-    <p class="sub">Sky Patches Over Time. The sky looks still. It isn't.</p>
-    <p style="max-width:1000px">A free website that turns real NASA SPHEREx infrared images of <strong>any</strong> patch of sky into a little video, so anyone can spot what moved or changed.</p>
+  <div>
+    <img src="logo.svg" alt="SPOT" style="width:300px;margin-bottom:24px">
+    <p style="font-size:36px;font-weight:600">The sky looks still. It isn't.</p>
+    <p class="haze">Blink real NASA SPHEREx images of any patch of sky.</p>
     <p class="url">https://therealbatats.github.io/spot/</p>
-    <p class="muted">Team AITHMAC · Ali · Baghdad · NASA Space Apps Challenge 2026 · "Planet X and SPHEREx"</p>
+    <p class="small">Team AITHMAC · Ali · Baghdad · NASA Space Apps 2026 · Planet X and SPHEREx</p>
   </div>
+  <img src="pair_barnard.png" alt="Barnard's Star in WISE 2010 and SPHEREx 2026">
 </section>
 
 <section class="slide">
-  <h2>The problem</h2>
-  <ul>
-    <li>SPHEREx maps the <strong>whole sky every six months in 102 infrared colours</strong> — images of more than a billion objects, according to the challenge statement.</li>
-    <li>Nearby stars, brown dwarfs, asteroids and maybe new planets give themselves away by <strong>moving between images</strong>. Pluto was found this way in 1930.</li>
-    <li>But SPHEREx sees a <strong>different colour in every image</strong>: compare carelessly and you invent changes.</li>
-    <li>The challenge: type coordinates, see the images of that patch <strong>like a little video</strong>, easily, for anyone.</li>
-  </ul>
-</section>
-
-<section class="slide">
-  <h2>The tool</h2>
-  <div class="cols">
-    <img class="shot" src="shot_tool.jpg" alt="SPOT viewer showing Barnard's Star">
-    <div>
-      <p><strong>Type any RA/Dec</strong> (or put it in the URL). Ready-made fields for all five challenge targets + a control galaxy.</p>
-      <p><strong>Blink · Swipe · Difference · Timeline · Add all.</strong></p>
-      <p>Each detector's band added per visit for signal-to-noise, or one exact wavelength.</p>
-      <p>Gaia overlay, quality flags, spectrum of the target by date, shareable links. Works on a phone.</p>
-    </div>
+  <div>
+    <h2>Discoveries hide in motion</h2>
+    <p>SPHEREx maps the whole sky every six months in 102 infrared colours.</p>
+    <p>Things that move or change between images are the interesting ones. That is how Pluto was found in 1930.</p>
   </div>
+  <img src="pair_pluto.png" alt="Pluto moving between October 4 and 12, 2025, in SPHEREx images">
 </section>
 
 <section class="slide">
-  <h2>How it stays honest — and keeps working</h2>
-  <div class="cols">
-    <ul style="margin-top:0">
-      <li>Compares only <strong>matched wavelengths</strong> (within half a filter width) or the band range <strong>shared by every visit</strong>.</li>
-      <li>One brightness scale per comparison; SPHEREx's own <strong>quality flags</strong> shown.</li>
-      <li><strong>Provenance</strong> for every frame: date, detector, wavelength, link to the original file.</li>
-      <li>IRSA's search API returned HTTP 502 throughout our build (1:41–5:55 PM Baghdad), so we <strong>indexed all 97,434 SPHEREx visits</strong> from the public cloud copy. Any browser can now build a field <strong>live</strong>, reading ~2 MB per image, no server.</li>
-    </ul>
-    <div>
-      <div class="stat"><div class="big">0.03–0.29 px</div><p>median distance of Gaia stars from their catalogue positions after alignment (1 px = 6.2″)</p></div>
-      <div class="stat"><div class="big">&lt; 40 s</div><p>to build a new field live in the browser (one detector band)</p></div>
-    </div>
+  <div>
+    <h2>Any patch, as a little video</h2>
+    <p>Type coordinates. Your browser builds the field live from NASA's public archive copy. No server.</p>
+    <p class="haze">Blink, swipe, subtract, add, play. Zoom, readout, provenance.</p>
   </div>
+  <img src="shot_site.jpg" alt="SPOT viewer on the public site" style="image-rendering:auto;border:1px solid #263553">
 </section>
 
 <section class="slide">
-  <h2>What the test targets show</h2>
-  <table>
-    <tr><th>Target</th><th>What SPOT shows (real data, measured)</th></tr>
-    
-<tr><td>Barnard's Star</td><td>Moves <strong>1.69 px north</strong> in a year (predicted 1.67 px = 10.2″); measured within 0.07–0.44 px of Gaia's prediction on every date and band.</td></tr>
-<tr><td>Epsilon Indi B</td><td>Brown-dwarf pair shines at 4 µm; moves ~1 px south-east in 1.4 years, within ~0.1 px of prediction.</td></tr>
-<tr><td>WISE 0855−0714</td><td>Near SPHEREx's limit: at 3.8–4.4 µm a faint dot shifts west 1.28 px/yr (predicted 1.35) beside a fixed background star. <em>Consistent with</em> a detection; not proven.</td></tr>
-<tr><td>R Draconis</td><td>Saturated; measured from its outer glow: brightness swings by ~2–2.7× over months, smoothly — a pulsating giant.</td></tr>
-<tr><td>RW Aurigae</td><td>Infrared glow (2.4–5 µm) fell ~1.7–1.9× from Sept 2025 to Sept 2026 in three bands; shorter wavelengths within noise.</td></tr>
-<tr><td>M101 (control)</td><td>Nothing changes: differences at noise level; galaxy brightness steady to 2–6%.</td></tr>
-  </table>
-  <p class="muted" style="font-size:19px;margin-top:14px">We claim no discoveries. Anything unexplained is a "candidate needing follow-up". Numbers: VALIDATION.md in the repository.</p>
-</section>
-
-<section class="slide">
-  <h2>Spot the wanderer · Planet X simulator</h2>
-  <div class="cols">
-    <img class="shot" src="shot_px.jpg" alt="Planet X simulator with a labelled simulated planet">
-    <div>
-      <p><strong>Spot the wanderer:</strong> markers hide, you tap what moved, the site explains it.</p>
-      <p><strong>Planet X simulator</strong> <span class="sim">SIMULATED</span> draws a pretend planet into real images at 100–1000 AU, moving by parallax and orbit.</p>
-      <p>Lesson: in Barnard's Star's field, a planet at 500 AU would jump ~14 arcminutes between visits six months apart — wider than the whole image.</p>
-      <p>Honest answer: a real Planet Nine (~mag 22–25) is <strong>probably too faint</strong> for SPHEREx (~18.4–19.5 per channel).</p>
-    </div>
+  <div>
+    <h2>Honest by design</h2>
+    <p>Compares only matching wavelengths. Differences show significance, so steady stars stay grey.</p>
+    <p class="haze">Control galaxy: 2 spots in 18 comparisons.</p>
   </div>
+  <img src="pair_diff.png" alt="Significance difference: control galaxy flat, Barnard's Star leaves a pair">
 </section>
 
 <section class="slide">
-  <h2>Next</h2>
-  <ul>
-    <li>Rerun the open pipeline as each new SPHEREx release lands (one command per field; index refresh ~25 min).</li>
-    <li>Add asteroid and comet tracking with ephemerides; wider live fields of view.</li>
-    <li>Classroom mode in Arabic and English: built in Baghdad, for students everywhere.</li>
-  </ul>
-  <p class="url" style="margin-top:40px">Try it: https://therealbatats.github.io/spot/</p>
-  <p class="muted">Code (MIT): https://github.com/therealbatats/spot</p>
-  <p class="muted" style="font-size:18px">Data: SPHEREx DR1 & QR3 spectral images, NASA/IPAC IRSA (DOI 10.26131/IRSA678, 10.26131/IRSA662). Gaia DR3 (ESA) via MAST. All images are real telescope data except the labelled simulation.</p>
-  <p class="muted" style="font-size:18px">Prepared with AI assistance.</p>
+  <div>
+    <h2>Measured, not just shown</h2>
+    <p><span class="num">27.1</span> <span class="haze">px: Barnard's Star 2010→2026 (predicted 27.3)</span></p>
+    <p><span class="num">0.5</span> <span class="haze">px: Pluto vs NASA JPL Horizons, median</span></p>
+    <p><span class="num">15/15</span> <span class="haze">frames traced to the original files</span></p>
+  </div>
+  <img src="shot_lc.png" alt="R Draconis brightness over 17 months" style="image-rendering:auto">
+</section>
+
+<section class="slide">
+  <div>
+    <h2>Planet X simulator <span class="sim">SIMULATED</span></h2>
+    <p>Draws a pretend planet, moving as parallax and orbit would, into real images.</p>
+    <p class="haze">A real Planet Nine is probably too faint for SPHEREx. We say so.</p>
+  </div>
+  <img src="shot_px.jpg" alt="Planet X simulator with a labelled simulated planet" style="image-rendering:auto;border:1px solid #263553">
+</section>
+
+<section class="slide full">
+  <h2>Try it</h2>
+  <p class="url">https://therealbatats.github.io/spot/</p>
+  <p class="haze">Code (MIT): https://github.com/therealbatats/spot</p>
+  <p>Next: asteroid tracking, Arabic and English classroom mode.</p>
+  <p class="small" style="margin-top:48px">Data: SPHEREx DR1 and QR3 (NASA/IPAC IRSA, DOI 10.26131/IRSA678, 10.26131/IRSA662); AllWISE (NASA/IRSA); Gaia DR3 (ESA, via MAST); JPL Horizons. All images are real telescope data except the labelled simulation.</p>
+  <p class="small">Prepared with AI assistance.</p>
 </section>
 </body></html>
