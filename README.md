@@ -45,7 +45,7 @@ Why our own index? On November 15, 2026, IRSA's search API (TAP, SIA and the ima
 
 ## Validation (details in `VALIDATION.md`)
 - Alignment: Gaia stars land 0.03–0.35 px from their catalogue positions in the star fields (Pluto's single-day images 0.11–0.56 px; 1 px = 6.15″).
-- Movers: Barnard's Star within 0.43 px of prediction in all 18 band-visits; Pluto within 1.05 px of JPL Horizons in all 28 band-days.
+- Movers: Barnard's Star within 0.43 px of prediction in all 18 band-visits; Pluto within 1.05 px of JPL Horizons in all 26 band-days.
 - Control: 2 regions with |S| ≥ 5 in 18 M101 differences; galaxy brightness steady to 1–6%.
 - Provenance: 15/15 random frames traced to IRSA's original files.
 - Our search finds all 17 files that IRSA's own tutorial lists for its example position.
