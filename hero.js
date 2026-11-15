@@ -7,7 +7,7 @@
   if (!cv) return;
   const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   let f;
-  try { f = await (await fetch("data/fields/barnard/field.json")).json(); } catch (e) { cv.parentElement.hidden = true; return; }
+  try { f = await (await fetch("data/fields/barnard/field.json", { cache: "no-cache" })).json(); } catch (e) { cv.parentElement.hidden = true; return; }
   const b6 = f.bands.find(b => b.detector === 6);
   if (!f.wise || !b6) { cv.parentElement.hidden = true; return; }
   const last = b6.epochs[b6.epochs.length - 1];

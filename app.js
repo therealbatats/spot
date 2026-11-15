@@ -23,7 +23,7 @@ function loadImg(src) {
   S.imgs.set(src, p);
   return p;
 }
-function fieldPath(f) { return f.startsWith("data:") ? f : `data/fields/${S.fieldId}/${f}`; }
+function fieldPath(f) { return f.startsWith("data:") ? f : `data/fields/${S.fieldId}/${f}?b=${encodeURIComponent((S.manifest && S.manifest.generated_utc) || "")}`; }
 
 // Parse "08h55m10.8s", "08:55:10.8", "8 55 10.8" (hours) or decimal degrees.
 function parseRA(s) {
@@ -118,7 +118,7 @@ function renderCards() {
 async function openField(id, q) {
   const meta = S.manifest.fields.find(f => f.id === id);
   if (!meta) return;
-  const f = await (await fetch(`data/fields/${id}/field.json`)).json();
+  const f = await (await fetch(`data/fields/${id}/field.json`, { cache: "no-cache" })).json();
   await showField(f, meta, q);
 }
 window.SpotOpenFieldObject = async (f) => { await showField(f, { kind_label: "live", hook: f.story.hook }, null); };
