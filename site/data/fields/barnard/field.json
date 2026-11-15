@@ -72,7 +72,7 @@
       58.49
      ],
      "meas_xy": [
-      57.82,
+      57.81,
       58.53
      ]
     },
@@ -111,8 +111,8 @@
       57.64
      ],
      "meas_xy": [
-      58.02,
-      57.48
+      58.0,
+      57.4
      ]
     },
     {
@@ -151,8 +151,8 @@
       56.85
      ],
      "meas_xy": [
-      58.15,
-      56.91
+      58.19,
+      56.84
      ]
     }
    ],
@@ -161,22 +161,37 @@
     {
      "a": 1,
      "b": 2,
-     "png": "b1_d1_2.png"
+     "png": "b1_d1_2.png",
+     "sig_png": "b1_s1_2.png",
+     "n_pix_over_5": 63,
+     "sky_sigma": 0.00847918914638806,
+     "star_resid_median": 0.135,
+     "n_stars": 30
     },
     {
      "a": 2,
      "b": 3,
-     "png": "b1_d2_3.png"
+     "png": "b1_d2_3.png",
+     "sig_png": "b1_s2_3.png",
+     "n_pix_over_5": 80,
+     "sky_sigma": 0.009996588056696327,
+     "star_resid_median": 0.138,
+     "n_stars": 29
     },
     {
      "a": 1,
      "b": 3,
-     "png": "b1_d1_3.png"
+     "png": "b1_d1_3.png",
+     "sig_png": "b1_s1_3.png",
+     "n_pix_over_5": 74,
+     "sky_sigma": 0.007967099680744636,
+     "star_resid_median": 0.14,
+     "n_stars": 29
     }
    ],
    "stretch": [
-    -0.034950459736763854,
-    22.69087120817958
+    -0.034946819708094747,
+    22.60931144883702
    ],
    "phot_method": "wings: ring 3-6 px (centre saturated)"
   },
@@ -229,8 +244,8 @@
       58.53
      ],
      "meas_xy": [
-      57.61,
-      58.59
+      57.66,
+      58.58
      ]
     },
     {
@@ -268,8 +283,8 @@
       57.62
      ],
      "meas_xy": [
-      57.9,
-      57.52
+      57.93,
+      57.51
      ]
     },
     {
@@ -306,8 +321,8 @@
       56.85
      ],
      "meas_xy": [
-      57.92,
-      56.93
+      57.98,
+      56.89
      ]
     }
    ],
@@ -316,22 +331,37 @@
     {
      "a": 1,
      "b": 2,
-     "png": "b2_d1_2.png"
+     "png": "b2_d1_2.png",
+     "sig_png": "b2_s1_2.png",
+     "n_pix_over_5": 23,
+     "sky_sigma": 0.007307899704420648,
+     "star_resid_median": 0.101,
+     "n_stars": 30
     },
     {
      "a": 2,
      "b": 3,
-     "png": "b2_d2_3.png"
+     "png": "b2_d2_3.png",
+     "sig_png": "b2_s2_3.png",
+     "n_pix_over_5": 30,
+     "sky_sigma": 0.008278009488482726,
+     "star_resid_median": 0.128,
+     "n_stars": 29
     },
     {
      "a": 1,
      "b": 3,
-     "png": "b2_d1_3.png"
+     "png": "b2_d1_3.png",
+     "sig_png": "b2_s1_3.png",
+     "n_pix_over_5": 46,
+     "sky_sigma": 0.007154192284332425,
+     "star_resid_median": 0.17,
+     "n_stars": 29
     }
    ],
    "stretch": [
-    -0.04120760752227532,
-    26.071331336220105
+    -0.04120776027396005,
+    24.67040255504513
    ],
    "phot_method": "wings: ring 3-6 px (centre saturated)"
   },
@@ -382,8 +412,8 @@
       58.54
      ],
      "meas_xy": [
-      57.97,
-      58.73
+      58.16,
+      58.7
      ]
     },
     {
@@ -419,8 +449,8 @@
       57.54
      ],
      "meas_xy": [
-      57.95,
-      57.27
+      57.84,
+      57.16
      ]
     },
     {
@@ -456,8 +486,8 @@
       56.88
      ],
      "meas_xy": [
-      58.21,
-      57.04
+      58.33,
+      57.07
      ]
     }
    ],
@@ -466,22 +496,37 @@
     {
      "a": 1,
      "b": 2,
-     "png": "b3_d1_2.png"
+     "png": "b3_d1_2.png",
+     "sig_png": "b3_s1_2.png",
+     "n_pix_over_5": 26,
+     "sky_sigma": 0.007590385116915749,
+     "star_resid_median": 0.192,
+     "n_stars": 29
     },
     {
      "a": 2,
      "b": 3,
-     "png": "b3_d2_3.png"
+     "png": "b3_d2_3.png",
+     "sig_png": "b3_s2_3.png",
+     "n_pix_over_5": 15,
+     "sky_sigma": 0.007875485309080823,
+     "star_resid_median": 0.177,
+     "n_stars": 30
     },
     {
      "a": 1,
      "b": 3,
-     "png": "b3_d1_3.png"
+     "png": "b3_d1_3.png",
+     "sig_png": "b3_s1_3.png",
+     "n_pix_over_5": 48,
+     "sky_sigma": 0.00615616961457012,
+     "star_resid_median": 0.161,
+     "n_stars": 29
     }
    ],
    "stretch": [
-    -0.036474897142701294,
-    25.58453258855392
+    -0.036475843288941934,
+    23.634360925850313
    ],
    "phot_method": "wings: ring 3-6 px (centre saturated)"
   },
@@ -531,8 +576,8 @@
       58.49
      ],
      "meas_xy": [
-      57.86,
-      58.54
+      57.82,
+      58.48
      ]
     },
     {
@@ -568,7 +613,7 @@
       57.64
      ],
      "meas_xy": [
-      57.87,
+      57.86,
       57.61
      ]
     },
@@ -605,8 +650,8 @@
       56.84
      ],
      "meas_xy": [
-      58.17,
-      57.01
+      58.22,
+      57.02
      ]
     }
    ],
@@ -615,22 +660,37 @@
     {
      "a": 1,
      "b": 2,
-     "png": "b4_d1_2.png"
+     "png": "b4_d1_2.png",
+     "sig_png": "b4_s1_2.png",
+     "n_pix_over_5": 15,
+     "sky_sigma": 0.005612625719326749,
+     "star_resid_median": 0.163,
+     "n_stars": 30
     },
     {
      "a": 2,
      "b": 3,
-     "png": "b4_d2_3.png"
+     "png": "b4_d2_3.png",
+     "sig_png": "b4_s2_3.png",
+     "n_pix_over_5": 22,
+     "sky_sigma": 0.005210299748088589,
+     "star_resid_median": 0.149,
+     "n_stars": 30
     },
     {
      "a": 1,
      "b": 3,
-     "png": "b4_d1_3.png"
+     "png": "b4_d1_3.png",
+     "sig_png": "b4_s1_3.png",
+     "n_pix_over_5": 61,
+     "sky_sigma": 0.00467620762343076,
+     "star_resid_median": 0.153,
+     "n_stars": 30
     }
    ],
    "stretch": [
-    -0.025129422358808814,
-    17.021407437521443
+    -0.025128929169760877,
+    17.20968106157051
    ],
    "phot_method": "wings: ring 3-6 px (centre saturated)"
   },
@@ -682,8 +742,8 @@
       58.53
      ],
      "meas_xy": [
-      57.88,
-      58.58
+      57.79,
+      58.6
      ]
     },
     {
@@ -720,8 +780,8 @@
       57.61
      ],
      "meas_xy": [
-      57.92,
-      57.55
+      57.94,
+      57.57
      ]
     },
     {
@@ -758,8 +818,8 @@
       56.85
      ],
      "meas_xy": [
-      58.27,
-      56.84
+      58.3,
+      56.82
      ]
     }
    ],
@@ -768,22 +828,37 @@
     {
      "a": 1,
      "b": 2,
-     "png": "b5_d1_2.png"
+     "png": "b5_d1_2.png",
+     "sig_png": "b5_s1_2.png",
+     "n_pix_over_5": 31,
+     "sky_sigma": 0.010822031408562336,
+     "star_resid_median": 0.083,
+     "n_stars": 30
     },
     {
      "a": 2,
      "b": 3,
-     "png": "b5_d2_3.png"
+     "png": "b5_d2_3.png",
+     "sig_png": "b5_s2_3.png",
+     "n_pix_over_5": 22,
+     "sky_sigma": 0.012274938749770993,
+     "star_resid_median": 0.086,
+     "n_stars": 30
     },
     {
      "a": 1,
      "b": 3,
-     "png": "b5_d1_3.png"
+     "png": "b5_d1_3.png",
+     "sig_png": "b5_s1_3.png",
+     "n_pix_over_5": 58,
+     "sky_sigma": 0.00912254536332227,
+     "star_resid_median": 0.073,
+     "n_stars": 30
     }
    ],
    "stretch": [
-    -0.02862299678397943,
-    19.468935831995925
+    -0.02862156229878149,
+    18.379669063181165
    ],
    "phot_method": "wings: ring 3-6 px (centre saturated)"
   },
@@ -836,8 +911,8 @@
       58.55
      ],
      "meas_xy": [
-      57.99,
-      58.59
+      58.0,
+      58.56
      ]
     },
     {
@@ -875,8 +950,8 @@
       57.55
      ],
      "meas_xy": [
-      57.9,
-      57.5
+      57.88,
+      57.49
      ]
     },
     {
@@ -913,8 +988,8 @@
       56.87
      ],
      "meas_xy": [
-      58.27,
-      56.9
+      58.24,
+      56.94
      ]
     }
    ],
@@ -923,22 +998,37 @@
     {
      "a": 1,
      "b": 2,
-     "png": "b6_d1_2.png"
+     "png": "b6_d1_2.png",
+     "sig_png": "b6_s1_2.png",
+     "n_pix_over_5": 30,
+     "sky_sigma": 0.016757740221692217,
+     "star_resid_median": 0.094,
+     "n_stars": 30
     },
     {
      "a": 2,
      "b": 3,
-     "png": "b6_d2_3.png"
+     "png": "b6_d2_3.png",
+     "sig_png": "b6_s2_3.png",
+     "n_pix_over_5": 18,
+     "sky_sigma": 0.018721034614576144,
+     "star_resid_median": 0.108,
+     "n_stars": 30
     },
     {
      "a": 1,
      "b": 3,
-     "png": "b6_d1_3.png"
+     "png": "b6_d1_3.png",
+     "sig_png": "b6_s1_3.png",
+     "n_pix_over_5": 53,
+     "sky_sigma": 0.013890829248593844,
+     "star_resid_median": 0.089,
+     "n_stars": 30
     }
    ],
    "stretch": [
     -0.03595576102979931,
-    9.71664905597312
+    9.622919440567165
    ],
    "phot_method": "wings: ring 3-6 px (centre saturated)"
   }
@@ -994,12 +1084,14 @@
     {
      "a": 0,
      "b": 1,
-     "png": "c1_d0.png"
+     "png": "c1_d0.png",
+     "sig_png": "c1_s0.png"
     },
     {
      "a": 1,
      "b": 2,
-     "png": "c1_d1.png"
+     "png": "c1_d1.png",
+     "sig_png": "c1_s1.png"
     }
    ]
   },
@@ -1053,12 +1145,14 @@
     {
      "a": 0,
      "b": 1,
-     "png": "c2_d0.png"
+     "png": "c2_d0.png",
+     "sig_png": "c2_s0.png"
     },
     {
      "a": 1,
      "b": 2,
-     "png": "c2_d1.png"
+     "png": "c2_d1.png",
+     "sig_png": "c2_s1.png"
     }
    ]
   },
@@ -1112,12 +1206,14 @@
     {
      "a": 0,
      "b": 1,
-     "png": "c3_d0.png"
+     "png": "c3_d0.png",
+     "sig_png": "c3_s0.png"
     },
     {
      "a": 1,
      "b": 2,
-     "png": "c3_d1.png"
+     "png": "c3_d1.png",
+     "sig_png": "c3_s1.png"
     }
    ]
   },
@@ -1171,12 +1267,14 @@
     {
      "a": 0,
      "b": 1,
-     "png": "c4_d0.png"
+     "png": "c4_d0.png",
+     "sig_png": "c4_s0.png"
     },
     {
      "a": 1,
      "b": 2,
-     "png": "c4_d1.png"
+     "png": "c4_d1.png",
+     "sig_png": "c4_s1.png"
     }
    ]
   },
@@ -1230,12 +1328,14 @@
     {
      "a": 0,
      "b": 1,
-     "png": "c5_d0.png"
+     "png": "c5_d0.png",
+     "sig_png": "c5_s0.png"
     },
     {
      "a": 1,
      "b": 2,
-     "png": "c5_d1.png"
+     "png": "c5_d1.png",
+     "sig_png": "c5_s1.png"
     }
    ]
   },
@@ -1289,12 +1389,14 @@
     {
      "a": 0,
      "b": 1,
-     "png": "c6_d0.png"
+     "png": "c6_d0.png",
+     "sig_png": "c6_s0.png"
     },
     {
      "a": 1,
      "b": 2,
-     "png": "c6_d1.png"
+     "png": "c6_d1.png",
+     "sig_png": "c6_s1.png"
     }
    ]
   }
@@ -11186,5 +11288,11 @@
    17.13
   ]
  ],
- "gaia_note": "ESA Gaia DR3 (via MAST), G < 17.5; [ra, dec, pmra mas/yr, pmdec mas/yr, G] at epoch 2016.0"
+ "gaia_note": "ESA Gaia DR3 (via MAST), G < 17.5; [ra, dec, pmra mas/yr, pmdec mas/yr, G] at epoch 2016.0",
+ "diff_floor": {
+  "f_used": 0.12,
+  "star_resid_this_field": 0.127,
+  "n_star_measurements": 534,
+  "stars": 30
+ }
 }

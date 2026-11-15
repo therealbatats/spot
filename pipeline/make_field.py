@@ -147,15 +147,55 @@ def stretch_params(stack):
     return float(lo), float(max(hi, lo + 1e-6))
 
 
+def display_fill(img, hi, signed=False):
+    """DISPLAY ONLY. Masked (NaN) pixels in holes inside the image are filled so bright stars are
+    not drawn as black holes: a hole touching a bright source (5x5 neighbourhood reaches the top of
+    the display stretch) is drawn at display maximum (white); any other hole gets the local median.
+    In difference images every hole becomes 0 (no change). Holes connected to the image border
+    (no coverage) stay empty. Photometry and the true mask are not affected."""
+    from scipy import ndimage
+    a = np.array(img, dtype=float)
+    nan = ~np.isfinite(a)
+    if not nan.any():
+        return a, nan
+    lab, n = ndimage.label(nan)
+    edge = set(np.unique(np.r_[lab[0], lab[-1], lab[:, 0], lab[:, -1]])) - {0}
+    holes = nan & ~np.isin(lab, list(edge))
+    out = a.copy()
+    if signed:
+        out[holes] = 0.0
+        return out, holes
+    for _ in range(12):
+        todo = holes & ~np.isfinite(out)
+        if not todo.any():
+            break
+        fin = np.isfinite(out)
+        mx = ndimage.maximum_filter(np.where(fin, out, -np.inf), size=5)
+        pad = np.pad(np.where(fin, out, np.nan), 2, constant_values=np.nan)
+        win = np.lib.stride_tricks.sliding_window_view(pad, (5, 5))
+        cnt = np.isfinite(win).sum(axis=(2, 3))
+        cand = todo & (cnt > 0)
+        with np.errstate(all="ignore"), __import__("warnings").catch_warnings():
+            __import__("warnings").simplefilter("ignore")
+            med = np.nanmedian(win, axis=(2, 3))
+        bright = cand & (mx >= hi)
+        out[bright] = hi * 4.0
+        rest = cand & ~bright
+        out[rest] = med[rest]
+    return out, holes
+
+
 def to_png(img, lo, hi, path, signed=False):
-    """8-bit grey + alpha (alpha 0 = no data). Rows flipped so north is up, east left."""
+    """8-bit grey + alpha. Alpha 255 = real pixel, 254 = flagged pixel filled for display
+    (see display_fill), 0 = no data. Rows flipped so north is up, east left."""
+    img, filled = display_fill(img, hi, signed)
     if signed:
         z = 0.5 + 0.5 * np.clip(img / hi, -1, 1)
     else:
         z = np.clip((img - lo) / (hi - lo), 0, 1)
         z = np.arcsinh(8 * z) / np.arcsinh(8)
     g = np.nan_to_num(z * 255, nan=0).astype(np.uint8)[::-1]
-    al = np.where(np.isfinite(img), 255, 0).astype(np.uint8)[::-1]
+    al = np.where(np.isfinite(img), np.where(filled, 254, 255), 0).astype(np.uint8)[::-1]
     Image.fromarray(np.dstack([g, al]), mode="LA").save(path, optimize=True)
 
 
@@ -163,6 +203,15 @@ def wmean(stack, vstack):
     """Per-pixel mean across frames with 3-sigma clipping (rejects cosmic rays that slipped through)."""
     from astropy.stats import sigma_clip
     s = np.array(stack, dtype=float)
+    v0 = np.array(vstack, dtype=float)
+    if len(s) >= 3:
+        # reject single-frame outliers (cosmic rays, hot pixels missed by the flags): more than
+        # 5 sigma + 30% of the median away from the per-pixel median of all frames of this visit
+        with np.errstate(all="ignore"), __import__("warnings").catch_warnings():
+            __import__("warnings").simplefilter("ignore")
+            med = np.nanmedian(s, axis=0)
+        lim = 5 * np.sqrt(np.clip(v0, 0, None)) + 0.3 * np.abs(med)
+        s = np.where(np.abs(s - med) > lim, np.nan, s)
     if len(s) >= 3:
         c = sigma_clip(np.ma.masked_invalid(s), sigma=3, axis=0, maxiters=2)
         m = c.mean(axis=0).filled(np.nan)
@@ -243,6 +292,55 @@ def planetx_offsets(ra0, dec0, epochs_mjd, gw, shape, distances_au):
     return out
 
 
+
+
+# ------------------------------------------------------------------ honest differences
+# F_RESID: fraction of a star's peak that remains in B - A for stars that did NOT change (sub-pixel
+# registration and PSF differences between visits). Measured on isolated Gaia stars in all six fields
+# (pipeline/diff_floor.json, written by pass 1); default used until measured.
+def f_resid():
+    fp = Path(__file__).parent / "diff_floor.json"
+    return json.loads(fp.read_text())["f"] if fp.exists() else 0.1
+
+
+def sig_map(A, B, f, vA=None, vB=None):
+    """Significance of a change: S = (B - A) / sqrt(sigma^2 + (f * max(A, B))^2).
+    sigma is per pixel: sqrt(vA + vB) from the tracked variance, rescaled so that the robust scatter of
+    (B - A) / sqrt(vA + vB) on empty sky (pixels fainter than the 60th percentile) is exactly 1 (this
+    absorbs the noise correlation introduced by reprojection). Without variance maps, one sky value."""
+    d = B - A
+    m = np.fmax(A, B)
+    ok = np.isfinite(d) & np.isfinite(m)
+    if ok.sum() < 50:
+        return d * np.nan, np.nan
+    sky = ok & (m < np.nanpercentile(m[ok], 60))
+    if vA is not None and vB is not None:
+        sv = np.sqrt(np.clip(np.asarray(vA, float) + np.asarray(vB, float), 0, None))
+        good = sky & np.isfinite(sv) & (sv > 0)
+        if good.sum() > 50:
+            z = d[good] / sv[good]
+            scale = 1.4826 * np.nanmedian(np.abs(z - np.nanmedian(z)))
+            sig = sv * scale
+            sig = np.where(np.isfinite(sig) & (sig > 0), sig, np.nanmedian(sig[good]))
+            return d / np.sqrt(sig ** 2 + (f * np.clip(m, 0, None)) ** 2), float(np.nanmedian(sig[good]))
+    sig = 1.4826 * np.nanmedian(np.abs(d[sky] - np.nanmedian(d[sky])))
+    return d / np.sqrt(sig ** 2 + (f * np.clip(m, 0, None)) ** 2), float(sig)
+
+
+def star_resid(A, B, stars):
+    """For each star (grid x, y): max |B - A| within 2 px divided by max(A, B) peak within 2 px."""
+    out = []
+    yy, xx = np.mgrid[:A.shape[0], :A.shape[1]]
+    for x, y in stars:
+        r = np.hypot(xx - x, yy - y) <= 2
+        a, b = A[r], B[r]
+        if not (np.isfinite(a).all() and np.isfinite(b).all()):
+            continue
+        pk = max(a.max(), b.max())
+        if pk <= 0:
+            continue
+        out.append(float(np.abs(b - a).max() / pk))
+    return out
 
 # ------------------------------------------------------------------ Gaia overlay (ESA Gaia DR3 via MAST TAP)
 def gaia_sources(fid, ra, dec, radius_deg, gmax=17.5):
@@ -337,6 +435,22 @@ def build(t, half=None):
     gw, shape = F.target_grid(ra_mid, dec_mid, size)
     n_ep = ep
     log(f"[{fid}] {len(metas)} usable frames in {n_ep} epochs")
+    # isolated Gaia stars (G 9-15, no G<17 neighbour within 20", >25" from the target) for the
+    # difference floor; positions on the grid at 2026.0 (stars with pm > 50 mas/yr skipped)
+    gstars = []
+    gall = gaia_sources(fid, ra_mid, dec_mid, size * 0.72) or []
+    for k, g in enumerate(gall):
+        if not (9 < g[4] < 15) or abs(g[2]) > 50 or abs(g[3]) > 50:
+            continue
+        if any(j != k and o[4] < 17 and np.hypot((o[0] - g[0]) * np.cos(np.radians(g[1])), o[1] - g[1]) * 3600 < 20 for j, o in enumerate(gall)):
+            continue
+        if np.hypot((g[0] - ra_mid) * np.cos(np.radians(dec_mid)), g[1] - dec_mid) * 3600 < 25:
+            continue
+        gx, gy = gw.world_to_pixel_values(g[0], g[1])
+        if 4 <= gx < shape[1] - 4 and 4 <= gy < shape[0] - 4:
+            gstars.append((float(gx), float(gy)))
+    FRES = f_resid()
+    resid_all = []
 
     cleaned = {}
     for m in metas:
@@ -390,11 +504,12 @@ def build(t, half=None):
             log(f"[{fid}] D{det}: visits do not share enough wavelength range for a fair band comparison; band shows {eps}")
         if dropped:
             log(f"[{fid}] D{det}: dropped visit(s) {dropped} from the band view (too little shared wavelength range)")
-        imgs, items = [], []
+        imgs, items, vmaps = [], [], []
         for e in eps:
             ms = [m for m in by[(det, e)] if lo_c <= m["wavelength_um"] <= hi_c] or by[(det, e)]
             im, vm = wmean([cleaned[m["key"]][0] for m in ms], [cleaned[m["key"]][1] for m in ms])
             imgs.append(im)
+            vmaps.append(vm)
             wl = [m["wavelength_um"] for m in ms]
             items.append({"epoch": e, "n_frames": len(ms), "utc_first": ms[0]["utc"], "utc_last": ms[-1]["utc"],
                           "mjd_mean": round(float(np.mean([m["mjd"] for m in ms])), 4),
@@ -420,7 +535,15 @@ def build(t, half=None):
             for (i, j), d in zip(pairs, dd):
                 p = f"b{det}_d{items[i]['epoch']}_{items[j]['epoch']}.png"
                 to_png(d, 0, dh or 1.0, outdir / p, signed=True)
-                diffs.append({"a": items[i]["epoch"], "b": items[j]["epoch"], "png": p})
+                S, sky_sig = sig_map(imgs[i], imgs[j], FRES, vmaps[i], vmaps[j])
+                ps = f"b{det}_s{items[i]['epoch']}_{items[j]['epoch']}.png"
+                to_png(S, 0, 5.0, outdir / ps, signed=True)  # fixed range: grey 0, white +5, black -5
+                rs = star_resid(imgs[i], imgs[j], gstars)
+                resid_all += rs
+                big = int((np.abs(np.nan_to_num(S)) > 5).sum())
+                diffs.append({"a": items[i]["epoch"], "b": items[j]["epoch"], "png": p, "sig_png": ps,
+                              "n_pix_over_5": big, "sky_sigma": sky_sig,
+                              "star_resid_median": round(float(np.median(rs)), 3) if rs else None, "n_stars": len(rs)})
         field["bands"].append({"detector": det, "label": BAND_LABEL[det], "range_um": BANDS[det],
                                "common_um": [round(lo_c, 3), round(hi_c, 3)], "dropped_visits": dropped,
                                "epochs": items, "all_png": f"b{det}_all.png", "diffs": diffs,
@@ -470,7 +593,10 @@ def build(t, half=None):
             dh = float(np.nanpercentile(np.abs(d), 99.5)) if np.isfinite(d).any() else 1.0
             p = f"{cid}_d{i}.png"
             to_png(d, 0, dh or 1.0, outdir / p, signed=True)
-            ch["diffs"].append({"a": i, "b": i + 1, "png": p})
+            S, _ = sig_map(imgs[i], imgs[i + 1], FRES, cleaned[sel[i]["key"]][1], cleaned[sel[i + 1]["key"]][1])
+            ps = f"{cid}_s{i}.png"
+            to_png(S, 0, 5.0, outdir / ps, signed=True)
+            ch["diffs"].append({"a": i, "b": i + 1, "png": p, "sig_png": ps})
         field["channels"].append(ch)
 
     # ---- target track: predicted vs measured (band with best S/N chosen later in validation)
@@ -539,6 +665,10 @@ def build(t, half=None):
     if g:
         field["gaia"] = g
         field["gaia_note"] = "ESA Gaia DR3 (via MAST), G < 17.5; [ra, dec, pmra mas/yr, pmdec mas/yr, G] at epoch 2016.0"
+    field["diff_floor"] = {"f_used": FRES, "star_resid_this_field": round(float(np.median(resid_all)), 3) if resid_all else None,
+                           "n_star_measurements": len(resid_all), "stars": len(gstars)}
+    (Path(__file__).parent / "resid" ).mkdir(exist_ok=True)
+    (Path(__file__).parent / "resid" / f"{fid}.json").write_text(json.dumps(resid_all))
     (outdir / "field.json").write_text(json.dumps(field, indent=1))
     (outdir / "build.log").write_text("\n".join(LOG))
     log(f"[{fid}] done in {time.time()-t0:.0f}s: {len(field['bands'])} bands, {len(field['channels'])} channels")
