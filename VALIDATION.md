@@ -13,11 +13,34 @@ Scripts: `pipeline/validate.py` (checks 1–3), `pipeline/check_diff.py` (check 
 | 3 | Known movers | **Pass.** Barnard's Star: 0.01–0.43 px from the Gaia prediction in all 18 band-visits; WISE (2010) → SPHEREx (2026) shift measured 27.1 px vs 27.3 predicted; WISE-epoch residual 0.14 px. Epsilon Indi B: 0.01–0.32 px in 20 band-visits. WISE 0855: SPHEREx 0.29–1.96 px in 14 band-visits (faint; neighbour star 7.8″ away); 2010 → 2026 shift measured 20.7 px vs 20.9 predicted; WISE-epoch residual 1.12 px. **Pluto (solar system):** 0.07–1.05 px from the JPL Horizons ephemeris in 26 band-days and 0.17–0.57 px in the 8 daily all-band images; it moves about 12 px in 8 days. |
 | 4 | Control field (new test) | **Pass.** Significance map S = (B − A) / √(σ² + (f·max(A,B))²), f = 0.12 measured as the median residual of 1,555 isolated non-changing Gaia stars in all fields (84th percentile 0.205). M101: **2 regions with |S| ≥ 5 in 18 differences**, none at the centre. Other fields: the targets appear at their positions; isolated spots elsewhere are mostly single-visit artifacts (satellite trails, reflections of bright stars, residual cosmic rays), stated on the site. |
 | 5 | Provenance | **Pass.** 15 random frames (three samples of 5): the IRSA source link opened (HTTP 206) and the file's DETECTOR, OBSID and DATE-AVG match the site. 15/15 MATCH. The WISE source link for Barnard's Star also opens (HTTP 206). |
-| 6 | Simulation labelling | SEE_CHECK6 |
-| 7 | Live site | SEE_CHECK7 |
+| 6 | Simulation labelling | **Pass.** With the Planet X simulator on, the image carries a full-width pink banner "SIMULATED planet shown — not real data" and the dot is boxed and labelled SIMULATED; the simulator tab and the deck use the same label. Screenshot from the public site: `docs/evidence/check6_simulated_label_public_site.jpg`. Nothing else on the site, deck or video is simulated. |
+| 7 | Live site | **Pass** (public site, November (11) 15, 7:30 PM). Scripted run in a browser: all 7 fields × every detector band (plus Pluto's all-bands-by-day view) × all 5 compare modes, 3 exact-wavelength channels per field, WISE on/off where offered (5 fields), and every tab: about 400 clicks, 0 script errors, 0 failed resources, 0 console errors. Repeated at 360 px width: no horizontal scroll on the home page or any field. Typing WISE 0855's coordinates (133.786, −7.2444) opens its ready-made field (1.6′ from centre). Live Orion (83.8221, −5.3911) at 360 px: 35 images in 3 visits in 6 s, no errors. No cookies and no local storage; every request on the home page went to the site's own host. Keyboard and reduced-motion were checked in the smoke test before the redesign merge, not re-run here. |
 | 8 | Size and speed | Initial page including the hero's real data and fonts ≈ 414 KB, plus 7 thumbnails 56 KB (uncompressed; limit 2 MB). Opening a field: field.json 130–260 KB plus 2–3 PNGs (10–25 KB). Live mode: visit index 4.5 MB raw / 1.6 MB gzip, loaded only on first live request; Orion Nebula (D2, 0.1°) built in about 6 s on the public site with 180/180 requests OK. |
 | 9 | Links | All visitor-facing links returned 200/206 when checked: DOIs, IRSA pages and tutorials, AWS buckets, MAST, challenge page, repository. Expected non-OK: IRSA TAP and image search (HTTP 502 all afternoon), CDS services ("page unavailable"), two Canadian Space Agency pages (time-out, only in a private notes file). |
-| 10 | Text truth | SEE_CHECK10 |
+| 10 | Text truth | **Pass after 6 corrections.** Every number on the site, README, deck, video captions and submission text was compared with the outputs above (table below). Found and fixed: Pluto band-days 28 → 26; Pluto shift "about 13 px" → "about 12" (12.40 predicted); Pluto distance 5.8 → 5.2 billion km (JPL Horizons, 35.07 AU on 2025-10-08); Epsilon Indi B 6.5″ → 6.4″; Barnard "close to two" → "about 1.7" px per year; WISE baseline "ten times" → "16 times" larger motions than one year of SPHEREx; deck Pluto median 0.5 px → 0.35 px (8 daily images). |
+
+## Check 10 — public claims and where each is shown to be true
+
+| Claim (where it appears) | Value | Source of truth |
+|---|---|---|
+| Barnard's Star WISE 2010 → SPHEREx 2026 (site, README, deck, video, submission) | 27.1 px measured, 27.3 predicted; "almost three arcminutes" (27.1 × 6.15″ = 2.78′) | Check 3 |
+| WISE 0855 2010 → 2026 (site, README, submission) | 20.7 px vs 20.9; "two arcminutes" (2.12′) | Check 3 |
+| Pluto vs JPL Horizons (README, deck, submission) | 0.07–1.05 px in 26 band-days; 0.17–0.57 px daily, median 0.35 | Check 3, Pluto table |
+| Pluto moves (site, submission) | about 12 px in 8 days (12.40 predicted) | Pluto table |
+| Pluto distance (site) | about 5.2 billion km | JPL Horizons query, 2025-10-08: delta 35.07 AU |
+| Alignment (README, submission) | 0.03–0.35 px in star fields | Check 1 |
+| Barnard / Epsilon Indi B / WISE 0855 SPHEREx positions | ≤ 0.43 px (18), ≤ 0.32 px (20, median 0.12), 0.29–1.96 px (14) | Check 3 tables |
+| M101 control (README, deck, submission) | 2 regions with \|S\| ≥ 5 in 18 differences; core steady 1–6% | Check 4, photometry floors |
+| Noise floor f (submission, EXPLAIN_IT) | 12%, from 1,555 Gaia stars | Check 4 |
+| R Draconis (site, submission) | 0.46×–1.98× per frame; fitted maximum 10 days from VSX; rms 0.187 → 0.116 dex | Photometry floors |
+| RW Aurigae (site, README, submission) | 2.4–5 µm fell 1.7–1.9× | Photometry floors |
+| Provenance (README, deck, submission) | 15/15 | Check 5 |
+| File search vs IRSA tutorial | 17/17 | Independent check |
+| Visit index | 97,434 visits; about 3.7% missing | row count of `site/data/live/index.json` (97,434); 3.7% from the index build (README) |
+| Live mode (EXPLAIN_IT, submission) | Orion 35 images in about 6 s | Check 7 |
+| Initial page under 2 MB | 186 KB transferred, 465 KB uncompressed, 18 requests (7:35 PM) | Check 8, browser timing |
+| Video length | 28.000 s | `ffprobe deck/SPOT_demo.mp4` |
+| No AI tool or model names in the public repository or site | 0 matches on `main` and `gh-pages`, files and commit messages | case-insensitive `git grep` for AI product, model and company names (search list kept in the private notes) |
 
 ## Photometry floors (what counts as a real brightness change)
 | Method | Test object | Scatter |
