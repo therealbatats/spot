@@ -1,0 +1,21 @@
+<!doctype html>
+<!-- SPOT - page not found. Written with AI assistance under the direction of Ali (team AITHMAC). -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Not found — SPOT</title><meta name="theme-color" content="#000000">
+<style>
+body{margin:0;background:#000000;color:#FFFFFF;font:400 16px/1.5 system-ui,sans-serif;display:flex;min-height:100vh;align-items:center;justify-content:center;padding:16px;box-sizing:border-box}
+main{max-width:520px} h1{font-size:28px;margin:0 0 8px} p{color:rgba(255,255,255,.65)} a{color:#FFFFFF}
+form{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+input{background:#000000;color:#FFFFFF;border:1px solid rgba(255,255,255,.65);border-radius:6px;padding:10px 12px;font:inherit;min-height:44px;flex:1 1 180px}
+button{background:#FE5101;color:#000000;border:0;border-radius:6px;padding:10px 16px;font:inherit;font-weight:600;min-height:44px;cursor:pointer}
+</style></head><body><main>
+<h1>This patch of sky is empty.</h1>
+<p>The page you asked for does not exist. Type coordinates to look at any patch of sky instead.</p>
+<form id="f"><input id="ra" aria-label="Right ascension" placeholder="RA, e.g. 133.786" required><input id="dec" aria-label="Declination" placeholder="Dec, e.g. -7.2444" required><button>Show this sky</button></form>
+<p><a id="home" href="/spot/">Go to the SPOT home page</a></p>
+</main><script>
+const base = location.pathname.startsWith("/spot/") || location.pathname === "/spot" ? "/spot/" : "/";
+document.getElementById("home").href = base;
+document.getElementById("f").addEventListener("submit", e => { e.preventDefault();
+  location.href = base + "?" + new URLSearchParams({ ra: document.getElementById("ra").value.trim(), dec: document.getElementById("dec").value.trim() }); });
+</script></body></html>
