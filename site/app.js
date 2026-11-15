@@ -164,9 +164,9 @@ function renderBandBtns() {
   if (S.data === "band") {
     const R = { 1: [0.75, 1.09], 2: [1.10, 1.62], 3: [1.63, 2.41], 4: [2.42, 3.82], 5: [3.83, 4.41], 6: [4.42, 5.00] };
     box.innerHTML = `<div class="rulerbar" role="group" aria-label="Wavelength: choose a detector band">` + [1, 2, 3, 4, 5, 6].map(d => {
-      const b = f.bands.find(x => x.detector === d), w = R[d][1] - R[d][0];
+      const b = f.bands.find(x => x.detector === d), w = (d < 6 ? R[d + 1][0] : 5.0) - R[d][0]; // contiguous widths: bar and tick scale are both linear 0.75–5 µm
       return `<button data-det="${d}" ${b ? "" : "disabled"} aria-pressed="${d === S.det}" style="flex:${w.toFixed(2)} 1 0;background:var(--d${d})" title="${b ? esc(b.label) : "no data"}" aria-label="D${d}, ${R[d][0]} to ${R[d][1]} micrometres">D${d}</button>`;
-    }).join("") + `</div><div class="rulerscale"><span>0.75 µm</span><span>2 µm</span><span>5 µm</span></div>` +
+    }).join("") + `</div><div class="rulerscale">` + [1, 2, 3, 4, 5].map(u => `<span style="left:${((u - 0.75) / 4.25 * 100).toFixed(2)}%">${u}${u === 5 ? " µm" : ""}</span>`).join("") + `</div>` +
       (f.bands.find(x => x.detector === 0) ? `<div class="chanbtns"><button data-det="0" aria-pressed="${S.det === 0}">All bands, one image per day (positions only)</button></div>` : "");
     const b = band();
     $("#dataHelp").innerHTML = !b ? "" : (b.detector === 0
@@ -231,7 +231,7 @@ async function draw() {
   const cv = $("#cv"), ctx = cv.getContext("2d"), f = S.field, n = f.grid_px;
   cv.width = n * SCALE; cv.height = n * SCALE;
   const items = seq();
-  if (!items.length) { ctx.fillStyle = "#000"; ctx.fillRect(0, 0, cv.width, cv.height); $("#frameLabel").textContent = "No data for this selection."; return; }
+  if (!items.length) { ctx.fillStyle = "#000000"; ctx.fillRect(0, 0, cv.width, cv.height); $("#frameLabel").textContent = "No data for this selection."; return; }
   const A = items[S.a] || items[0], B = items[S.b] || items[items.length - 1];
   let cur = A, label = "", srcs = [];
   if (S.mode === "blink") { cur = S.phase ? B : A; srcs = [fieldPath(cur.png)]; label = `${S.phase ? "Later" : "Earlier"}: ${cur.label}`; }
@@ -252,13 +252,13 @@ async function draw() {
   const vt = viewXform(cv, cur || A);
   ctx.setTransform(vt.z, 0, 0, vt.z, -vt.ox * vt.z, -vt.oy * vt.z);
   // background: missing / flagged pixels show through (transparent in the PNG)
-  if (S.ovFlags) { ctx.fillStyle = "#ff2fa8"; } else { ctx.fillStyle = S.mode === "diff" ? "#808080" : "#000"; }
+  if (S.ovFlags) { ctx.fillStyle = "#FE5101"; } else { ctx.fillStyle = S.mode === "diff" ? "rgba(255,255,255,0.5)" : "#000000"; }
   ctx.fillRect(0, 0, cv.width, cv.height);
   if (S.mode === "swipe") {
     ctx.drawImage(S.ovFlags ? flagged(ims[0]) : ims[0], 0, 0, cv.width, cv.height);
     const x = Math.round(S.swipeX * cv.width);
     ctx.save(); ctx.beginPath(); ctx.rect(x, 0, cv.width - x, cv.height); ctx.clip();
-    if (S.ovFlags) { ctx.fillStyle = "#ff2fa8"; ctx.fillRect(x, 0, cv.width - x, cv.height); } else { ctx.fillStyle = "#000"; ctx.fillRect(x, 0, cv.width - x, cv.height); }
+    if (S.ovFlags) { ctx.fillStyle = "#FE5101"; ctx.fillRect(x, 0, cv.width - x, cv.height); } else { ctx.fillStyle = "#000000"; ctx.fillRect(x, 0, cv.width - x, cv.height); }
     ctx.drawImage(S.ovFlags ? flagged(ims[1]) : ims[1], 0, 0, cv.width, cv.height); ctx.restore();
     $("#swipeHandle").style.left = (S.swipeX * 100) + "%";
   } else if (ims[0]) {
@@ -302,8 +302,8 @@ function dms(d) { const sg = d < 0 ? "−" : "+", a = Math.abs(d), D = Math.floo
 function drawFrameInfo(ctx, cv, vt, cur) {
   S.vt = vt;
   const k = cv.width / 702, pad = 14 * k;
-  ctx.font = `600 ${15 * k}px Plex, system-ui`; ctx.lineWidth = 2 * k; ctx.strokeStyle = "#E8EEF7"; ctx.fillStyle = "#E8EEF7";
-  ctx.shadowColor = "#000"; ctx.shadowBlur = 3;
+  ctx.font = `600 ${15 * k}px Plex, system-ui`; ctx.lineWidth = 2 * k; ctx.strokeStyle = "#FFFFFF"; ctx.fillStyle = "#FFFFFF";
+  ctx.shadowColor = "#000000"; ctx.shadowBlur = 3;
   ctx.beginPath(); ctx.moveTo(pad + 12 * k, pad + 34 * k); ctx.lineTo(pad + 12 * k, pad + 8 * k); ctx.moveTo(pad + 12 * k, pad + 34 * k); ctx.lineTo(pad + 38 * k, pad + 34 * k); ctx.stroke();
   ctx.fillText("N", pad + 6 * k, pad + 6 * k); ctx.fillText("E", pad + 42 * k, pad + 39 * k);
   const L = 60 / S.field.pixel_scale_arcsec * SCALE * vt.z; // one arcminute on screen
@@ -315,7 +315,7 @@ function drawFrameInfo(ctx, cv, vt, cur) {
 }
 
 // Pixels SPHEREx flagged are stored with alpha 254 (filled for display) or 0 (no data).
-// With the flag overlay on, paint both kinds pink so nothing is hidden.
+// With the flag overlay on, paint both kinds orange so nothing is hidden.
 const flagCache = new WeakMap();
 function flagged(im) {
   if (flagCache.has(im)) return flagCache.get(im);
@@ -358,15 +358,15 @@ function drawOverlays(ctx, cur, A, B, items) {
   // target marker(s)
   if (S.ovTarget && !hidden && f.kind !== "control" && f.kind !== "custom") {
     // faint trail of all predicted positions
-    ctx.strokeStyle = "rgba(255,106,61,0.55)"; ctx.lineWidth = 2; ctx.beginPath();
+    ctx.strokeStyle = "rgba(254,81,1,0.55)"; ctx.lineWidth = 2; ctx.beginPath();
     items.forEach((it, i) => { const p = targetXY(it); if (!p) return; const x = (p[0] + 0.5) * k, y = (p[1] + 0.5) * k; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
     ctx.stroke();
     pts.forEach((it, j) => {
       const p = targetXY(it); if (!p) return;
       const x = (p[0] + 0.5) * k, y = (p[1] + 0.5) * k;
-      ctx.strokeStyle = "#0B1220"; ctx.lineWidth = 5 / zf; ctx.beginPath(); ctx.arc(x, y, 5 * k, 0, 2 * Math.PI); ctx.stroke();
-      ctx.strokeStyle = "#FF6A3D"; ctx.lineWidth = 3 / zf; ctx.beginPath(); ctx.arc(x, y, 5 * k, 0, 2 * Math.PI); ctx.stroke();
-      ctx.fillStyle = "#FF6A3D"; ctx.font = `600 ${4 * k / zf}px Plex, system-ui`;
+      ctx.strokeStyle = "#000000"; ctx.lineWidth = 5 / zf; ctx.beginPath(); ctx.arc(x, y, 5 * k, 0, 2 * Math.PI); ctx.stroke();
+      ctx.strokeStyle = "#FE5101"; ctx.lineWidth = 3 / zf; ctx.beginPath(); ctx.arc(x, y, 5 * k, 0, 2 * Math.PI); ctx.stroke();
+      ctx.fillStyle = "#FE5101"; ctx.font = `600 ${4 * k / zf}px Plex, system-ui`;
       const lab = pts.length > 1 ? (j ? "later" : "earlier") : "target";
       ctx.fillText(lab, Math.min(x + 5.5 * k, ctx.canvas.width - ctx.measureText(lab).width - 4), y - 4 * k + (j ? 9 * k : 0));
     });
@@ -374,7 +374,7 @@ function drawOverlays(ctx, cur, A, B, items) {
   // Gaia overlay (positions moved to the image date with Gaia proper motions)
   if (S.ovGaia && f.gaia && !hidden) {
     const it = pts[0]; const mjd = it ? itemMJD(it) : null; const yr = mjd ? mjdToYear(mjd) : 2016.0;
-    ctx.strokeStyle = "rgba(169,188,214,0.9)"; ctx.lineWidth = 2;
+    ctx.strokeStyle = "rgba(255,255,255,0.65)"; ctx.lineWidth = 2;
     for (const g of f.gaia) {
       const dt = yr - 2016.0;
       const dec = g[1] + (g[3] || 0) * dt / 3.6e6, ra = g[0] + (g[2] || 0) * dt / 3.6e6 / Math.cos(g[1] * Math.PI / 180);
@@ -391,10 +391,10 @@ function drawOverlays(ctx, cur, A, B, items) {
         // off the field: arrow at the edge pointing to where it is
         const cx = (n - 1) / 2, cy = (n - 1) / 2, dx = x - cx, dy = y - cy, sc = (n / 2 - 6) / Math.max(Math.abs(dx), Math.abs(dy));
         const ex = (cx + dx * sc + 0.5) * k, ey = (cy + dy * sc + 0.5) * k, ang = Math.atan2(dy, dx);
-        ctx.save(); ctx.translate(ex, ey); ctx.rotate(ang); ctx.fillStyle = "#ff6bd6";
+        ctx.save(); ctx.translate(ex, ey); ctx.rotate(ang); ctx.fillStyle = "#FFFFFF";
         ctx.beginPath(); ctx.moveTo(4 * k, 0); ctx.lineTo(-3 * k, -3 * k); ctx.lineTo(-3 * k, 3 * k); ctx.closePath(); ctx.fill(); ctx.restore();
         const off = Math.hypot(dx, dy) * f.pixel_scale_arcsec / 60;
-        ctx.fillStyle = "#ff6bd6"; ctx.font = `600 ${3.4 * k / zf}px Plex, system-ui`;
+        ctx.fillStyle = "#FFFFFF"; ctx.font = `600 ${3.4 * k / zf}px Plex, system-ui`;
         const tx = Math.min(Math.max(ex - 30 * k, 2 * k), (n - 62) * k), ty = Math.min(Math.max(ey + (ey > n * k / 2 ? -5 * k : 8 * k), 5 * k), (n - 2) * k);
         ctx.fillText(`SIMULATED planet${pts.length > 1 ? (j ? " (B)" : " (A)") : ""}: off field, ${off.toFixed(0)}′ from centre`, tx, ty);
         return;
@@ -404,15 +404,15 @@ function drawOverlays(ctx, cur, A, B, items) {
       g.addColorStop(0, neg ? "rgba(0,0,0,1)" : "rgba(255,255,255,1)"); g.addColorStop(1, neg ? "rgba(0,0,0,0)" : "rgba(255,255,255,0)");
       ctx.fillStyle = g; ctx.beginPath(); ctx.arc(X, Y, 1.6 * k, 0, 2 * Math.PI); ctx.fill();
       if (!hidden) {
-        ctx.setLineDash([6, 5]); ctx.strokeStyle = "#ff6bd6"; ctx.lineWidth = 2; ctx.strokeRect(X - 5 * k, Y - 5 * k, 10 * k, 10 * k); ctx.setLineDash([]);
-        ctx.fillStyle = "#ff6bd6"; ctx.font = `600 ${3.6 * k / zf}px Plex, system-ui`;
+        ctx.setLineDash([6, 5]); ctx.strokeStyle = "#FFFFFF"; ctx.lineWidth = 2; ctx.strokeRect(X - 5 * k, Y - 5 * k, 10 * k, 10 * k); ctx.setLineDash([]);
+        ctx.fillStyle = "#FFFFFF"; ctx.font = `600 ${3.6 * k / zf}px Plex, system-ui`;
         const tw = ctx.measureText("SIMULATED").width;
         ctx.fillText("SIMULATED", Math.max(2, Math.min(X - 5 * k, ctx.canvas.width - tw - 2)), Y + 9 * k > ctx.canvas.height - 4 ? Y - 6 * k : Y + 9 * k);
       }
     });
   }
   // game taps
-  if (S.game) for (const t of S.game.taps) { ctx.strokeStyle = "#ffb547"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(t[0] * k - 12, t[1] * k - 12); ctx.lineTo(t[0] * k + 12, t[1] * k + 12); ctx.moveTo(t[0] * k + 12, t[1] * k - 12); ctx.lineTo(t[0] * k - 12, t[1] * k + 12); ctx.stroke(); }
+  if (S.game) for (const t of S.game.taps) { ctx.strokeStyle = "#FFFFFF"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(t[0] * k - 12, t[1] * k - 12); ctx.lineTo(t[0] * k + 12, t[1] * k + 12); ctx.moveTo(t[0] * k + 12, t[1] * k - 12); ctx.lineTo(t[0] * k - 12, t[1] * k + 12); ctx.stroke(); }
 }
 
 function pxPos(epoch) {
@@ -431,8 +431,8 @@ function renderLegend() {
   if (S.ovTarget && S.field.kind !== "control") parts.push("orange ring: where catalogue data predict the target on that date");
   if (S.ovGaia) parts.push("+ grey-blue: Gaia stars (ESA), moved to the image date");
   parts.push("very bright stars overload SPHEREx; their centres are drawn white");
-  if (S.ovFlags) parts.push("pink = no data or pixel flagged unreliable by the SPHEREx pipeline (shown filled when the overlay is off)");
-  if (S.px) parts.push("dashed pink square = SIMULATED planet (not real)");
+  if (S.ovFlags) parts.push("solid orange = no data or pixel flagged unreliable by the SPHEREx pipeline (shown filled when the overlay is off)");
+  if (S.px) parts.push("dashed white square labelled SIMULATED = simulated planet (not real)");
   $("#legend").textContent = parts.join(" · ");
 }
 
@@ -475,7 +475,7 @@ function renderSpectrum() {
   const ys = ys0.map(v => v / div), lo = Math.min(0, ...ys), hi = Math.max(...ys) * 1.08 || 1;
   const X = w => L + (w - 0.7) / (5.05 - 0.7) * (W - L - R), Y = v => T + (1 - (v - lo) / (hi - lo)) * (H - T - Bm);
   const eps = [...new Set(pts.map(p => p.epoch))].sort((a, b) => a - b);
-  const cols = ["#6FA8FF", "#FF9C6E", "#E8EEF7", "#F6C9A8", "#A3C4F3", "#FF6A3D", "#5B7BA6"];
+  const cols = Array.from({ length: 7 }, (_, i) => `rgba(255,255,255,${(0.35 + 0.65 * i / 6).toFixed(2)})`); // dates: neutral white ramp, early = faint
   const marks = ["circle", "square", "diamond", "triangle", "circle", "square", "diamond"];
   const shape = (m, x, y, c, hollow) => {
     const fill = hollow ? "none" : c, s = `stroke="${c}" stroke-width="1.5" fill="${fill}"`;
@@ -485,10 +485,10 @@ function renderSpectrum() {
     return `<circle cx="${x}" cy="${y}" r="3.8" ${s}/>`;
   };
   let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Target brightness versus wavelength, coloured by visit date">`;
-  for (let w = 1; w <= 5; w++) svg += `<line x1="${X(w)}" x2="${X(w)}" y1="${T}" y2="${H - Bm}" stroke="#263553"/><text x="${X(w)}" y="${H - Bm + 16}" fill="#9fb0cc" font-size="12" text-anchor="middle">${w}</text>`;
-  svg += `<text x="${(W + L) / 2}" y="${H - 6}" fill="#9fb0cc" font-size="12" text-anchor="middle">wavelength (µm)</text>`;
-  for (let i = 0; i <= 4; i++) { const v = lo + (hi - lo) * i / 4; svg += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="#1A2540"/><text x="${L - 6}" y="${Y(v) + 4}" fill="#9fb0cc" font-size="11" text-anchor="end">${+v.toPrecision(3)}</text>`; }
-  svg += `<text x="14" y="${(H - Bm) / 2}" fill="#9fb0cc" font-size="12" transform="rotate(-90 14 ${(H - Bm) / 2})" text-anchor="middle">flux (${unit})</text>`;
+  for (let w = 1; w <= 5; w++) svg += `<line x1="${X(w)}" x2="${X(w)}" y1="${T}" y2="${H - Bm}" stroke="rgba(255,255,255,0.3)"/><text x="${X(w)}" y="${H - Bm + 16}" fill="rgba(255,255,255,0.65)" font-size="12" text-anchor="middle">${w}</text>`;
+  svg += `<text x="${(W + L) / 2}" y="${H - 6}" fill="rgba(255,255,255,0.65)" font-size="12" text-anchor="middle">wavelength (µm)</text>`;
+  for (let i = 0; i <= 4; i++) { const v = lo + (hi - lo) * i / 4; svg += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="rgba(255,255,255,0.15)"/><text x="${L - 6}" y="${Y(v) + 4}" fill="rgba(255,255,255,0.65)" font-size="11" text-anchor="end">${+v.toPrecision(3)}</text>`; }
+  svg += `<text x="14" y="${(H - Bm) / 2}" fill="rgba(255,255,255,0.65)" font-size="12" transform="rotate(-90 14 ${(H - Bm) / 2})" text-anchor="middle">flux (${unit})</text>`;
   for (const p of pts) {
     const ei = eps.indexOf(p.epoch), c = cols[ei % cols.length], x = X(p.wavelength_um), fv = p.phot.flux_ujy / div, y = Y(fv);
     const e = p.phot.err_ujy / div; svg += `<line x1="${x}" x2="${x}" y1="${Y(fv - e)}" y2="${Y(fv + e)}" stroke="${c}" stroke-opacity=".5"/>`;
@@ -503,7 +503,7 @@ function bindHide() { const h = $("#hideFlag"); if (h) h.addEventListener("chang
 
 function renderLightCurve() {
   const f = S.field, lc = f.lightcurve || [];
-  const cols = { 1: "#6FA8FF", 2: "#A3C4F3", 3: "#D3DBE6", 4: "#F6C9A8", 5: "#FF9C6E", 6: "#FF6A3D" };
+  const cols = Object.fromEntries([1, 2, 3, 4, 5, 6].map(d => [d, `color-mix(in srgb, #FE5101 ${(d - 1) * 20}%, #FFFFFF)`]));
   if (lc.length < 4) { $("#lc").innerHTML = "<p class='small'>Not enough measurements for a light curve here (live mode does not measure brightness).</p>"; return; }
   const W = 720, H = 300, L = 56, R = 16, T = 12, Bm = 40;
   const t0 = Math.min(...lc.map(p => p.mjd)) - 10, t1 = Math.max(...lc.map(p => p.mjd)) + 10;
@@ -512,10 +512,10 @@ function renderLightCurve() {
   const X = t => L + (t - t0) / (t1 - t0) * (W - L - R), Y = v => T + (1 - (v - ylo) / (yhi - ylo)) * (H - T - Bm);
   let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Brightness of the target in every frame over time, relative to its own average">`;
   // noise band: +-10% (what a steady object shows with this method, see the text)
-  svg += `<rect x="${L}" y="${Y(Math.log10(1.1))}" width="${W - L - R}" height="${Y(Math.log10(0.9)) - Y(Math.log10(1.1))}" fill="#5B7BA6" fill-opacity=".18"/>`;
-  for (const v of [0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4]) { const y = Math.log10(v); if (y < ylo || y > yhi) continue; svg += `<line x1="${L}" x2="${W - R}" y1="${Y(y)}" y2="${Y(y)}" stroke="#1A2540"/><text x="${L - 6}" y="${Y(y) + 4}" fill="#A9BCD6" font-size="11" text-anchor="end">${v}×</text>`; }
-  for (let m = Math.ceil(t0 / 30.44); m * 30.44 < t1; m += 2) { const t = m * 30.44, d = new Date((t - 40587) * 864e5).toISOString().slice(0, 7); svg += `<text x="${X(t)}" y="${H - Bm + 16}" fill="#A9BCD6" font-size="11" text-anchor="middle">${d}</text>`; }
-  svg += `<text x="${(W + L) / 2}" y="${H - 6}" fill="#A9BCD6" font-size="12" text-anchor="middle">date</text>`;
+  svg += `<rect x="${L}" y="${Y(Math.log10(1.1))}" width="${W - L - R}" height="${Y(Math.log10(0.9)) - Y(Math.log10(1.1))}" fill="#FFFFFF" fill-opacity=".1"/>`;
+  for (const v of [0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4]) { const y = Math.log10(v); if (y < ylo || y > yhi) continue; svg += `<line x1="${L}" x2="${W - R}" y1="${Y(y)}" y2="${Y(y)}" stroke="rgba(255,255,255,0.15)"/><text x="${L - 6}" y="${Y(y) + 4}" fill="rgba(255,255,255,0.65)" font-size="11" text-anchor="end">${v}×</text>`; }
+  for (let m = Math.ceil(t0 / 30.44); m * 30.44 < t1; m += 2) { const t = m * 30.44, d = new Date((t - 40587) * 864e5).toISOString().slice(0, 7); svg += `<text x="${X(t)}" y="${H - Bm + 16}" fill="rgba(255,255,255,0.65)" font-size="11" text-anchor="middle">${d}</text>`; }
+  svg += `<text x="${(W + L) / 2}" y="${H - 6}" fill="rgba(255,255,255,0.65)" font-size="12" text-anchor="middle">date</text>`;
   const fit = f.lc_fit;
   if (fit) for (const [d, [c, a]] of Object.entries(fit.per_detector)) {
     let pts = []; for (let t = t0; t <= t1; t += 3) pts.push(`${X(t).toFixed(1)},${Y(c + a * Math.cos(2 * Math.PI * (t - fit.t0_mjd) / fit.period_days)).toFixed(1)}`);
