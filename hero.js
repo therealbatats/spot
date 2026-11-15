@@ -21,7 +21,7 @@
     const ctx = cv.getContext("2d"), W = cv.clientWidth * devicePixelRatio, H = cv.clientHeight * devicePixelRatio;
     cv.width = W; cv.height = H;
     ctx.imageSmoothingEnabled = false;
-    ctx.fillStyle = "#000"; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "#000000"; ctx.fillRect(0, 0, W, H);
     // crop: grid region around both positions, filling the hero
     // frame so the 2026 position sits near the top and the 2010 position (the O) about 60% down
     const dy = Math.abs(pW[1] - pS[1]) + 0.01, hgrid = dy / 0.42, s = H / hgrid, wgrid = W / s;
@@ -29,7 +29,7 @@
     ctx.drawImage(phase ? imS : imW, sx, sy, wgrid, hgrid, 0, 0, W, H);
     // wordmark: S P (ring) T, the ring centred on the 2010 position
     const rx = (pW[0] + 0.5 - sx) * s, ry = (pW[1] + 0.5 - sy) * s, R = 0.075 * hgrid * s, lw = Math.max(3, R * 0.2);
-    ctx.strokeStyle = "#E8EEF7"; ctx.lineWidth = lw; ctx.lineCap = "square"; ctx.shadowColor = "#000"; ctx.shadowBlur = 6;
+    ctx.strokeStyle = "#FFFFFF"; ctx.lineWidth = lw; ctx.lineCap = "square"; ctx.shadowColor = "#000000"; ctx.shadowBlur = 6;
     ctx.beginPath(); ctx.arc(rx, ry, R, 0, 2 * Math.PI); ctx.stroke();
     const cap = 2 * R, gap = R * 0.55, Lw = cap * 0.62;
     const xP = rx - R - gap - Lw, xS = xP - gap - Lw, xT = rx + R + gap, top = ry - R, bot = ry + R, mid = ry;
@@ -38,7 +38,7 @@
     ctx.moveTo(xP, bot); ctx.lineTo(xP, top); ctx.lineTo(xP + Lw, top); ctx.lineTo(xP + Lw, mid); ctx.lineTo(xP, mid); // P
     ctx.moveTo(xT, top); ctx.lineTo(xT + Lw * 1.1, top); ctx.moveTo(xT + Lw * 0.55, top); ctx.lineTo(xT + Lw * 0.55, bot); // T
     ctx.stroke(); ctx.shadowBlur = 0;
-    ctx.fillStyle = "#E8EEF7"; ctx.font = `600 ${Math.max(13, 0.022 * W)}px Plex, system-ui`;
+    ctx.fillStyle = "#FFFFFF"; ctx.font = `600 ${Math.max(13, 0.022 * W)}px Plex, system-ui`;
     ctx.fillText(phase ? "SPHEREx " + last.utc_first.slice(0, 4) : "WISE " + f.wise.utc.slice(0, 4), 16, 16 + Math.max(13, 0.022 * W));
   }
   function tick() { phase ^= 1; draw(); }

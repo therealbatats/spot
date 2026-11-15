@@ -8,18 +8,18 @@
 @font-face { font-family: "Plex"; src: url("../site/fonts/plex-sans-600.woff2") format("woff2"), url("../fonts/plex-sans-600.woff2") format("woff2"); font-weight: 600; }
 @page { size: 1280px 720px; margin: 0; }
 * { box-sizing: border-box; }
-body { margin: 0; font-family: "Plex", -apple-system, "Segoe UI", sans-serif; color: #E8EEF7; background: #0B1220; }
-.slide { width: 1280px; height: 720px; padding: 56px 64px; position: relative; page-break-after: always; overflow: hidden; background: #0B1220; display: grid; grid-template-columns: 1fr 1.25fr; gap: 48px; align-items: center; }
+body { margin: 0; font-family: "Plex", -apple-system, "Segoe UI", sans-serif; color: #FFFFFF; background: #000000; }
+.slide { width: 1280px; height: 720px; padding: 56px 64px; position: relative; page-break-after: always; overflow: hidden; background: #000000; display: grid; grid-template-columns: 1fr 1.25fr; gap: 48px; align-items: center; }
 .slide.full { display: block; }
 h1 { font-size: 88px; margin: 0; font-weight: 600; letter-spacing: 2px; }
 h2 { font-size: 44px; margin: 0 0 20px; font-weight: 600; line-height: 1.15; }
-p { font-size: 26px; line-height: 1.4; margin: 0 0 16px; color: #E8EEF7; }
-.haze { color: #A9BCD6; } .ember { color: #FF6A3D; }
+p { font-size: 26px; line-height: 1.4; margin: 0 0 16px; color: #FFFFFF; }
+.haze { color: rgba(255,255,255,.65); } .ember { color: #FE5101; }
 img { width: 100%; display: block; image-rendering: pixelated; }
-.url { font-size: 30px; color: #FF6A3D; font-weight: 600; }
-.small { font-size: 18px; color: #A9BCD6; }
-.sim { background: #FF4FD8; color: #0B1220; font-weight: 600; padding: 0 8px; border-radius: 4px; }
-.num { font-size: 64px; font-weight: 600; color: #FF6A3D; line-height: 1; }
+.url { font-size: 30px; color: #FE5101; font-weight: 600; }
+.small { font-size: 18px; color: rgba(255,255,255,.65); }
+.sim { background: repeating-linear-gradient(-45deg, #000000 0 4px, rgba(255,255,255,.3) 4px 6px); color: #FFFFFF; border: 1px solid #FFFFFF; font-weight: 600; padding: 0 8px; border-radius: 4px; }
+.num { font-size: 64px; font-weight: 600; color: #FE5101; line-height: 1; }
 </style></head><body>
 
 <section class="slide">
@@ -48,7 +48,7 @@ img { width: 100%; display: block; image-rendering: pixelated; }
     <p>Type coordinates. Your browser builds the field live from NASA's public archive copy. No server.</p>
     <p class="haze">Blink, swipe, subtract, add, play. Zoom, readout, provenance.</p>
   </div>
-  <img src="shot_site.jpg" alt="SPOT viewer on the public site" style="image-rendering:auto;border:1px solid #263553">
+  <img src="shot_site.jpg" alt="SPOT viewer on the public site" style="image-rendering:auto;border:1px solid rgba(255,255,255,.3)">
 </section>
 
 <section class="slide">
@@ -76,7 +76,7 @@ img { width: 100%; display: block; image-rendering: pixelated; }
     <p>Draws a pretend planet, moving as parallax and orbit would, into real images.</p>
     <p class="haze">A real Planet Nine is probably too faint for SPHEREx. We say so.</p>
   </div>
-  <img src="shot_px.jpg" alt="Planet X simulator with a labelled simulated planet" style="image-rendering:auto;border:1px solid #263553">
+  <img src="shot_px.jpg" alt="Planet X simulator with a labelled simulated planet" style="image-rendering:auto;border:1px solid rgba(255,255,255,.3)">
 </section>
 
 <section class="slide full">
