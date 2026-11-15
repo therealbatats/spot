@@ -18,7 +18,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://therealbatats.github.io/spot/">
 <link rel="preload" href="fonts/plex-sans-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=24">
+<link rel="stylesheet" href="styles.css?v=25">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 </head>
 <body>
@@ -60,9 +60,9 @@
       <button type="button" data-f="rwaur">RW Aurigae</button>
       <button type="button" data-ra="83.8221" data-dec="-5.3911">Orion Nebula (built live)</button>
     </div>
-    <p class="small muted">Every image is real NASA SPHEREx data. Anything we draw ourselves is labelled <span class="simtag">SIMULATED</span>.</p>
+    <p class="small muted">Real NASA images only. Anything we draw is labelled <span class="simtag">SIMULATED</span>.</p>
     <details class="liveopts">
-      <summary>Options for positions that are not ready-made (built live in your browser)</summary>
+      <summary>Live options</summary>
       <div class="small" id="liveDets" role="group" aria-label="Detector bands to fetch">Detector bands:
         <label class="chk"><input type="checkbox" value="1"> D1 0.75–1.1 µm</label>
         <label class="chk"><input type="checkbox" value="2" checked> D2 1.1–1.6 µm</label>
@@ -72,15 +72,21 @@
         <label class="chk"><input type="checkbox" value="6"> D6 4.4–5.0 µm</label>
       </div>
       <label class="small">Field of view <select id="liveSize"><option value="0.05">0.05° (fastest)</option><option value="0.1" selected>0.1°</option><option value="0.2">0.2° (slower, more data)</option></select></label>
-      <p class="small muted">Live mode reads real SPHEREx images straight from NASA/IPAC's public cloud copy (AWS): about 1–3 MB per image, 10–40 images per band.</p>
+      <p class="small muted">Built in your browser from NASA/IPAC's public cloud copy, 1–3 MB per image.</p>
     </details>
     <p id="coordMsg" class="msg" role="status" aria-live="polite"></p>
     <div id="liveBox" class="livebox" hidden><div class="progress"><div id="liveBar"></div></div></div>
   </section>
 
+  <section id="sky" class="sky" aria-labelledby="skyTitle">
+    <h2 id="skyTitle">Where they are in the sky</h2>
+    <canvas id="globe" tabindex="0" role="img" aria-label="Rotating 3D sky globe with the seven targets at their real coordinates. Drag to turn; tap a dot to open it."></canvas>
+    <p class="muted small">Drag to turn. Tap a dot to open it. Dashed line: the ecliptic, where the planets travel.</p>
+  </section>
+
   <section id="fields" aria-labelledby="fieldsTitle">
     <h2 id="fieldsTitle">Targets</h2>
-    <p class="muted small">The five test targets named in the challenge, Pluto (the first "Planet X"), and a galaxy where nothing should change (our control).</p>
+    <p class="muted small">The five challenge targets, Pluto, and a control galaxy.</p>
     <div id="cards" class="cards"></div>
   </section>
 
@@ -102,13 +108,15 @@
         <div class="framebar">
           <span id="frameLabel" class="framelabel">—</span>
         </div>
-        <div id="readout" class="readout" aria-live="off">Move over the image to read sky coordinates.</div>
+        <div id="readout" class="readout" aria-live="off">Hover for sky coordinates.</div>
         <div class="viewtools">
           <label>Zoom <select id="zoomSel"><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option></select></label>
+          <details class="more"><summary>Image settings</summary><div class="viewtools">
           <label>Brightness <input id="bright" type="range" min="0.5" max="2.5" step="0.05" value="1"></label>
           <label>Contrast <input id="contrast" type="range" min="0.5" max="2.5" step="0.05" value="1"></label>
           <label class="chk"><input type="checkbox" id="plate"> Plate view (dark stars on light)</label>
           <button class="btn" id="resetView" type="button">Reset</button>
+          </div></details>
         </div>
         <div id="scaleNote" class="muted small"></div>
         <div class="legend" id="legend"></div>
@@ -148,20 +156,20 @@
             <button id="playBtn" class="btn" aria-label="Play or pause (space)">Play</button>
             <input id="tSlider" type="range" min="0" max="0" value="0" aria-label="Date">
           </div>
-          <label class="chk small" id="wiseWrap" hidden><input type="checkbox" id="wiseOn"> Include WISE, about 2010 (older NASA infrared telescope, 4.6 µm). Compare positions only</label>
+          <label class="chk small" id="wiseWrap" hidden><input type="checkbox" id="wiseOn"> Add WISE 2010 (older telescope; positions only)</label>
           <label class="small">Speed <input id="speed" type="range" min="0.5" max="2.5" step="0.5" value="1"> <span id="speedVal">1</span> flips per second</label>
         </div>
 
-        <div class="group">
-          <h3>Overlays</h3>
+        <details class="group more">
+          <summary><h3>Overlays</h3></summary>
           <label class="chk"><input type="checkbox" id="ovTarget" checked> Target: predicted position (ring)</label>
           <label class="chk"><input type="checkbox" id="ovGaia"> Gaia stars (another telescope, +)</label>
           <label class="chk"><input type="checkbox" id="ovFlags"> Show missing or flagged pixels</label>
-        </div>
+        </details>
 
         <div class="group">
           <h3>Spot the wanderer</h3>
-          <p class="small muted">Markers hide. Watch the blink, then tap where something moved or changed.</p>
+          <p class="small muted">Markers hide. Tap what moved.</p>
           <button id="gameBtn" class="btn">Start</button>
           <p id="gameMsg" class="small" role="status" aria-live="polite"></p>
         </div>
@@ -181,35 +189,35 @@
     </section>
 
     <section class="tabpanel" id="lcPanel" role="tabpanel" hidden>
-      <p class="muted small">How bright the target was in every frame, compared with its own average. Hollow dots: the star is so bright that its centre is saturated, so we measure its unsaturated outer glow instead, which is less precise. Check: in our control galaxy, where nothing should change, single frames scatter by about 4%; for Barnard's Star measured from its outer glow, about 10%. Treat changes inside the shaded band as noise.</p>
+      <p class="muted small">Brightness in each frame vs the star's own average. Shaded band = noise (4% in the control galaxy, 10% for saturated stars). Hollow dots = saturated star, measured from its glow.</p>
       <div id="lc"></div>
     </section>
 
     <section class="tabpanel" id="specPanel" role="tabpanel" hidden>
-      <p class="muted small">Each dot is one SPHEREx frame: the target's brightness in a 12-arcsecond circle against that frame's wavelength. Colours are dates. If the colours separate, the object changed between visits. Fluxes are not aperture-corrected; use them to compare dates.</p>
+      <p class="muted small">One dot per frame: brightness vs wavelength. Shades are dates; if they separate, the object changed.</p>
       <div id="spec"></div>
     </section>
 
     <section class="tabpanel" id="provPanel" role="tabpanel" hidden>
-      <p class="muted small">Every frame is a SPHEREx Level-2 spectral image. "Source" opens the original file at NASA/IPAC's archive (about 65 MB). "Flagged" is the share of pixels SPHEREx's own pipeline marked as unreliable.</p>
+      <p class="muted small">Every frame, linked to its original NASA file (about 65 MB). "Flagged" = pixels SPHEREx marked unreliable.</p>
       <div class="tablewrap"><table id="provTable"><thead><tr><th>Date (UTC)</th><th>Detector</th><th>λ (µm)</th><th>Bandwidth</th><th>Flagged</th><th>Target flux (µJy)</th><th>Release</th><th>Source</th></tr></thead><tbody></tbody></table></div>
     </section>
 
     <section class="tabpanel planetx" id="pxPanel" role="tabpanel" hidden>
-      <p class="small">A distant planet does not sit still. As Earth, and SPHEREx with it, circles the Sun, the planet seems to shift back and forth (parallax), and it creeps along its own orbit. Turn this on to draw a <strong>pretend</strong> planet into these real images at the distance you choose. <span class="simtag">SIMULATED</span></p>
+      <p class="small">Draws a <strong>pretend</strong> planet into these real images, moving as parallax and its orbit would. <span class="simtag">SIMULATED</span></p>
       <label class="chk"><input type="checkbox" id="pxOn"> Draw a simulated planet</label>
       <label class="small">Distance from the Sun: <input id="pxDist" type="range" min="0" max="1" step="0.001" value="0.6"> <strong id="pxDistVal">500</strong> AU</label>
       <p id="pxInfo" class="small muted"></p>
       <div class="note">
         <h3>Could SPHEREx really see Planet X?</h3>
-        <p id="pxHonest">Probably not, except perhaps in the most favourable case. Planet Nine would shine only by faint reflected sunlight. Brown &amp; Batygin (2016) put it at about visual magnitude 22 to 25; their 2021 update finds a closer orbit (about 380 AU) and says its brightest cases could already have been detected by existing surveys. SPHEREx is designed to reach magnitude 18.4 (AB) or fainter per wavelength channel at 2 µm after its full two-year survey (Crill et al. 2020, Table 1), and a single six-month pass is shallower. Visible and infrared magnitudes are different scales and the planet's infrared brightness depends on its unknown atmosphere, so this comparison is approximate, but a gap of 3.5 magnitudes or more is a factor of 25 or more in brightness. Our simulated dot is drawn much brighter than a real one would be, so you can learn what its motion looks like. Sources: see <a href="#about">How it works</a>.</p>
+        <p id="pxHonest">Probably not. Planet Nine would be about magnitude 22–25 in visible light (Brown &amp; Batygin 2016); SPHEREx reaches about 18.4 per channel after two full years (Crill et al. 2020). That gap is a factor of 25 or more (approximate: visible and infrared scales differ). Our dot is drawn far brighter so you can see how it moves. Sources: <a href="#about">How it works</a>.</p>
       </div>
     </section>
   </section>
 
   <section id="about" class="about" aria-labelledby="aboutTitle">
-    <h2 id="aboutTitle">How it works</h2>
-    <div id="aboutBody"></div>
+    <details id="aboutDetails"><summary><h2 id="aboutTitle">How it works and sources</h2></summary>
+    <div id="aboutBody"></div></details>
   </section>
 </main>
 
@@ -220,8 +228,9 @@
 <script src="vendor/gsap.min.js?v=3.12.5"></script>
 <script src="vendor/lenis.min.js?v=1.1.13"></script>
 <script src="motion.js?v=1"></script>
-<script src="app.js?v=35"></script>
+<script src="app.js?v=37"></script>
 <script src="live.js?v=9"></script>
 <script src="hero.js?v=5"></script>
+<script src="fx.js?v=2"></script>
 </body>
 </html>

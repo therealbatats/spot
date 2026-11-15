@@ -122,3 +122,23 @@ th { color: var(--haze); font-weight: 600; }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
 /* Lenis (landing page smooth scroll) */
 html.lenis, html.lenis body { height: auto; } .lenis.lenis-smooth { scroll-behavior: auto !important; } .lenis.lenis-stopped { overflow: hidden; } [data-lenis-prevent] { overscroll-behavior: contain; }
+
+/* round 3: friendlier controls, button motion, 3D globe */
+.sky { margin-top: 48px; }
+#globe { width: 100%; height: min(70vw, 460px); display: block; cursor: grab; touch-action: none; border-radius: 12px; }
+#globe:active { cursor: grabbing; }
+details.more > summary, #aboutDetails > summary { cursor: pointer; list-style: none; color: var(--haze); min-height: 44px; display: flex; align-items: center; gap: 8px; }
+details.more > summary::before, #aboutDetails > summary::before { content: "+"; color: var(--ember); font-weight: 600; width: 1em; }
+details[open].more > summary::before, #aboutDetails[open] > summary::before { content: "−"; }
+details.more > summary h3, #aboutDetails > summary h2 { display: inline; margin: 0; }
+details.more > summary::-webkit-details-marker, #aboutDetails > summary::-webkit-details-marker { display: none; }
+.btn, .seg button, .chanbtns button, .rulerbar button, .tabs button, .card { transition: transform .15s ease, box-shadow .2s ease, border-color .2s ease, background-color .2s ease; will-change: transform; }
+.btn:hover, .seg button:hover, .chanbtns button:hover { box-shadow: 0 0 0 1px rgba(255,255,255,.65), 0 6px 20px rgba(254,81,1,.18); }
+.btn.primary:hover { box-shadow: 0 8px 28px rgba(254,81,1,.45); }
+.btn:active, .seg button:active, .chanbtns button:active, .rulerbar button:active, .tabs button:active { transform: scale(.95); }
+.card { border-radius: 10px; transform-style: preserve-3d; }
+.card img { border-radius: 10px; transition: border-color .2s ease, box-shadow .2s ease; }
+.card:hover img { box-shadow: 0 14px 34px rgba(254,81,1,.25); border-color: #FE5101; }
+.btn, .seg button, .chanbtns button, input, select { border-radius: 999px; }
+.rulerbar button { border-radius: 0; }
+@media (prefers-reduced-motion: reduce) { .btn:active, .seg button:active, .chanbtns button:active, .rulerbar button:active, .tabs button:active { transform: none; } }
