@@ -169,7 +169,9 @@ function renderBandBtns() {
     }).join("") + `</div><div class="rulerscale"><span>0.75 µm</span><span>2 µm</span><span>5 µm</span></div>` +
       (f.bands.find(x => x.detector === 0) ? `<div class="chanbtns"><button data-det="0" aria-pressed="${S.det === 0}">All bands, one image per day (positions only)</button></div>` : "");
     const b = band();
-    $("#dataHelp").innerHTML = b ? `<strong>${esc(b.label)}.</strong> All frames this detector took of this spot during one visit are added for a cleaner picture, using only the wavelengths every visit covered.` : "";
+    $("#dataHelp").innerHTML = !b ? "" : (b.detector === 0
+      ? `<strong>All six detectors, one image per day.</strong> Each detector's image is scaled to the same brightness level, then averaged, so you can follow positions day by day. Brightness is not comparable between days in this view.`
+      : `<strong>${esc(b.label)}.</strong> All frames this detector took of this spot during one visit are added for a cleaner picture, using only the wavelengths every visit covered.`);
   } else {
     box.innerHTML = `<div class="chanbtns">` + (f.channels.map(c => `<button data-chan="${c.id}" aria-pressed="${c.id === S.chan}">${c.wavelength_um.toFixed(2)} µm · D${c.detector}</button>`).join("") || "<p class='small muted'>No matched wavelengths for this field.</p>") + `</div>`;
     const c = chan();
