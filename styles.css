@@ -120,3 +120,5 @@ th { color: var(--haze); font-weight: 600; }
 .foot { border-top: 1px solid var(--line); padding: 24px 16px; color: var(--haze); font-size: 14px; max-width: 1280px; margin: 0 auto; }
 @media (max-width: 600px) { .heroText p { font-size: 20px; } #heroCv { height: 52vh; } .topnav { gap: 12px; } }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+/* Lenis (landing page smooth scroll) */
+html.lenis, html.lenis body { height: auto; } .lenis.lenis-smooth { scroll-behavior: auto !important; } .lenis.lenis-stopped { overflow: hidden; } [data-lenis-prevent] { overscroll-behavior: contain; }

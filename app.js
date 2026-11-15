@@ -112,7 +112,7 @@ function renderCards() {
       <img src="data/fields/${esc(f.id)}/${esc(f.thumb)}" alt="" loading="lazy" width="117" height="117">
       <div class="cbody"><h3>${esc(f.title)}</h3><span class="badge ${esc(f.kind)}">${esc(f.kind_label || f.kind)}</span><p>${esc(f.hook)}</p></div>
     </button>`).join("");
-  $$(".card").forEach(c => c.addEventListener("click", () => { openField(c.dataset.id); }));
+  $$(".card").forEach(c => c.addEventListener("click", () => { const im = c.querySelector("img"); Promise.resolve(openField(c.dataset.id)).then(() => window.SpotMotion && SpotMotion.fly(im, $(".stage"))); }));
 }
 
 async function openField(id, q) {
@@ -549,7 +549,7 @@ function renderLightCurve() {
   }
   for (const p of lc) {
     const c = cols[p.det], x = X(p.mjd), y = Y(Math.log10(Math.max(p.ratio, 0.05))), hollow = p.method !== "core";
-    svg += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" stroke="${c}" stroke-width="1.3" fill="${hollow ? "none" : c}"><title>D${p.det}, ${new Date((p.mjd - 40587) * 864e5).toISOString().slice(0, 10)}, ${p.wl} µm: ${p.ratio.toFixed(2)}× its average${hollow ? " (outer glow; star saturated)" : ""}</title></circle>`;
+    svg += `<circle data-mjd="${p.mjd}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" stroke="${c}" stroke-width="1.3" fill="${hollow ? "none" : c}"><title>D${p.det}, ${new Date((p.mjd - 40587) * 864e5).toISOString().slice(0, 10)}, ${p.wl} µm: ${p.ratio.toFixed(2)}× its average${hollow ? " (outer glow; star saturated)" : ""}</title></circle>`;
   }
   svg += `</svg>`;
   const used = [...new Set(lc.map(p => p.det))].sort();
@@ -557,6 +557,7 @@ function renderLightCurve() {
   if (fit) fitTxt = ` Lines: a fit to our points with the period fixed at ${fit.period_days} days (AAVSO Variable Star Index): one shared time of maximum, a separate amplitude for each detector. The fitted maximum falls ${Math.abs(fit.max_phase_vs_vsx_days).toFixed(0)} days from the one predicted by the AAVSO ephemeris, which is an independent check.`;
   const csv = "mjd,detector,wavelength_um,ratio,err,method\n" + lc.map(p => [p.mjd, p.det, p.wl, p.ratio, p.err, p.method].join(",")).join("\n");
   $("#lc").innerHTML = svg + `<p class="small">${used.map(d => `<span style="color:${cols[d]}">● D${d}</span>`).join(" &nbsp; ")}. Each dot is one SPHEREx frame, divided by the star's own median brightness at that wavelength, so 1× means average. The shaded band is ±10%, about what a steady object shows with this method.${fitTxt}</p><p class="small"><a download="${S.fieldId}_brightness.csv" href="data:text/csv;charset=utf-8,${encodeURIComponent(csv)}">Download CSV</a></p>`;
+  if (window.SpotMotion) SpotMotion.inOrder($("#lc svg"));
 }
 
 function openTab(id) {
