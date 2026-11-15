@@ -97,6 +97,9 @@ async function init() {
   renderCards();
   renderAbout();
   bindUI();
+  const openAbout = () => { const d = $("#aboutDetails"); if (d) d.open = true; };
+  if (location.hash === "#about") openAbout();
+  document.addEventListener("click", e => { if (e.target.closest('a[href="#about"]')) openAbout(); });
   const q = new URLSearchParams(location.search);
   if (q.get("ra") && q.get("dec")) { $("#raIn").value = q.get("ra"); $("#decIn").value = q.get("dec"); goCoords(q.get("ra"), q.get("dec"), true, q.get("live") === "1"); }
   else if (q.get("field")) {
@@ -110,7 +113,7 @@ function renderCards() {
   $("#cards").innerHTML = S.manifest.fields.map(f => `
     <button class="card" data-id="${esc(f.id)}" aria-label="Open ${esc(f.title)}">
       <img src="data/fields/${esc(f.id)}/${esc(f.thumb)}" alt="" loading="lazy" width="117" height="117">
-      <div class="cbody"><h3>${esc(f.title)}</h3><span class="badge ${esc(f.kind)}">${esc(f.kind_label || f.kind)}</span><p>${esc(f.hook)}</p></div>
+      <div class="cbody"><h3>${esc(f.title)}</h3><span class="badge ${esc(f.kind)}">${esc(f.kind_label || f.kind)}</span></div>
     </button>`).join("");
   $$(".card").forEach(c => c.addEventListener("click", () => { const im = c.querySelector("img"); Promise.resolve(openField(c.dataset.id)).then(() => window.SpotMotion && SpotMotion.fly(im, $(".stage"))); }));
 }
@@ -170,12 +173,12 @@ function renderBandBtns() {
       (f.bands.find(x => x.detector === 0) ? `<div class="chanbtns"><button data-det="0" aria-pressed="${S.det === 0}">All bands, one image per day (positions only)</button></div>` : "");
     const b = band();
     $("#dataHelp").innerHTML = !b ? "" : (b.detector === 0
-      ? `<strong>All six detectors, one image per day.</strong> Each detector's image is scaled to the same brightness level, then averaged, so you can follow positions day by day. Brightness is not comparable between days in this view.`
-      : `<strong>${esc(b.label)}.</strong> All frames this detector took of this spot during one visit are added for a cleaner picture, using only the wavelengths every visit covered.`);
+      ? `<strong>All detectors, one image per day.</strong> Compare positions only, not brightness.`
+      : `<strong>${esc(b.label)}.</strong> Each visit's frames added, same wavelengths every visit.`);
   } else {
     box.innerHTML = `<div class="chanbtns">` + (f.channels.map(c => `<button data-chan="${c.id}" aria-pressed="${c.id === S.chan}">${c.wavelength_um.toFixed(2)} µm · D${c.detector}</button>`).join("") || "<p class='small muted'>No matched wavelengths for this field.</p>") + `</div>`;
     const c = chan();
-    $("#dataHelp").innerHTML = c ? `Single frames whose wavelength at the target differs by less than half a bandwidth (${(c.bandwidth_um / 2).toFixed(3)} µm). This is the strictest comparison: same colour of light, different dates.` : "";
+    $("#dataHelp").innerHTML = c ? `Single frames at the same wavelength (within ${(c.bandwidth_um / 2).toFixed(3)} µm). Strictest comparison.` : "";
   }
   $$("#bandBtns button[data-det]").forEach(bt => bt.addEventListener("click", () => { S.det = +bt.dataset.det; resetDates(); }));
   $$("#bandBtns button[data-chan]").forEach(bt => bt.addEventListener("click", () => { S.chan = bt.dataset.chan; resetDates(); }));
@@ -196,13 +199,13 @@ function syncButtons() {
   $("#dataSeg button[data-data=chan]").disabled = !S.field.channels.length;
   const sumBtn = $("#modeSeg button[data-mode=sum]"); sumBtn.disabled = S.data === "chan";
   const help = {
-    blink: "Flips between the earlier and the later date. Things that jump are moving; things that flash are changing brightness.",
-    swipe: "Drag the orange line. Left of it: the earlier date. Right of it: the later date.",
+    blink: "Jumps = moving. Flashes = changing brightness.",
+    swipe: "Drag the orange line: earlier on the left, later on the right.",
     diff: S.rawDiff
-      ? "Raw difference, later minus earlier. Even stars that do not change leave small black-and-white pairs here, because the pixels are coarse and the two visits are never perfectly sharp in the same way."
-      : "Significance of change, later minus earlier. Grey: nothing changed beyond what steady stars show. White: brighter later. Black: brighter earlier. A moving star leaves a black-and-white pair. Full white or black means about 5 times the change steady stars show: a bright star must change by more than about 60% of its peak, or move by roughly one pixel (6 arcseconds) or more. Lone dots are usually artifacts (cosmic rays, satellite trails, reflections of very bright stars): check the frames before trusting one.",
-    timeline: "Plays every date in order, like a little video. Drag the slider to scrub.",
-    sum: "All dates added together: fainter things become easier to see, but anything that moved gets smeared.",
+      ? "Raw difference (later minus earlier). Steady stars leave small pairs here too: pixels are coarse."
+      : "Grey = no real change. White = brighter later, black = brighter earlier. A mover leaves a black-and-white pair. Full white or black: about 5× what steady stars show (a 60% change, or a move of about one pixel). Lone dots are usually artifacts.",
+    timeline: "Every date in order. Drag to scrub.",
+    sum: "All dates added: faint things show up, movers smear.",
   };
   $("#modeHelp").textContent = help[S.mode];
   $("#rawWrap").hidden = S.mode !== "diff";
