@@ -68,8 +68,8 @@ New data releases: re-run `s3index.py` (it lists the bucket folders again), then
 - Gaia DR3 (ESA), through MAST. Pluto ephemeris: NASA JPL Horizons. R Draconis period: AAVSO Variable Star Index. WISE 0855 motion: Luhman & Esplin 2016, AJ 152, 78, Table 4.
 - Method follows the IRSA SPHEREx tutorials: https://caltech-ipac.github.io/irsa-tutorials/spherex/
 - Font: IBM Plex Sans (SIL Open Font License, `site/fonts/OFL.txt`), self-hosted.
-- Animation: GSAP 3.12.5 core (GSAP Standard "No Charge" License, https://gsap.com/standard-license; notice kept in `site/vendor/gsap.min.js`) and Lenis 1.1.13 (MIT, `site/vendor/LENIS_LICENSE.txt`), both self-hosted. Neither ever animates between two sky images; both are off under reduced motion.
-- Click sparks and magnetic buttons: plain-JavaScript ports of the React Bits components ClickSpark and Magnet by David Haz (https://reactbits.dev), used under the React Bits license (MIT + Commons Clause, `site/vendor/REACTBITS_LICENSE.md`). The site has no React or build step, so the effects were ported rather than installed.
+- Animation: GSAP 3.12.5 core and ScrollTrigger (GSAP Standard "No Charge" License, https://gsap.com/standard-license; notice kept in `site/vendor/gsap.min.js`) and Lenis 1.1.13 (MIT, `site/vendor/LENIS_LICENSE.txt`), both self-hosted. Neither ever animates between two sky images; both are off under reduced motion.
+- Click sparks, magnetic buttons, orbiting button light, cursor spotlight, rotating ring text and decrypting tagline: plain-JavaScript ports of the React Bits components ClickSpark, Magnet, StarBorder, SpotlightCard, CircularText and DecryptedText by David Haz (https://reactbits.dev), used under the React Bits license (MIT + Commons Clause, `site/vendor/REACTBITS_LICENSE.md`). The site has no React or build step, so the effects were ported rather than installed.
 - No cookies, no analytics, no accounts. Outside requests: the AWS data mirrors (live mode only).
 
 ## How this was made
